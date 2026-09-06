@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoverPanda V3 — Franchise OS</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0A3D3D;--teal-700:#0D4F4F;--teal-600:#1A6B6B;--teal-50:#F2F9F9;--teal-100:#E8F4F4;
+  --coral:#E8734A;--coral-light:#F09070;--coral-50:#FFF5F0;
+  --green:#1F9D5C;--green-50:#E6F5EC;--red:#DC4444;--red-50:#FDECEC;
+  --blue:#3B6AE8;--blue-50:#EBF1FD;--violet:#6B5CE8;--violet-50:#EFEDFD;
+  --amber:#D9881F;--amber-50:#FFF6E6;
+  --bg:#FAFAF7;--surface:#FFFFFF;
+  --ink-900:#0E1015;--ink-800:#1B1F26;--ink-700:#363B45;--ink-600:#5C6370;--ink-500:#8B91A0;--ink-400:#B0B5C0;--ink-300:#D8DBE2;--ink-200:#EAECEF;--ink-100:#F2F4F6;--ink-50:#F8F9FB;
+  --r-xs:4px;--r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-2xl:20px;
+  --shadow-xs:0 1px 2px rgba(14,16,21,.04);
+  --shadow-sm:0 1px 3px rgba(14,16,21,.06),0 1px 2px rgba(14,16,21,.03);
+  --shadow-md:0 4px 12px rgba(14,16,21,.06),0 2px 4px rgba(14,16,21,.04);
+  --shadow-lg:0 12px 32px rgba(14,16,21,.10),0 4px 12px rgba(14,16,21,.06);
+  --shadow-xl:0 24px 60px rgba(14,16,21,.14);
+  --border:1px solid var(--ink-200);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html,body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink-800);font-size:14px;line-height:1.45}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+.serif{font-family:'Fraunces',serif;letter-spacing:-.01em}
+.mono{font-family:'JetBrains Mono',monospace}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* SCREENS — only one visible at a time. !important guards against later rules. */
+.screen{display:none !important}
+.screen.active{display:flex !important;min-height:100vh}
+
+/* ============ SIGN UP ============ */
+.signup{flex-direction:column;background:radial-gradient(circle at 20% 0%,#0F4646 0%,#0A2828 60%,#06181C 100%);color:#fff;align-items:stretch;width:100%}
+.signup-top{display:flex;justify-content:space-between;align-items:center;padding:22px 36px;border-bottom:1px solid rgba(255,255,255,.06)}
+.signup-top .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+.signup-top .brand .dot{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#F09070,#E8734A);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:700}
+.signup-top .help{font-size:13px;color:rgba(255,255,255,.5)}
+.signup-top .help a{color:#F09070;cursor:pointer;font-weight:500}
+.signup-body{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:48px 24px}
+.signup-card{width:100%;max-width:540px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:36px;backdrop-filter:blur(8px)}
+.signup-card .progress{display:flex;gap:6px;margin-bottom:28px}
+.signup-card .progress div{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;transition:all .3s}
+.signup-card .progress div.done{background:rgba(232,115,74,.5)}
+.signup-card .progress div.active{background:linear-gradient(90deg,#F09070,#E8734A);box-shadow:0 0 12px rgba(232,115,74,.4)}
+.signup-card h1{font-family:'Fraunces',serif;font-size:30px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px;line-height:1.15}
+.signup-card .sub{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:28px;line-height:1.55}
+.su-step{display:none}.su-step.active{display:block;animation:fadeUp .3s cubic-bezier(.2,.8,.2,1)}
+.dark-field{margin-bottom:14px}
+.dark-field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px}
+.dark-field input,.dark-field select{width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;outline:none;transition:all .15s}
+.dark-field input:focus,.dark-field select:focus{border-color:rgba(232,115,74,.6);background:rgba(255,255,255,.06)}
+.dark-field input::placeholder{color:rgba(255,255,255,.3)}
+.dark-field select option{background:#0A2828;color:#fff}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dark-paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.dark-path{background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;text-align:left}
+.dark-path:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.04)}
+.dark-path.selected{border-color:#E8734A;background:rgba(232,115,74,.06)}
+.dark-path .icon{font-size:24px;margin-bottom:10px}
+.dark-path h4{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:4px}
+.dark-path p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5}
+.btn-coral{width:100%;padding:13px;background:linear-gradient(180deg,#F09070,#E8734A);color:#fff;font-weight:600;border-radius:8px;transition:all .2s;box-shadow:0 4px 14px rgba(232,115,74,.25)}
+.btn-coral:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,115,74,.35)}
+.btn-back{margin-top:8px;background:none;color:rgba(255,255,255,.45);font-size:13px;width:100%;padding:8px}
+.btn-back:hover{color:#fff}
+.signup-foot{padding:20px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.04)}
+.summary-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:14px;margin-bottom:14px}
+.summary-card .row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:rgba(255,255,255,.7)}
+.summary-card .row.total{padding-top:10px;margin-top:6px;border-top:1px solid rgba(255,255,255,.1);color:#fff;font-weight:600;font-size:15px}
+
+/* ============ APP CHROME ============ */
+/* .app gets display:flex from .screen.active — no need to repeat it. */
+.app{width:100%;background:var(--bg)}
+.sidebar{width:236px;background:var(--surface);border-right:var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:40}
+.sb-brand{padding:18px 22px;display:flex;align-items:center;gap:10px;border-bottom:var(--border)}
+.sb-brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0F4646,#0A2828);display:flex;align-items:center;justify-content:center;color:#F09070;font-weight:700;font-size:16px;font-family:'Fraunces',serif}
+.sb-brand .name{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--ink-900)}
+
+.location-switcher{margin:14px 16px 8px;background:var(--ink-50);border:var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;position:relative}
+.location-switcher:hover{border-color:var(--ink-300);background:#fff}
+.location-switcher .ls-mark{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#F09070,#E8734A);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.location-switcher .ls-info{flex:1;min-width:0}
+.location-switcher .ls-info h5{font-size:12px;font-weight:600;color:var(--ink-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.location-switcher .ls-info p{font-size:10px;color:var(--ink-500)}
+.location-switcher .ls-chev{color:var(--ink-400);font-size:10px}
+
+.location-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:var(--border);border-radius:8px;box-shadow:var(--shadow-lg);padding:6px;z-index:60;display:none;animation:scaleIn .15s ease}
+.location-menu.open{display:block}
+.location-menu .lm-item{padding:9px 10px;border-radius:6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .1s}
+.location-menu .lm-item:hover{background:var(--ink-50)}
+.location-menu .lm-item .lm-mark{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.location-menu .lm-item .lm-info{flex:1;min-width:0}
+.location-menu .lm-item .lm-info h5{font-size:12px;font-weight:600}
+.location-menu .lm-item .lm-info p{font-size:10px;color:var(--ink-500)}
+.location-menu .lm-item .lm-check{color:var(--coral);font-size:12px;display:none;font-weight:700}
+.location-menu .lm-item.active .lm-check{display:block}
+.location-menu .lm-add{padding:9px 10px;border-radius:6px;font-size:12px;color:var(--coral);font-weight:600;cursor:pointer;border-top:var(--border);margin-top:4px;padding-top:10px}
+
+.sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
+.sb-section{padding:0 12px;margin:18px 0 8px;font-size:10px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink-700);cursor:pointer;transition:all .12s;margin-bottom:1px}
+.nav-item:hover{background:var(--ink-50);color:var(--ink-900)}
+.nav-item.active{background:var(--ink-900);color:#fff}
+.nav-item .nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-500);flex-shrink:0}
+.nav-item.active .nav-icon{color:#F09070}
+.nav-item .nav-badge{margin-left:auto;background:var(--coral);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.nav-item.active .nav-badge{background:#fff;color:var(--ink-900)}
+
+.sb-foot{padding:12px 14px;border-top:var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .12s}
+.sb-foot:hover{background:var(--ink-50)}
+.sb-foot .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1A6B6B,#0A3D3D);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sb-foot .info{flex:1;min-width:0}
+.sb-foot .info h5{font-size:12px;font-weight:600;color:var(--ink-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-foot .info p{font-size:10px;color:var(--ink-500)}
+
+.main{flex:1;margin-left:236px;display:flex;flex-direction:column;min-width:0}
+.topbar{height:56px;background:rgba(250,250,247,.85);backdrop-filter:blur(12px);border-bottom:var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:30}
+.cmd-bar{flex:1;max-width:520px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border:var(--border);border-radius:8px;font-size:13px;color:var(--ink-500);cursor:pointer;transition:all .15s}
+.cmd-bar:hover{border-color:var(--ink-300)}
+.cmd-bar .cmd-text{flex:1}
+.cmd-bar .cmd-kbd{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;background:var(--ink-100);border-radius:4px;color:var(--ink-600);font-weight:500}
+.tb-spacer{flex:1}
+.tb-icon-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ink-600);transition:all .12s;position:relative}
+.tb-icon-btn:hover{background:var(--ink-100);color:var(--ink-900)}
+.tb-icon-btn .dot-notif{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--coral);border:1.5px solid var(--bg)}
+
+/* Setup-progress pill in topbar — persistent PLG nudge */
+.setup-pill{display:none;align-items:center;gap:10px;padding:6px 6px 6px 12px;background:linear-gradient(90deg,rgba(232,115,74,.10),rgba(232,115,74,.04));border:1px solid rgba(232,115,74,.22);border-radius:999px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--ink-800);white-space:nowrap}
+.setup-pill.show{display:inline-flex;animation:fadeUp .25s ease}
+.setup-pill:hover{background:linear-gradient(90deg,rgba(232,115,74,.18),rgba(232,115,74,.08));border-color:rgba(232,115,74,.35);transform:translateY(-1px)}
+.setup-pill .sp-dot{width:7px;height:7px;border-radius:50%;background:var(--coral);box-shadow:0 0 8px rgba(232,115,74,.5);animation:pulse 2s infinite}
+.setup-pill .sp-text{font-weight:500}
+.setup-pill .sp-text strong{font-family:'JetBrains Mono',monospace;color:var(--coral);font-weight:700}
+.setup-pill .sp-mini-bar{width:60px;height:5px;background:rgba(232,115,74,.18);border-radius:3px;overflow:hidden}
+.setup-pill .sp-mini-fill{height:100%;background:linear-gradient(90deg,#F09070,#E8734A);border-radius:3px;transition:width .4s ease}
+.setup-pill .sp-go{font-size:13px;color:var(--coral);font-weight:600;padding:0 8px}
+
+.content{flex:1;padding:28px 36px 60px;max-width:1340px;width:100%}
+
+/* TAB ROUTING — stricter */
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeUp .3s cubic-bezier(.2,.8,.2,1)}
+
+.page-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;gap:24px}
+.page-hdr h1{font-family:'Fraunces',serif;font-size:30px;font-weight:600;letter-spacing:-.025em;line-height:1.1;color:var(--ink-900)}
+.page-hdr .subtitle{font-size:14px;color:var(--ink-600);margin-top:4px}
+.page-hdr-actions{display:flex;gap:8px;flex-shrink:0}
+
+.btn{padding:9px 16px;border-radius:8px;font-weight:500;font-size:13px;transition:all .15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-primary{background:var(--ink-900);color:#fff}
+.btn-primary:hover{background:var(--ink-800);transform:translateY(-1px)}
+.btn-coral-sm{background:linear-gradient(180deg,#F09070,#E8734A);color:#fff;box-shadow:0 2px 8px rgba(232,115,74,.20)}
+.btn-coral-sm:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,115,74,.30)}
+.btn-secondary{background:var(--surface);border:var(--border);color:var(--ink-700)}
+.btn-secondary:hover{border-color:var(--ink-300);color:var(--ink-900)}
+.btn-ghost{color:var(--ink-600)}
+.btn-ghost:hover{background:var(--ink-100);color:var(--ink-900)}
+
+.card{background:var(--surface);border:var(--border);border-radius:12px;padding:20px;transition:all .15s}
+.card.hover:hover{box-shadow:var(--shadow-md);border-color:var(--ink-300)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-header h3{font-size:13px;font-weight:600;color:var(--ink-700);letter-spacing:-.005em}
+.card-header .meta{font-size:11px;color:var(--ink-500)}
+.card-header .link{font-size:12px;color:var(--coral);font-weight:500;cursor:pointer}
+.card-header .link:hover{text-decoration:underline}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--surface);border:var(--border);border-radius:12px;padding:18px}
+.kpi-label{font-size:11px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.kpi-label .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.kpi-value{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--ink-900);letter-spacing:-.02em;line-height:1.1}
+.kpi-meta{font-size:11px;color:var(--ink-500);margin-top:6px;display:flex;align-items:center;gap:6px}
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.kpi-delta.up{background:var(--green-50);color:var(--green)}
+.kpi-delta.down{background:var(--red-50);color:var(--red)}
+.kpi-delta.flat{background:var(--ink-100);color:var(--ink-600)}
+.kpi.feature{background:linear-gradient(135deg,#0F4646,#0A2828);color:#fff;border-color:transparent}
+.kpi.feature .kpi-label{color:rgba(255,255,255,.55)}
+.kpi.feature .kpi-value{color:#fff}
+.kpi.feature .kpi-meta{color:rgba(255,255,255,.5)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-main{display:grid;grid-template-columns:1fr 340px;gap:18px}
+.grid-main-wide{display:grid;grid-template-columns:1fr 380px;gap:18px}
+
+.tbl{width:100%;border-collapse:separate;border-spacing:0}
+.tbl th{text-align:left;padding:10px 12px;font-size:10px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;border-bottom:var(--border)}
+.tbl td{padding:13px 12px;font-size:13px;color:var(--ink-700);border-bottom:1px solid var(--ink-100)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.row-link{cursor:pointer;transition:background .1s}
+.tbl tr.row-link:hover td{background:var(--ink-50)}
+.amt-pos{color:var(--green);font-weight:600}
+.amt-amt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px}
+.pill.green{background:var(--green-50);color:var(--green)}
+.pill.amber{background:var(--amber-50);color:var(--amber)}
+.pill.red{background:var(--red-50);color:var(--red)}
+.pill.blue{background:var(--blue-50);color:var(--blue)}
+.pill.violet{background:var(--violet-50);color:var(--violet)}
+.pill.coral{background:var(--coral-50);color:var(--coral)}
+.pill.gray{background:var(--ink-100);color:var(--ink-600)}
+.pill.dark{background:var(--ink-900);color:#fff}
+
+.subnav{display:flex;align-items:center;gap:2px;border-bottom:var(--border);margin-bottom:24px;padding:0;overflow-x:auto}
+.subnav-tab{padding:10px 14px;font-size:13px;font-weight:500;color:var(--ink-600);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.subnav-tab:hover{color:var(--ink-900)}
+.subnav-tab.active{color:var(--ink-900);border-bottom-color:var(--ink-900);font-weight:600}
+.subnav-tab .count{background:var(--ink-100);color:var(--ink-600);font-size:10px;padding:1px 7px;border-radius:9px;font-weight:600}
+.subnav-tab.active .count{background:var(--ink-900);color:#fff}
+.subnav-content{display:none}
+.subnav-content.active{display:block;animation:fadeUp .25s ease}
+
+.filter-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-pill{padding:6px 12px;border-radius:14px;background:var(--surface);border:var(--border);font-size:12px;color:var(--ink-700);cursor:pointer;transition:all .15s}
+.filter-pill:hover{border-color:var(--ink-300)}
+.filter-pill.active{background:var(--ink-900);color:#fff;border-color:var(--ink-900)}
+
+/* ============ BRAND LOGOS ============ */
+.brand-logo{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;letter-spacing:-.02em;flex-shrink:0;font-family:'DM Sans',sans-serif}
+.brand-logo.sm{width:28px;height:28px;border-radius:6px;font-size:11px}
+.brand-logo.lg{width:54px;height:54px;border-radius:12px;font-size:17px}
+.brand-logo.xl{width:64px;height:64px;border-radius:14px;font-size:20px}
+.bl-quickbooks{background:#2CA01C;font-family:'Fraunces',serif;font-style:italic;letter-spacing:0}
+.bl-gusto{background:#F45D48}
+.bl-adp{background:#D20000;letter-spacing:.05em}
+.bl-homebase{background:#1A237E}
+.bl-paychex{background:#0046A0}
+.bl-plaid{background:#111;font-family:'JetBrains Mono',monospace}
+.bl-mercury{background:#000}
+.bl-chase{background:#117ACA}
+.bl-bofa{background:linear-gradient(135deg,#E31837 50%,#012169 50%);font-size:11px}
+.bl-wellsfargo{background:#D71E28;font-size:10px;letter-spacing:.04em}
+.bl-capitalone{background:#004977}
+.bl-citi{background:#003B70}
+.bl-ramp{background:#FFD200;color:#000}
+.bl-brex{background:#F5F0E5;color:#000;border:1.5px solid #000;font-weight:800}
+.bl-toast{background:#FF4500}
+.bl-square{background:#fff;color:#000;border:2px solid #000}
+.bl-clover{background:#13A538}
+.bl-lightspeed{background:#F44336}
+.bl-revel{background:#15D2A6}
+.bl-stripe{background:#635BFF;font-family:'Fraunces',serif;font-style:italic;font-size:12px;letter-spacing:0}
+.bl-mailchimp{background:#FFE01B;color:#000}
+.bl-canva{background:linear-gradient(135deg,#00C4CC,#7D2AE7)}
+.bl-notion{background:#fff;color:#000;border:1.5px solid #000;font-family:'Fraunces',serif}
+.bl-slack{background:#4A154B}
+.bl-zoom{background:#2D8CFF;font-size:10px;letter-spacing:.05em}
+.bl-googleworkspace{background:#fff;color:#4285F4;border:1.5px solid #E0E0E0}
+.bl-microsoft{background:#fff;color:#737373;border:1.5px solid #E0E0E0;font-size:10px}
+.bl-openphone{background:#1F2937}
+.bl-ringcentral{background:#066FAC}
+.bl-next{background:#FF6B00}
+.bl-hiscox{background:#003E7E}
+.bl-thimble{background:#3C58E2}
+.bl-statefarm{background:#E31837}
+.bl-coverpanda{background:linear-gradient(135deg,#0F4646,#0A2828);color:#F09070;font-family:'Fraunces',serif}
+.bl-livedoak{background:#0E5749}
+.bl-rocketlawyer{background:#F58025}
+.bl-legalzoom{background:#0086FF}
+.bl-quickbooks-time{background:#2CA01C}
+.bl-doordash{background:#FF3008;font-size:11px}
+.bl-uber{background:#000;font-size:11px}
+.bl-grubhub{background:#F73C00}
+.bl-meta{background:#0866FF}
+.bl-google-ads{background:#fff;color:#4285F4;border:1.5px solid #E0E0E0}
+.bl-instagram{background:linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
+.bl-tiktok{background:#000}
+.bl-yelp{background:#D32323}
+
+/* ============ ONBOARDING MILESTONES ============ */
+.milestones-card{background:linear-gradient(135deg,#FFF5F0 0%,#FFEDE3 50%,#FBC8A8 100%);border:1px solid rgba(232,115,74,.25);border-radius:16px;padding:24px;margin-bottom:24px;position:relative;overflow:hidden}
+.milestones-card::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(232,115,74,.15) 0%,transparent 70%);pointer-events:none}
+.ms-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative}
+.ms-hdr h2{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink-900);letter-spacing:-.02em}
+.ms-hdr p{font-size:13px;color:var(--ink-700);margin-top:2px;max-width:480px}
+.ms-progress-text{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--coral);font-weight:600}
+.ms-bar{height:6px;background:rgba(255,255,255,.5);border-radius:3px;overflow:hidden;margin-bottom:18px;position:relative}
+.ms-bar-fill{height:100%;background:linear-gradient(90deg,#F09070,#E8734A);border-radius:3px;transition:width .5s ease}
+.ms-list{display:flex;flex-direction:column;gap:8px;position:relative}
+.ms-step{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.8);border-radius:10px;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
+.ms-step:hover{background:#fff;transform:translateX(2px);border-color:var(--ink-300);box-shadow:var(--shadow-sm)}
+.ms-step.done{background:rgba(255,255,255,.4);opacity:.65}
+.ms-step.done:hover{transform:none}
+.ms-step .ms-check{width:26px;height:26px;border-radius:50%;border:2px solid var(--ink-300);background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;transition:all .2s}
+.ms-step.done .ms-check{background:var(--green);border-color:var(--green);color:#fff}
+.ms-step.active .ms-check{border-color:var(--coral);background:#fff;color:var(--coral)}
+.ms-step .ms-icon{width:36px;height:36px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;border:1px solid var(--ink-200)}
+.ms-step.done .ms-icon{background:var(--green-50);border-color:var(--green-50)}
+.ms-step .ms-info{flex:1;min-width:0}
+.ms-step .ms-info h5{font-size:14px;font-weight:600;color:var(--ink-900);margin-bottom:2px}
+.ms-step.done .ms-info h5{text-decoration:line-through;color:var(--ink-500)}
+.ms-step .ms-info p{font-size:12px;color:var(--ink-600)}
+.ms-step .ms-cta{font-size:12px;font-weight:600;color:var(--coral);padding:6px 12px;border:1.5px solid var(--coral);border-radius:6px;background:transparent;transition:all .15s}
+.ms-step .ms-cta:hover{background:var(--coral);color:#fff}
+.ms-step.done .ms-cta{display:none}
+.ms-step.done .ms-status{font-size:11px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:4px}
+.ms-step .ms-status{display:none}
+.ms-actions{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+.ms-dismiss{font-size:12px;color:var(--ink-500);cursor:pointer}
+.ms-dismiss:hover{color:var(--ink-700)}
+
+/* ============ MODALS ============ */
+.modal-bg{position:fixed;inset:0;background:rgba(11,15,23,.6);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:48px 20px;overflow-y:auto;animation:fadeIn .2s}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:520px;padding:32px;position:relative;box-shadow:var(--shadow-xl);animation:scaleIn .25s cubic-bezier(.2,.8,.2,1)}
+.modal.wide{max-width:680px}
+.modal .m-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ink-100);font-size:14px;color:var(--ink-700);display:flex;align-items:center;justify-content:center}
+.modal .m-close:hover{background:var(--ink-200)}
+.modal h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.02em;color:var(--ink-900);margin-bottom:6px}
+.modal .m-sub{font-size:13px;color:var(--ink-600);margin-bottom:22px;line-height:1.5}
+.modal .m-progress{display:flex;gap:6px;margin-bottom:22px}
+.modal .m-progress div{flex:1;height:3px;background:var(--ink-200);border-radius:2px;transition:all .3s}
+.modal .m-progress div.done{background:var(--green)}
+.modal .m-progress div.active{background:var(--coral)}
+.modal-step{display:none}.modal-step.active{display:block;animation:fadeUp .25s ease}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink-700);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--ink-200);border-radius:8px;font-size:13px;outline:none;transition:all .15s;background:#fff}
+.field input:focus,.field select:focus{border-color:var(--ink-900)}
+.field-row-mod{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.summary-box{background:var(--ink-50);border:var(--border);border-radius:8px;padding:14px;margin-bottom:16px}
+.summary-box .sb-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-700);padding:3px 0}
+.summary-box .sb-row.total{padding-top:8px;margin-top:6px;border-top:var(--border);font-weight:600;color:var(--ink-900)}
+
+.payment-method{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--ink-900);background:var(--ink-50);border-radius:8px;margin-bottom:14px}
+.payment-method .pm-icon{width:38px;height:38px;border-radius:8px;background:var(--ink-900);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.payment-method .pm-info{flex:1}
+.payment-method .pm-info h5{font-size:13px;font-weight:600;color:var(--ink-900)}
+.payment-method .pm-info p{font-size:11px;color:var(--ink-500)}
+
+.connection-progress{display:flex;flex-direction:column;gap:6px;margin:18px 0}
+.cp-step{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--ink-50);border-radius:8px;font-size:13px;color:var(--ink-600);transition:all .3s}
+.cp-step.active{background:var(--coral-50);color:var(--ink-900);font-weight:500}
+.cp-step.done{background:var(--green-50);color:var(--green)}
+.cp-step .cp-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:var(--ink-200);color:var(--ink-600);flex-shrink:0}
+.cp-step.active .cp-icon{display:none}
+.cp-step.done .cp-icon{background:var(--green);color:#fff}
+.cp-step .cp-spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink-200);border-top-color:var(--coral);animation:spin .7s linear infinite;display:none;flex-shrink:0}
+.cp-step.active .cp-spinner{display:block}
+
+.success-box{text-align:center;padding:14px 0 8px}
+.success-box .sb-circle{width:64px;height:64px;border-radius:50%;background:var(--green-50);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--green);margin:0 auto 14px}
+.success-box h3{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink-900);margin-bottom:6px}
+.success-box p{font-size:13px;color:var(--ink-600);line-height:1.5}
+
+.btn-modal{width:100%;padding:12px;background:var(--ink-900);color:#fff;font-size:14px;font-weight:500;border-radius:8px;transition:all .15s;margin-top:8px}
+.btn-modal:hover{background:var(--ink-800)}
+.btn-modal.coral{background:linear-gradient(180deg,#F09070,#E8734A)}
+.btn-modal-2{width:100%;padding:11px;border:var(--border);background:#fff;color:var(--ink-700);font-size:13px;font-weight:500;border-radius:8px;margin-top:8px}
+
+.partner-strip{display:flex;align-items:center;gap:14px;padding:14px;background:var(--ink-50);border-radius:8px;margin-bottom:16px}
+.partner-strip h4{font-size:14px;font-weight:600;color:var(--ink-900)}
+.partner-strip p{font-size:12px;color:var(--ink-600)}
+
+.scope-list{background:var(--ink-50);border-radius:8px;padding:14px;margin-bottom:14px}
+.scope-list h5{font-size:11px;font-weight:600;color:var(--ink-600);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.scope-list .scope-item{font-size:12px;color:var(--ink-700);padding:3px 0;display:flex;gap:8px;align-items:center}
+.scope-list .scope-item::before{content:'✓';color:var(--green);font-weight:700}
+
+.brand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.brand-pick{padding:12px 8px;border:var(--border);border-radius:8px;text-align:center;cursor:pointer;transition:all .15s;background:#fff;display:flex;flex-direction:column;align-items:center;gap:6px}
+.brand-pick:hover{border-color:var(--ink-900);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.brand-pick h5{font-size:11px;font-weight:600;color:var(--ink-800)}
+
+.acc-pick{padding:12px 14px;border:1.5px solid var(--ink-200);border-radius:8px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s}
+.acc-pick:hover{border-color:var(--ink-400)}
+.acc-pick.selected{border-color:var(--ink-900);background:var(--ink-50)}
+.acc-pick .ap-info{flex:1}
+.acc-pick h5{font-size:13px;font-weight:600;color:var(--ink-900)}
+.acc-pick p{font-size:11px;color:var(--ink-500)}
+.acc-pick .ap-bal{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+
+.oauth-frame{background:var(--ink-50);border-radius:8px;padding:18px;margin-bottom:14px;text-align:center}
+.oauth-frame .of-logo-wrap{display:flex;justify-content:center;margin-bottom:8px}
+.oauth-frame h4{font-size:14px;font-weight:600;color:var(--ink-900);margin-bottom:4px}
+.oauth-frame p{font-size:12px;color:var(--ink-500);font-family:'JetBrains Mono',monospace}
+
+/* Plaid header */
+.plaid-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:#fff;border-bottom:var(--border);margin:-32px -32px 22px;border-radius:20px 20px 0 0}
+.plaid-header h4{font-size:14px;font-weight:600}
+.plaid-header .ph-tag{margin-left:auto;font-size:10px;color:var(--ink-500)}
+
+/* Drawer */
+.drawer-bg{position:fixed;inset:0;background:rgba(11,15,23,.4);backdrop-filter:blur(2px);z-index:150;display:none;animation:fadeIn .15s}
+.drawer-bg.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:380px;background:#fff;z-index:151;transform:translateX(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-xl)}
+.drawer.open{transform:translateX(0)}
+.drawer-hdr{padding:18px 20px;border-bottom:var(--border);display:flex;justify-content:space-between;align-items:center}
+.drawer-hdr h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+.drawer-body{flex:1;overflow-y:auto;padding:8px 0}
+.notif{padding:14px 20px;border-bottom:1px solid var(--ink-100);display:flex;gap:12px;cursor:pointer;transition:background .12s;position:relative}
+.notif:hover{background:var(--ink-50)}
+.notif .n-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.notif .n-info{flex:1;min-width:0}
+.notif .n-info h5{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:2px}
+.notif .n-info p{font-size:12px;color:var(--ink-600);line-height:1.45}
+.notif .n-time{font-size:10px;color:var(--ink-400);margin-top:4px;font-family:'JetBrains Mono',monospace}
+
+/* Cmd palette */
+.cmd-palette-bg{position:fixed;inset:0;background:rgba(11,15,23,.5);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-start;justify-content:center;padding-top:120px;animation:fadeIn .15s}
+.cmd-palette-bg.open{display:flex}
+.cmd-palette{width:100%;max-width:540px;background:#fff;border-radius:16px;box-shadow:var(--shadow-xl);overflow:hidden;animation:scaleIn .15s ease}
+.cmd-palette-input{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:var(--border)}
+.cmd-palette-input input{flex:1;border:none;outline:none;font-size:15px;color:var(--ink-900)}
+.cmd-palette-input input::placeholder{color:var(--ink-400)}
+.cmd-palette-results{max-height:400px;overflow-y:auto;padding:8px 0}
+.cmd-section{padding:6px 20px;font-size:10px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em}
+.cmd-result{padding:10px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px}
+.cmd-result:hover{background:var(--ink-50)}
+.cmd-result .cr-icon{width:28px;height:28px;border-radius:6px;background:var(--ink-100);display:flex;align-items:center;justify-content:center;font-size:14px}
+.cmd-result .cr-info{flex:1}
+.cmd-result .cr-info h5{font-size:13px;font-weight:500;color:var(--ink-900)}
+.cmd-result .cr-info p{font-size:11px;color:var(--ink-500)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink-900);color:#fff;padding:12px 22px;border-radius:8px;font-size:13px;font-weight:500;z-index:1000;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);animation:fadeUp .25s ease}
+.toast.success{background:var(--green)}
+
+/* Connection chip / row */
+.conn-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border:var(--border);border-radius:8px;background:var(--surface);transition:all .15s;cursor:pointer;margin-bottom:6px}
+.conn-chip:hover{border-color:var(--ink-300)}
+.conn-chip .cc-info{flex:1;min-width:0}
+.conn-chip .cc-info h5{font-size:12px;font-weight:600;color:var(--ink-900)}
+.conn-chip .cc-info p{font-size:10px;color:var(--ink-500)}
+
+.action-banner{display:flex;align-items:center;gap:14px;padding:18px 22px;border-radius:12px;margin-bottom:20px;background:linear-gradient(135deg,#FFF5F0 0%,#FFEDE3 100%);border:1px solid rgba(232,115,74,.2)}
+.action-banner.success{background:linear-gradient(135deg,#E6F5EC 0%,#D5EFDD 100%);border-color:rgba(31,157,92,.2)}
+.action-banner .ab-tag{padding:5px 11px;background:var(--coral);color:#fff;font-size:11px;font-weight:600;border-radius:14px;flex-shrink:0}
+.action-banner.success .ab-tag{background:var(--green)}
+.action-banner .ab-text{flex:1;font-size:13px;color:var(--ink-800)}
+.action-banner .ab-text strong{color:var(--ink-900);font-weight:600}
+.action-banner .ab-btn{padding:8px 16px;background:var(--ink-900);color:#fff;border-radius:8px;font-size:12px;font-weight:500}
+
+.action-stack{display:flex;flex-direction:column;gap:14px}
+.action-card{background:var(--surface);border:var(--border);border-radius:12px;padding:18px}
+.action-card.warning{background:linear-gradient(135deg,#FFF5F0 0%,#FFEDE3 100%);border-color:rgba(232,115,74,.25)}
+.action-card.info{background:linear-gradient(135deg,#EBF1FD 0%,#DCE7FB 100%);border-color:rgba(59,106,232,.2)}
+.action-card.success{background:linear-gradient(135deg,#E6F5EC 0%,#D5EFDD 100%);border-color:rgba(31,157,92,.2)}
+.action-card .ac-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
+.action-card h4{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:4px}
+.action-card p{font-size:12px;color:var(--ink-700);line-height:1.5;margin-bottom:12px}
+.action-card .ac-btn{padding:8px 14px;background:var(--ink-900);color:#fff;border-radius:8px;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.action-card .ac-btn:hover{background:var(--ink-800)}
+
+.folder-card{background:var(--surface);border:var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.folder-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-sm);transform:translateX(2px)}
+.folder-card .fc-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.folder-card .fc-info{flex:1;min-width:0}
+.folder-card .fc-info h4{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:2px}
+.folder-card .fc-info p{font-size:11px;color:var(--ink-500)}
+.folder-card .fc-arrow{color:var(--ink-400);font-size:16px}
+
+/* Marketplace cards */
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mkt-card{background:var(--surface);border:var(--border);border-radius:12px;padding:20px;transition:all .15s;position:relative;display:flex;flex-direction:column}
+.mkt-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.mkt-card .mk-tag{position:absolute;top:14px;right:14px;font-size:9px;font-weight:700;color:var(--coral);background:var(--coral-50);padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
+.mkt-card .mk-logo{margin-bottom:12px}
+.mkt-card h3{font-size:14px;font-weight:600;color:var(--ink-900);margin-bottom:6px}
+.mkt-card p{font-size:12px;color:var(--ink-600);line-height:1.5;margin-bottom:14px;flex:1}
+.mkt-card .mk-price{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--ink-900);margin-bottom:14px}
+.mkt-card .mk-price small{font-size:11px;font-weight:400;color:var(--ink-500);font-family:'DM Sans',sans-serif}
+.mkt-card .mk-cta{padding:9px;background:var(--ink-900);color:#fff;font-size:12px;font-weight:500;border-radius:8px;transition:all .15s;width:100%}
+.mkt-card .mk-cta:hover{background:var(--ink-800);transform:translateY(-1px)}
+
+/* Insurance paths */
+.ins-paths{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.ins-path{background:var(--surface);border:var(--border);border-radius:14px;padding:24px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column}
+.ins-path:hover{border-color:var(--ink-300);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.ins-path.featured{background:linear-gradient(135deg,#0F4646,#0A2828);color:#fff;border:none}
+.ins-path .ip-icon{font-size:28px;margin-bottom:12px}
+.ins-path h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:6px;color:var(--ink-900)}
+.ins-path.featured h3{color:#fff}
+.ins-path p{font-size:13px;color:var(--ink-600);margin-bottom:18px;flex:1;line-height:1.5}
+.ins-path.featured p{color:rgba(255,255,255,.7)}
+.ins-path .ip-cta{padding:10px 16px;background:var(--ink-900);color:#fff;border-radius:8px;font-size:12px;font-weight:500;text-align:center}
+.ins-path.featured .ip-cta{background:var(--coral);color:#fff}
+
+/* Sales pipeline */
+.pipeline-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pipe-col{background:var(--ink-50);border:var(--border);border-radius:10px;padding:14px;min-height:300px}
+.pipe-col h4{font-size:11px;font-weight:600;color:var(--ink-600);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;justify-content:space-between}
+.pipe-col h4 span{font-family:'JetBrains Mono',monospace;color:var(--ink-900)}
+.pipe-card{background:#fff;border:var(--border);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.pipe-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.pipe-card h5{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:4px}
+.pipe-card p{font-size:11px;color:var(--ink-500);margin-bottom:8px}
+.pipe-card .pc-foot{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.pipe-card .pc-foot .amt{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--ink-900)}
+
+/* Doola-style community */
+.community-layout{display:grid;grid-template-columns:240px 1fr;gap:24px}
+.com-side{position:sticky;top:80px;align-self:flex-start;background:var(--surface);border:var(--border);border-radius:12px;padding:14px}
+.com-side-section{margin-bottom:18px}
+.com-side-section:last-child{margin-bottom:0}
+.com-side-title{font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;padding:0 10px;margin-bottom:6px}
+.com-side-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;font-size:13px;color:var(--ink-700);cursor:pointer;transition:all .12s}
+.com-side-item:hover{background:var(--ink-50)}
+.com-side-item.active{background:var(--ink-900);color:#fff}
+.com-feed{display:flex;flex-direction:column;gap:14px}
+.com-post{background:var(--surface);border:var(--border);border-radius:12px;padding:22px}
+.com-post .cp-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.com-post .cp-av{width:36px;height:36px;border-radius:50%;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.com-post .cp-meta h5{font-size:13px;font-weight:600;color:var(--ink-900);display:flex;align-items:center;gap:6px}
+.com-post .cp-meta .role-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase}
+.com-post .cp-meta p{font-size:11px;color:var(--ink-500)}
+.com-post .cp-body{font-size:13px;color:var(--ink-700);line-height:1.6}
+.com-post .cp-body strong{color:var(--ink-900);font-weight:600}
+.com-post .cp-actions{display:flex;gap:14px;margin-top:14px;padding-top:14px;border-top:var(--border);font-size:12px;color:var(--ink-500)}
+.com-post .cp-actions span{cursor:pointer}
+.com-post .cp-actions span:hover{color:var(--ink-900)}
+
+/* Doula-inspired form fields */
+.field-block{background:var(--surface);border:var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.field-block-hdr{padding:18px 20px;border-bottom:var(--border)}
+.field-block-hdr h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink-900)}
+.field-block-hdr p{font-size:12px;color:var(--ink-500);margin-top:2px}
+.field-block-body{padding:8px 0}
+.field-row-d{display:grid;grid-template-columns:160px 1fr;align-items:center;padding:10px 20px;gap:14px;border-bottom:1px solid var(--ink-100)}
+.field-row-d:last-child{border-bottom:none}
+.field-row-d label{font-size:13px;color:var(--ink-700);font-weight:500}
+.field-row-d input,.field-row-d select{width:100%;padding:9px 12px;border:1px solid transparent;border-radius:6px;background:var(--ink-50);font-size:13px;outline:none;transition:all .15s}
+.field-row-d input:hover,.field-row-d select:hover{background:var(--ink-100)}
+.field-row-d input:focus,.field-row-d select:focus{background:#fff;border-color:var(--ink-300)}
+</style>
+</head>
+<body>
+
+<!-- ============================================== -->
+<!-- ============ SIGN UP (default) =============== -->
+<!-- ============================================== -->
+<div class="screen signup active" id="s-signup">
+  <div class="signup-top">
+    <div class="brand"><div class="dot">P</div><span>CoverPanda</span></div>
+    <div class="help">Already with us? <a onclick="enterApp()">Sign in →</a></div>
+  </div>
+
+  <div class="signup-body">
+    <div class="signup-card">
+      <div class="progress">
+        <div class="active"></div><div></div><div></div>
+      </div>
+
+      <div class="su-step active" id="su-1">
+        <h1>Welcome to CoverPanda</h1>
+        <p class="sub">Banking, books, payroll, taxes, and a community of franchise operators — in one workspace.</p>
+        <div class="dark-paths">
+          <button class="dark-path selected" data-p="new" onclick="signPath(this)"><div class="icon">🏛️</div><h4>New entity</h4><p>Form an LLC, S-Corp, or C-Corp from scratch.</p></button>
+          <button class="dark-path" data-p="migrate" onclick="signPath(this)"><div class="icon">📦</div><h4>Migrate existing</h4><p>I have a business — bring it under management.</p></button>
+        </div>
+        <button class="btn-coral" onclick="signNext(2)">Continue →</button>
+      </div>
+
+      <div class="su-step" id="su-2">
+        <h1>Tell us about you</h1>
+        <p class="sub">This becomes your CoverPanda login.</p>
+        <div class="row-2">
+          <div class="dark-field"><label>First name</label><input id="s-first" placeholder="Jordan"></div>
+          <div class="dark-field"><label>Last name</label><input id="s-last" placeholder="Smith"></div>
+        </div>
+        <div class="dark-field"><label>Work email</label><input id="s-email" placeholder="jordan@donutnv.com"></div>
+        <div class="row-2">
+          <div class="dark-field"><label>Brand</label><select id="s-brand"><option>DonutNV</option><option>Crumbl</option><option>Crispy Cones</option><option>Stella's Ice Cream</option><option>Jimmy John's</option><option>Other</option></select></div>
+          <div class="dark-field"><label>State</label><select id="s-state"><option>Nevada</option><option>Florida</option><option>Texas</option><option>Delaware</option><option>Wyoming</option></select></div>
+        </div>
+        <button class="btn-coral" onclick="signNext(3)">Continue →</button>
+        <button class="btn-back" onclick="signNext(1)">← Back</button>
+      </div>
+
+      <div class="su-step" id="su-3">
+        <h1>Confirm and pay</h1>
+        <p class="sub">Growth plan — full workspace, all integrations, members-only marketplace pricing.</p>
+        <div class="summary-card">
+          <div class="row"><span>LLC formation</span><span>$297</span></div>
+          <div class="row"><span>NV state filing</span><span>$425</span></div>
+          <div class="row"><span>Registered Agent (1st year)</span><span>Included</span></div>
+          <div class="row"><span>Growth plan (monthly)</span><span>$149/mo</span></div>
+          <div class="row total"><span>Due today</span><span>$871.00</span></div>
+        </div>
+        <div class="row-2">
+          <div class="dark-field"><label>Card</label><input placeholder="4242 4242 4242 4242"></div>
+          <div class="dark-field"><label>MM/YY</label><input placeholder="12/28"></div>
+        </div>
+        <div class="row-2">
+          <div class="dark-field"><label>CVC</label><input placeholder="123"></div>
+          <div class="dark-field"><label>ZIP</label><input placeholder="89015"></div>
+        </div>
+        <button class="btn-coral" onclick="finishSignup()">Create Account & Pay →</button>
+        <button class="btn-back" onclick="signNext(2)">← Back</button>
+      </div>
+    </div>
+  </div>
+  <div class="signup-foot">Secured by Stripe · Encrypted in transit & at rest · CoverPanda © 2026</div>
+</div>
+
+<!-- ============================================== -->
+<!-- ============== MAIN APP ===================== -->
+<!-- ============================================== -->
+<div class="screen app" id="s-app">
+
+  <aside class="sidebar">
+    <div class="sb-brand"><div class="logo">P</div><div class="name">CoverPanda</div></div>
+
+    <div class="location-switcher" onclick="toggleLocations(event)">
+      <div class="ls-mark" id="ls-mark">SP</div>
+      <div class="ls-info">
+        <h5 id="ls-name">DonutNV — Springfield</h5>
+        <p id="ls-sub">Smith QSR Holdings</p>
+      </div>
+      <div class="ls-chev">▾</div>
+
+      <div class="location-menu" id="loc-menu">
+        <div class="lm-item active" data-id="SP" onclick="pickLocation(event,'SP','DonutNV — Springfield','Active · Main')">
+          <div class="lm-mark" style="background:linear-gradient(135deg,#F09070,#E8734A)">SP</div>
+          <div class="lm-info"><h5>DonutNV — Springfield</h5><p>Active · Main</p></div>
+          <div class="lm-check">✓</div>
+        </div>
+        <div class="lm-item" data-id="HD" onclick="pickLocation(event,'HD','DonutNV — Henderson','Opening Aug 1')">
+          <div class="lm-mark" style="background:linear-gradient(135deg,#3B6AE8,#1E4FB8)">HD</div>
+          <div class="lm-info"><h5>DonutNV — Henderson</h5><p>Opening Aug 1</p></div>
+          <div class="lm-check">✓</div>
+        </div>
+        <div class="lm-add" onclick="event.stopPropagation();toast('Add location flow','success')">+ Add new location</div>
+      </div>
+    </div>
+
+    <nav class="sb-nav" id="sb-nav">
+      <!-- Nav items injected via JS to keep order canonical -->
+    </nav>
+
+    <div class="sb-foot" onclick="if(confirm('Sign out and reset prototype state?'))resetAccount()" title="Sign out / reset">
+      <div class="av" id="av">JS</div>
+      <div class="info">
+        <h5 id="user-name">Jordan Smith</h5>
+        <p id="user-role">Owner · DonutNV</p>
+      </div>
+      <span style="font-size:11px;color:var(--ink-400);margin-left:6px">⏻</span>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="cmd-bar" onclick="openCmd()">
+        <span>⌕</span>
+        <span class="cmd-text">Search or ask anything…</span>
+        <span class="cmd-kbd">⌘K</span>
+      </button>
+      <button class="setup-pill" id="setup-pill" onclick="goToMilestones()" title="Resume setup">
+        <span class="sp-dot"></span>
+        <span class="sp-text">Setup <strong id="sp-count">1/8</strong></span>
+        <div class="sp-mini-bar"><div class="sp-mini-fill" id="sp-mini-fill" style="width:12.5%"></div></div>
+        <span class="sp-go">Resume →</span>
+      </button>
+      <div class="tb-spacer"></div>
+      <button class="tb-icon-btn" title="Help">?</button>
+      <button class="tb-icon-btn" onclick="openDrawer()" title="Notifications" id="notif-btn">
+        ⚐
+        <span class="dot-notif" id="notif-dot"></span>
+      </button>
+    </div>
+
+    <div class="content" id="content-root">
+      <!-- TAB SECTIONS START HERE -->
+      <!-- (Each section will be added by Edit calls) -->
+
+      <!-- ============ TODAY ============ -->
+      <section class="tab-content active" id="t-today">
+        <div class="page-hdr">
+          <div>
+            <h1>Welcome back, Jordan</h1>
+            <div class="subtitle">Tuesday, May 5 · DonutNV — Springfield · Live now 2:47p MT</div>
+          </div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="navTo('finance')">Open finance</button>
+            <button class="btn btn-coral-sm" onclick="openConn('pos')">Connect POS for live sales</button>
+          </div>
+        </div>
+
+        <!-- ===== ONBOARDING MILESTONES ===== -->
+        <div class="milestones-card" id="milestones">
+          <div class="ms-hdr">
+            <div>
+              <h2>Get your franchise running</h2>
+              <p>8 milestones. Most operators finish setup in under 30 minutes.</p>
+            </div>
+            <div class="ms-progress-text"><span id="ms-done">1</span>/8 complete</div>
+          </div>
+          <div class="ms-bar"><div class="ms-bar-fill" id="ms-bar-fill" style="width:12.5%"></div></div>
+          <div class="ms-list" id="ms-list">
+            <div class="ms-step done" data-key="business">
+              <div class="ms-check">✓</div>
+              <div class="ms-icon">🏛️</div>
+              <div class="ms-info"><h5>Set up your business</h5><p>LLC formed · EIN issued · OA signed</p></div>
+              <div class="ms-status">✓ Done at signup</div>
+              <button class="ms-cta" onclick="navTo('setup')">Open</button>
+            </div>
+            <div class="ms-step active" data-key="bank" onclick="openConn('plaid')">
+              <div class="ms-check">2</div>
+              <div class="ms-icon">🏦</div>
+              <div class="ms-info"><h5>Connect your bank</h5><p>Plaid links Mercury, Chase, BofA, Wells, Cap One — read-only.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();openConn('plaid')">Connect</button>
+            </div>
+            <div class="ms-step" data-key="cards" onclick="openConn('cards')">
+              <div class="ms-check">3</div>
+              <div class="ms-icon">💳</div>
+              <div class="ms-info"><h5>Connect your cards</h5><p>Ramp or Brex for corporate spend, auto-categorized to your books.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();openConn('cards')">Connect</button>
+            </div>
+            <div class="ms-step" data-key="finance" onclick="navTo('finance')">
+              <div class="ms-check">4</div>
+              <div class="ms-icon">$</div>
+              <div class="ms-info"><h5>Build out your Finance tab</h5><p>Add accounts, set transaction rules, define your COA.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();navTo('finance')">Open Finance</button>
+            </div>
+            <div class="ms-step" data-key="accounting" onclick="navTo('accounting')">
+              <div class="ms-check">5</div>
+              <div class="ms-icon">📚</div>
+              <div class="ms-info"><h5>Build out your Accounting tab</h5><p>Run your first close, generate your starter P&amp;L and Balance Sheet.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();navTo('accounting')">Open Accounting</button>
+            </div>
+            <div class="ms-step" data-key="quickbooks" onclick="openConn('quickbooks')">
+              <div class="ms-check">6</div>
+              <div class="ms-icon">▤</div>
+              <div class="ms-info"><h5>Connect QuickBooks Online</h5><p>Sync wage entries, daily POS settlement, and reconciliation.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();openConn('quickbooks')">Connect</button>
+            </div>
+            <div class="ms-step" data-key="payroll" onclick="openConn('payroll-picker')">
+              <div class="ms-check">7</div>
+              <div class="ms-icon">◇</div>
+              <div class="ms-info"><h5>Connect a payroll provider</h5><p>Gusto (3 mo free), ADP, Homebase, Paychex, or QuickBooks Time.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();openConn('payroll-picker')">Choose</button>
+            </div>
+            <div class="ms-step" data-key="insurance" onclick="navTo('insurance')">
+              <div class="ms-check">8</div>
+              <div class="ms-icon">🛡️</div>
+              <div class="ms-info"><h5>Connect your insurance</h5><p>Invite your agent, shop quotes, or get CoverPanda Insurance.</p></div>
+              <div class="ms-status"></div>
+              <button class="ms-cta" onclick="event.stopPropagation();navTo('insurance')">Open Insurance</button>
+            </div>
+          </div>
+          <div class="ms-actions">
+            <span class="ms-dismiss" onclick="toast('Hide checklist anytime in Settings','success')">Hide checklist</span>
+            <span style="font-size:11px;color:var(--ink-500)">Auto-dismisses when complete</span>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label"><span class="pulse"></span>Sales today</div><div class="kpi-value">$1,842</div><div class="kpi-meta"><span class="kpi-delta up">↑ 18%</span> vs Tue last week</div></div>
+          <div class="kpi"><div class="kpi-label">Labor today</div><div class="kpi-value">$348</div><div class="kpi-meta"><span class="kpi-delta flat">18.9%</span> of sales</div></div>
+          <div class="kpi"><div class="kpi-label">Tickets</div><div class="kpi-value">87</div><div class="kpi-meta">Avg ticket $21.17</div></div>
+          <div class="kpi feature"><div class="kpi-label">Cash position</div><div class="kpi-value">$39,830</div><div class="kpi-meta">Mercury · runway 4.7 mo</div></div>
+        </div>
+
+        <div class="grid-main-wide">
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-header"><h3>Recent activity</h3><span class="link" onclick="navTo('finance')">All transactions →</span></div>
+              <table class="tbl">
+                <thead><tr><th>Time</th><th>Description</th><th>Source</th><th style="text-align:right">Amount</th><th>Category</th></tr></thead>
+                <tbody>
+                  <tr class="row-link"><td>2:47p</td><td>POS settlement</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$1,842.00</td><td><span class="pill green">Revenue</span></td></tr>
+                  <tr class="row-link"><td>10:42a</td><td>Sysco Foods</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt">−$1,245.00</td><td><span class="pill amber">COGS</span></td></tr>
+                  <tr class="row-link"><td>9:15a</td><td>Meta Ads</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt">−$84.00</td><td><span class="pill blue">Marketing</span></td></tr>
+                  <tr class="row-link"><td>Yesterday</td><td>Rent payment</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt">−$2,200.00</td><td><span class="pill blue">Rent</span></td></tr>
+                  <tr class="row-link"><td>Yesterday</td><td>Unknown wire · review</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt">−$420.00</td><td><span class="pill red">Uncategorized</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside>
+            <div class="action-stack">
+              <div class="action-card warning">
+                <div class="ac-icon">▲</div>
+                <h4>2 transactions need a category</h4>
+                <p>Categorize before month-end so April books close clean.</p>
+                <button class="ac-btn" onclick="navTo('finance')">Review →</button>
+              </div>
+              <div class="action-card info">
+                <div class="ac-icon">◇</div>
+                <h4>Office hours with Taylor</h4>
+                <p>Friday 4 PM MT · live Q&amp;A for franchise operators.</p>
+                <button class="ac-btn" onclick="navTo('community')">Reserve →</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============ FINANCE ============ -->
+      <section class="tab-content" id="t-finance">
+        <div class="page-hdr">
+          <div><h1>Finance</h1><div class="subtitle">Cash, accounts, transactions, and payments.</div></div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="openConn('plaid')">+ Add bank</button>
+            <button class="btn btn-secondary" onclick="openConn('cards')">+ Add card</button>
+            <button class="btn btn-primary">Export</button>
+          </div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'fin-overview')">Overview</button>
+          <button class="subnav-tab" onclick="switchSub(this,'fin-accounts')">Accounts</button>
+          <button class="subnav-tab" onclick="switchSub(this,'fin-txns')">Transactions <span class="count">2</span></button>
+          <button class="subnav-tab" onclick="switchSub(this,'fin-payments')">Payments</button>
+          <button class="subnav-tab" onclick="switchSub(this,'fin-rules')">Rules</button>
+        </div>
+
+        <div class="subnav-content active" id="fin-overview">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Total cash</div><div class="kpi-value">$39,830</div><div class="kpi-meta">Across 2 accounts</div></div>
+            <div class="kpi"><div class="kpi-label">Credit available</div><div class="kpi-value">$16,588</div><div class="kpi-meta">Ramp $20K limit</div></div>
+            <div class="kpi"><div class="kpi-label">Inflows MTD</div><div class="kpi-value">$18,460</div><div class="kpi-meta"><span class="kpi-delta up">↑ 11%</span></div></div>
+            <div class="kpi feature"><div class="kpi-label">Net change 30d</div><div class="kpi-value">+$6,120</div><div class="kpi-meta">Operating cash flow</div></div>
+          </div>
+
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><h3>Connected accounts</h3><span class="link" onclick="switchSub(document.querySelectorAll('#t-finance .subnav-tab')[1],'fin-accounts')">View all →</span></div>
+                <div class="conn-chip"><div class="brand-logo bl-mercury">M</div><div class="cc-info"><h5>Mercury Checking ••••4821</h5><p>Synced via Mercury API</p></div><span class="amt-amt" style="font-weight:700">$24,830</span></div>
+                <div class="conn-chip"><div class="brand-logo bl-mercury">M</div><div class="cc-info"><h5>Mercury Savings ••••4822</h5><p>Treasury · 4.00% APY</p></div><span class="amt-amt" style="font-weight:700">$15,000</span></div>
+                <div class="conn-chip"><div class="brand-logo bl-ramp">R</div><div class="cc-info"><h5>Ramp Corporate Card ••••7392</h5><p>$3,412 used of $20,000</p></div><span class="amt-amt" style="font-weight:700">$16,588</span></div>
+                <div class="conn-chip"><div class="brand-logo bl-stripe">s</div><div class="cc-info"><h5>Stripe Connect</h5><p>Payment processing · T+2 payout</p></div><span class="amt-amt" style="font-weight:700">$2,103</span></div>
+              </div>
+            </div>
+            <aside>
+              <div class="action-stack">
+                <div class="action-card warning">
+                  <div class="ac-icon">⌖</div>
+                  <h4>2 uncategorized transactions</h4>
+                  <p>$420 wire and $84 refund need categories.</p>
+                  <button class="ac-btn" onclick="switchSub(document.querySelectorAll('#t-finance .subnav-tab')[2],'fin-txns')">Review →</button>
+                </div>
+                <div class="action-card">
+                  <div class="ac-icon">+</div>
+                  <h4>Connect more accounts</h4>
+                  <p>Plaid links 12,000+ banks. Read-only, secure.</p>
+                  <button class="ac-btn" onclick="openConn('plaid')">Add bank →</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="fin-accounts">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Banking</h3><button class="btn btn-secondary" onclick="openConn('plaid')">+ Add bank</button></div>
+              <div class="conn-chip"><div class="brand-logo bl-mercury">M</div><div class="cc-info"><h5>Mercury Checking ••••4821</h5><p>Synced via Mercury API</p></div><span class="amt-amt">$24,830</span></div>
+              <div class="conn-chip"><div class="brand-logo bl-mercury">M</div><div class="cc-info"><h5>Mercury Savings ••••4822</h5><p>4.00% APY</p></div><span class="amt-amt">$15,000</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Credit &amp; spend</h3><button class="btn btn-secondary" onclick="openConn('cards')">+ Add card</button></div>
+              <div class="conn-chip"><div class="brand-logo bl-ramp">R</div><div class="cc-info"><h5>Ramp Corporate Card</h5><p>$3,412 used of $20,000</p></div><span class="amt-amt">$16,588</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Loans &amp; debt</h3></div>
+              <div class="conn-chip"><div class="brand-logo bl-livedoak">LO</div><div class="cc-info"><h5>SBA Loan · Live Oak</h5><p>$1,842/mo · 7.5% · 10yr</p></div><span class="amt-amt" style="color:var(--red)">−$142,000</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Payment processing</h3></div>
+              <div class="conn-chip"><div class="brand-logo bl-stripe">s</div><div class="cc-info"><h5>Stripe Connect</h5><p>T+2 payout to Mercury</p></div><span class="amt-amt">$2,103</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="fin-txns">
+          <div class="action-banner">
+            <span class="ab-tag">●  Review</span>
+            <div class="ab-text"><strong>2 transactions need a category.</strong> Save your bookkeeper time at month-end.</div>
+            <button class="ab-btn" onclick="toast('Auto-suggesting categories','success')">Auto-categorize</button>
+          </div>
+          <div class="card">
+            <div class="filter-row" style="margin-bottom:14px"><button class="filter-pill active">All</button><button class="filter-pill">Mercury</button><button class="filter-pill">Ramp</button><button class="filter-pill">Stripe</button><button class="filter-pill">Uncategorized</button></div>
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Description</th><th>Source</th><th style="text-align:right">Amount</th><th>Category</th></tr></thead>
+              <tbody>
+                <tr class="row-link"><td>Apr 8</td><td>POS settlement</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$1,842</td><td><span class="pill green">Revenue</span></td></tr>
+                <tr class="row-link"><td>Apr 8</td><td>Sysco Foods</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt">−$1,245</td><td><span class="pill amber">COGS</span></td></tr>
+                <tr class="row-link"><td>Apr 5</td><td>Rent payment</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt">−$2,200</td><td><span class="pill blue">Rent</span></td></tr>
+                <tr class="row-link"><td>Apr 4</td><td>Gusto Payroll</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt">−$3,000</td><td><span class="pill violet">Payroll</span></td></tr>
+                <tr class="row-link"><td>Apr 3</td><td>Meta Ads</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt">−$450</td><td><span class="pill blue">Marketing</span></td></tr>
+                <tr class="row-link"><td>Apr 2</td><td>Unknown wire</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt">−$420</td><td><span class="pill red">Uncategorized</span></td></tr>
+                <tr class="row-link"><td>Apr 1</td><td>State Farm</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt">−$890</td><td><span class="pill green">Insurance</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="fin-payments">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Payments received MTD</div><div class="kpi-value">$18,460</div><div class="kpi-meta"><span class="kpi-delta up">↑ 11%</span></div></div>
+            <div class="kpi"><div class="kpi-label">Pending payouts</div><div class="kpi-value">$2,103</div><div class="kpi-meta">Stripe · settles May 7</div></div>
+            <div class="kpi"><div class="kpi-label">Avg ticket</div><div class="kpi-value">$21.17</div><div class="kpi-meta"><span class="kpi-delta up">↑ $1.40</span></div></div>
+            <div class="kpi"><div class="kpi-label">Refunds MTD</div><div class="kpi-value">$84.50</div><div class="kpi-meta">3 tickets · 0.46%</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Recent payments</h3></div>
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Customer</th><th>Method</th><th style="text-align:right">Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>2:47p</td><td>Walk-in #1842</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$47.50</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>1:58p</td><td>DoorDash · #DD-7104</td><td><span class="pill amber">Marketplace</span></td><td style="text-align:right" class="amt-amt amt-pos">+$28.75</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>11:42a</td><td>Catering · Smith Corp</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$425.00</td><td><span class="pill green">Paid</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="fin-rules">
+          <div class="card">
+            <div class="card-header"><h3>Transaction rules</h3><button class="btn btn-secondary">+ Add rule</button></div>
+            <p style="font-size:13px;color:var(--ink-600);margin-bottom:14px">Auto-categorize matching transactions across all your accounts.</p>
+            <div class="conn-chip"><span style="font-size:18px">⚙</span><div class="cc-info"><h5>Sysco → COGS</h5><p>Matches "Sysco" in description · 4 txns last 30d</p></div><span class="pill green">Active</span></div>
+            <div class="conn-chip"><span style="font-size:18px">⚙</span><div class="cc-info"><h5>Gusto → Payroll</h5><p>Matches "Gusto" in description · 2 txns last 30d</p></div><span class="pill green">Active</span></div>
+            <div class="conn-chip"><span style="font-size:18px">⚙</span><div class="cc-info"><h5>Meta → Marketing</h5><p>Matches "Meta" in description · 8 txns last 30d</p></div><span class="pill green">Active</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SALES ============ -->
+      <section class="tab-content" id="t-sales">
+        <div class="page-hdr">
+          <div><h1>Sales</h1><div class="subtitle">POS revenue, top customers, catering pipeline, and channel mix.</div></div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="openConn('pos')">Connect POS</button>
+            <button class="btn btn-primary">+ New order</button>
+          </div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'sales-overview')">Overview</button>
+          <button class="subnav-tab" onclick="switchSub(this,'sales-pipeline')">Catering pipeline</button>
+          <button class="subnav-tab" onclick="switchSub(this,'sales-customers')">Customers</button>
+          <button class="subnav-tab" onclick="switchSub(this,'sales-channels')">Channels</button>
+        </div>
+
+        <div class="subnav-content active" id="sales-overview">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Sales MTD</div><div class="kpi-value">$18,460</div><div class="kpi-meta"><span class="kpi-delta up">↑ 11%</span> vs LM</div></div>
+            <div class="kpi"><div class="kpi-label">Avg ticket</div><div class="kpi-value">$21.17</div><div class="kpi-meta"><span class="kpi-delta up">↑ $1.40</span></div></div>
+            <div class="kpi"><div class="kpi-label">Tickets MTD</div><div class="kpi-value">872</div><div class="kpi-meta">~28/day</div></div>
+            <div class="kpi feature"><div class="kpi-label">Top channel</div><div class="kpi-value" style="font-size:18px;line-height:1.4">In-store</div><div class="kpi-meta">68% of revenue</div></div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Revenue by channel · MTD</h3></div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-700);margin-bottom:4px"><span style="display:flex;gap:6px;align-items:center"><div class="brand-logo sm bl-stripe">s</div>In-store (Stripe)</span><span class="amt-amt">$12,553 · 68%</span></div><div style="height:8px;background:var(--ink-100);border-radius:4px"><div style="height:100%;width:68%;background:#635BFF;border-radius:4px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-700);margin-bottom:4px"><span style="display:flex;gap:6px;align-items:center"><div class="brand-logo sm bl-doordash">D</div>DoorDash</span><span class="amt-amt">$3,143 · 17%</span></div><div style="height:8px;background:var(--ink-100);border-radius:4px"><div style="height:100%;width:17%;background:#FF3008;border-radius:4px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-700);margin-bottom:4px"><span style="display:flex;gap:6px;align-items:center"><div class="brand-logo sm bl-uber">U</div>Uber Eats</span><span class="amt-amt">$1,664 · 9%</span></div><div style="height:8px;background:var(--ink-100);border-radius:4px"><div style="height:100%;width:9%;background:#000;border-radius:4px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-700);margin-bottom:4px"><span style="display:flex;gap:6px;align-items:center"><div class="brand-logo sm bl-grubhub">G</div>Grubhub</span><span class="amt-amt">$555 · 3%</span></div><div style="height:8px;background:var(--ink-100);border-radius:4px"><div style="height:100%;width:3%;background:#F73C00;border-radius:4px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-700);margin-bottom:4px"><span style="display:flex;gap:6px;align-items:center"><div class="brand-logo sm" style="background:#1A6B6B">C</div>Catering (direct)</span><span class="amt-amt">$545 · 3%</span></div><div style="height:8px;background:var(--ink-100);border-radius:4px"><div style="height:100%;width:3%;background:#1A6B6B;border-radius:4px"></div></div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Top customers · 90 days</h3></div>
+              <table class="tbl">
+                <thead><tr><th>Customer</th><th style="text-align:right">Spend</th><th style="text-align:right">Orders</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Smith Corp</strong><div style="font-size:11px;color:var(--ink-500)">Catering · monthly</div></td><td style="text-align:right" class="amt-amt">$3,400</td><td style="text-align:right">8</td></tr>
+                  <tr><td><strong>Springfield Schools</strong><div style="font-size:11px;color:var(--ink-500)">Field-day events</div></td><td style="text-align:right" class="amt-amt">$2,100</td><td style="text-align:right">4</td></tr>
+                  <tr><td><strong>Lakeside Real Estate</strong><div style="font-size:11px;color:var(--ink-500)">Open-house events</div></td><td style="text-align:right" class="amt-amt">$1,820</td><td style="text-align:right">6</td></tr>
+                  <tr><td><strong>Mercy Hospital</strong><div style="font-size:11px;color:var(--ink-500)">Staff appreciation</div></td><td style="text-align:right" class="amt-amt">$1,250</td><td style="text-align:right">3</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="sales-pipeline">
+          <p style="font-size:13px;color:var(--ink-600);margin-bottom:18px">Catering &amp; large-order opportunities. Drag cards across stages.</p>
+          <div class="pipeline-grid">
+            <div class="pipe-col">
+              <h4>New <span>4</span></h4>
+              <div class="pipe-card"><h5>Henderson Hospital staff event</h5><p>Lead from Yelp inquiry · 250 ppl</p><div class="pc-foot"><span class="pill blue">Inquiry</span><span class="amt">$1,800</span></div></div>
+              <div class="pipe-card"><h5>Vegas Tech meetup</h5><p>Recurring · 60 ppl/mo</p><div class="pc-foot"><span class="pill blue">Inquiry</span><span class="amt">$520</span></div></div>
+              <div class="pipe-card"><h5>Cox Communications</h5><p>Office breakfast · weekly</p><div class="pc-foot"><span class="pill blue">Inquiry</span><span class="amt">$400</span></div></div>
+              <div class="pipe-card"><h5>SLS Wedding</h5><p>June 14 · 180 ppl</p><div class="pc-foot"><span class="pill blue">Inquiry</span><span class="amt">$1,200</span></div></div>
+            </div>
+            <div class="pipe-col">
+              <h4>Quoted <span>3</span></h4>
+              <div class="pipe-card"><h5>Smith Corp Q3 catering</h5><p>Quote sent May 3</p><div class="pc-foot"><span class="pill amber">Awaiting</span><span class="amt">$1,200</span></div></div>
+              <div class="pipe-card"><h5>Lakeside open house</h5><p>Quote sent May 1</p><div class="pc-foot"><span class="pill amber">Awaiting</span><span class="amt">$425</span></div></div>
+              <div class="pipe-card"><h5>Springfield schools</h5><p>Quote sent Apr 28</p><div class="pc-foot"><span class="pill amber">Awaiting</span><span class="amt">$680</span></div></div>
+            </div>
+            <div class="pipe-col">
+              <h4>Booked <span>5</span></h4>
+              <div class="pipe-card"><h5>Mercy Hospital · May 12</h5><p>Confirmed · invoice sent</p><div class="pc-foot"><span class="pill violet">Booked</span><span class="amt">$1,250</span></div></div>
+              <div class="pipe-card"><h5>Springfield Real Estate · May 18</h5><p>Confirmed · 75 ppl</p><div class="pc-foot"><span class="pill violet">Booked</span><span class="amt">$520</span></div></div>
+              <div class="pipe-card"><h5>Henderson Library · May 22</h5><p>Confirmed</p><div class="pc-foot"><span class="pill violet">Booked</span><span class="amt">$340</span></div></div>
+            </div>
+            <div class="pipe-col">
+              <h4>Won <span>8 · MTD</span></h4>
+              <div class="pipe-card"><h5>Smith Corp · May 1</h5><p>Paid · invoice settled</p><div class="pc-foot"><span class="pill green">Won</span><span class="amt">$425</span></div></div>
+              <div class="pipe-card"><h5>Cox 1st Friday · Apr 26</h5><p>Paid</p><div class="pc-foot"><span class="pill green">Won</span><span class="amt">$280</span></div></div>
+              <div class="pipe-card"><h5>NV Tax Office</h5><p>Paid</p><div class="pc-foot"><span class="pill green">Won</span><span class="amt">$190</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="sales-customers">
+          <div class="card">
+            <div class="card-header"><h3>All customers · sorted by lifetime value</h3><button class="btn btn-secondary">+ Add customer</button></div>
+            <table class="tbl">
+              <thead><tr><th>Customer</th><th>Type</th><th>First order</th><th style="text-align:right">Orders</th><th style="text-align:right">LTV</th><th style="text-align:right">Last order</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Smith Corp</strong></td><td>Catering · recurring</td><td>Jan 8, 2025</td><td style="text-align:right">28</td><td style="text-align:right" class="amt-amt">$11,840</td><td style="text-align:right">5 days ago</td></tr>
+                <tr><td><strong>Springfield Schools</strong></td><td>Catering · seasonal</td><td>Mar 14, 2025</td><td style="text-align:right">12</td><td style="text-align:right" class="amt-amt">$6,420</td><td style="text-align:right">2 weeks ago</td></tr>
+                <tr><td><strong>Lakeside Real Estate</strong></td><td>Catering · recurring</td><td>Aug 2, 2024</td><td style="text-align:right">31</td><td style="text-align:right" class="amt-amt">$5,890</td><td style="text-align:right">3 days ago</td></tr>
+                <tr><td><strong>Mercy Hospital</strong></td><td>Catering · monthly</td><td>Nov 11, 2025</td><td style="text-align:right">8</td><td style="text-align:right" class="amt-amt">$3,640</td><td style="text-align:right">3 weeks ago</td></tr>
+                <tr><td><strong>Cox Communications</strong></td><td>Office catering</td><td>Feb 4, 2026</td><td style="text-align:right">14</td><td style="text-align:right" class="amt-amt">$2,920</td><td style="text-align:right">4 days ago</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="sales-channels">
+          <div class="grid-3">
+            <div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-doordash">D</div><h3 style="font-size:14px">DoorDash</h3></div><span class="pill green">Connected</span></div><div style="font-family:'Fraunces',serif;font-size:24px;font-weight:600">$3,143</div><p style="font-size:11px;color:var(--ink-500)">MTD · 142 orders · avg $22</p></div>
+            <div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-uber">U</div><h3 style="font-size:14px">Uber Eats</h3></div><span class="pill green">Connected</span></div><div style="font-family:'Fraunces',serif;font-size:24px;font-weight:600">$1,664</div><p style="font-size:11px;color:var(--ink-500)">MTD · 78 orders · avg $21</p></div>
+            <div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-grubhub">G</div><h3 style="font-size:14px">Grubhub</h3></div><span class="pill green">Connected</span></div><div style="font-family:'Fraunces',serif;font-size:24px;font-weight:600">$555</div><p style="font-size:11px;color:var(--ink-500)">MTD · 24 orders · avg $23</p></div>
+            <div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-yelp">Y</div><h3 style="font-size:14px">Yelp</h3></div><span class="pill gray">Not connected</span></div><p style="font-size:12px;color:var(--ink-600);margin-top:8px">Track inquiries, reviews, and ad ROI from Yelp.</p><button class="btn btn-secondary" style="margin-top:8px;width:100%" onclick="toast('Connecting Yelp','success')">Connect</button></div>
+            <div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-google-ads">G</div><h3 style="font-size:14px">Google Business</h3></div><span class="pill gray">Not connected</span></div><p style="font-size:12px;color:var(--ink-600);margin-top:8px">Reviews, posts, and call tracking.</p><button class="btn btn-secondary" style="margin-top:8px;width:100%" onclick="toast('Connecting Google Business','success')">Connect</button></div>
+            <div class="card"><div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-instagram">○</div><h3 style="font-size:14px">Instagram Shop</h3></div><span class="pill gray">Not connected</span></div><p style="font-size:12px;color:var(--ink-600);margin-top:8px">Catering inquiries via Instagram DMs.</p><button class="btn btn-secondary" style="margin-top:8px;width:100%" onclick="toast('Connecting Instagram','success')">Connect</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ACCOUNTING ============ -->
+      <section class="tab-content" id="t-accounting">
+        <div class="page-hdr">
+          <div><h1>Accounting</h1><div class="subtitle">Books, financial statements, and tax-ready reports.</div></div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="openConn('quickbooks')">Connect QuickBooks</button>
+            <button class="btn btn-primary">Request close</button>
+          </div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'acct-home')">Accounting Home</button>
+          <button class="subnav-tab" onclick="switchSub(this,'acct-reports')">Reports <span class="count">12</span></button>
+          <button class="subnav-tab" onclick="switchSub(this,'acct-tax')">Tax center</button>
+          <button class="subnav-tab" onclick="switchSub(this,'acct-coa')">Chart of accounts</button>
+        </div>
+
+        <div class="subnav-content active" id="acct-home">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Revenue MTD</div><div class="kpi-value">$18,460</div><div class="kpi-meta"><span class="kpi-delta up">↑ 11%</span></div></div>
+            <div class="kpi"><div class="kpi-label">Expenses MTD</div><div class="kpi-value">$12,340</div><div class="kpi-meta"><span class="kpi-delta down">↑ 8%</span></div></div>
+            <div class="kpi"><div class="kpi-label">Net profit</div><div class="kpi-value">$6,120</div><div class="kpi-meta">33% margin</div></div>
+            <div class="kpi feature"><div class="kpi-label">Books status</div><div class="kpi-value" style="font-size:18px;line-height:1.4">Closed</div><div class="kpi-meta">April closed May 3</div></div>
+          </div>
+
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><div><h3>P&amp;L trend · 6 months</h3><p style="font-size:11px;color:var(--ink-500);margin-top:2px">Revenue (coral) overlaid on net income (teal)</p></div></div>
+                <svg viewBox="0 0 600 200" style="width:100%;height:200px;display:block;margin-top:14px">
+                  <defs>
+                    <linearGradient id="grad-rev3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8734A" stop-opacity="0.25"/><stop offset="100%" stop-color="#E8734A" stop-opacity="0"/></linearGradient>
+                    <linearGradient id="grad-net3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0A3D3D" stop-opacity="0.20"/><stop offset="100%" stop-color="#0A3D3D" stop-opacity="0"/></linearGradient>
+                  </defs>
+                  <path d="M 0 140 L 100 110 L 200 90 L 300 75 L 400 55 L 500 40 L 600 30 L 600 200 L 0 200 Z" fill="url(#grad-rev3)"/>
+                  <path d="M 0 140 L 100 110 L 200 90 L 300 75 L 400 55 L 500 40 L 600 30" fill="none" stroke="#E8734A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M 0 175 L 100 165 L 200 155 L 300 145 L 400 130 L 500 115 L 600 100 L 600 200 L 0 200 Z" fill="url(#grad-net3)"/>
+                  <path d="M 0 175 L 100 165 L 200 155 L 300 145 L 400 130 L 500 115 L 600 100" fill="none" stroke="#0A3D3D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="600" cy="100" r="4" fill="#0A3D3D"/>
+                  <circle cx="600" cy="30" r="4" fill="#E8734A"/>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-500);font-weight:500;margin-top:6px"><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span></div>
+              </div>
+            </div>
+            <aside>
+              <div class="action-stack">
+                <div class="action-card success">
+                  <div class="ac-icon">✓</div>
+                  <h4>April books closed</h4>
+                  <p>Bookkeeper signed off May 3. P&amp;L is final.</p>
+                  <button class="ac-btn" onclick="switchSub(document.querySelectorAll('#t-accounting .subnav-tab')[1],'acct-reports')">View P&amp;L →</button>
+                </div>
+                <div class="action-card info">
+                  <div class="ac-icon">▤</div>
+                  <h4>Need a custom report?</h4>
+                  <p>Per-location P&amp;L, royalty waterfall, custom KPIs — built within 2 days.</p>
+                  <button class="ac-btn" onclick="toast('Request submitted','success')">Request →</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="acct-reports">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card">
+                <div class="card-header"><h3>Financial statements</h3><span class="meta">As of May 4, 2026</span></div>
+                <table class="tbl">
+                  <thead><tr><th>Report</th><th>Period</th><th>Updated</th><th></th></tr></thead>
+                  <tbody>
+                    <tr class="row-link" onclick="toast('Opening Cash Flow','success')"><td><strong>Cash Flow Statement</strong><div style="font-size:11px;color:var(--ink-500)">Operating · Investing · Financing</div></td><td>April 2026</td><td>May 3</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening P&L','success')"><td><strong>Profit &amp; Loss</strong><div style="font-size:11px;color:var(--ink-500)">Revenue, COGS, OpEx, Net Income</div></td><td>April 2026</td><td>May 3</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening Balance Sheet','success')"><td><strong>Balance Sheet</strong><div style="font-size:11px;color:var(--ink-500)">Assets, Liabilities, Equity</div></td><td>April 2026</td><td>May 3</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening AR Aging','success')"><td><strong>AR Aging</strong><div style="font-size:11px;color:var(--ink-500)">Outstanding invoices by age</div></td><td>Live</td><td>5 min ago</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening Owner Distributions','success')"><td><strong>Owner distributions</strong><div style="font-size:11px;color:var(--ink-500)">YTD distributions to members</div></td><td>YTD 2026</td><td>May 1</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <aside>
+              <div style="font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;padding:0 4px;margin-bottom:8px">Folders</div>
+              <div class="folder-card" onclick="toast('Opening Tax Documents','success')"><div class="fc-icon" style="background:var(--coral-50)">▤</div><div class="fc-info"><h4>Tax documents</h4><p>34 files · Updated May 1</p></div><span class="fc-arrow">›</span></div>
+              <div class="folder-card" onclick="toast('Opening Financial Reports','success')"><div class="fc-icon" style="background:var(--blue-50)">◧</div><div class="fc-info"><h4>Financial reports</h4><p>87 files · Closed Apr</p></div><span class="fc-arrow">›</span></div>
+              <div class="folder-card" onclick="toast('Opening Bank Statements','success')"><div class="fc-icon" style="background:var(--green-50)">◐</div><div class="fc-info"><h4>Bank statements</h4><p>16 files · Auto-pulled</p></div><span class="fc-arrow">›</span></div>
+              <div class="folder-card" onclick="toast('Opening Receipts','success')"><div class="fc-icon" style="background:var(--violet-50)">▦</div><div class="fc-info"><h4>Receipts</h4><p>248 files</p></div><span class="fc-arrow">›</span></div>
+              <div class="folder-card" onclick="toast('Opening Vendor 1099s','success')"><div class="fc-icon" style="background:var(--amber-50)">◆</div><div class="fc-info"><h4>Vendor 1099s</h4><p>2 contractors</p></div><span class="fc-arrow">›</span></div>
+              <div class="folder-card" onclick="toast('Opening Compliance','success')"><div class="fc-icon" style="background:var(--ink-100)">▢</div><div class="fc-info"><h4>Compliance &amp; FDD</h4><p>9 files · DonutNV</p></div><span class="fc-arrow">›</span></div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="acct-tax">
+          <div class="action-banner success">
+            <span class="ab-tag">✓ Filed</span>
+            <div class="ab-text"><strong>Q1 federal &amp; state taxes filed.</strong> Next: Q2 941 due Jul 31 — auto-filed via Gusto.</div>
+            <button class="ab-btn">View calendar</button>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Federal</h3><span class="pill gray">EIN 84-XXXXXXX</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>Form 941 · Q1</span><span class="pill green">✓ Filed Apr 30</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>FUTA · Q1</span><span class="pill green">✓ Filed</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0"><span>Form 941 · Q2</span><span class="pill amber">Auto · Jul 31</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>State — Nevada</h3></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>NV MBT · Q1</span><span class="pill green">✓ Filed</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>NV SUI · Q1</span><span class="pill green">✓ Filed</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0"><span>NV MBT · Q2</span><span class="pill amber">Auto · Jul 31</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="acct-coa">
+          <div class="card">
+            <div class="card-header"><h3>Chart of accounts · synced from QuickBooks</h3><button class="btn btn-secondary">+ Add account</button></div>
+            <table class="tbl">
+              <thead><tr><th>Number</th><th>Account</th><th>Type</th><th style="text-align:right">Balance</th></tr></thead>
+              <tbody>
+                <tr><td class="amt-amt">1010</td><td>Mercury Checking</td><td>Bank</td><td style="text-align:right" class="amt-amt">$24,830</td></tr>
+                <tr><td class="amt-amt">1020</td><td>Mercury Savings</td><td>Bank</td><td style="text-align:right" class="amt-amt">$15,000</td></tr>
+                <tr><td class="amt-amt">1100</td><td>Stripe Clearing</td><td>Bank</td><td style="text-align:right" class="amt-amt">$2,103</td></tr>
+                <tr><td class="amt-amt">2010</td><td>Ramp AP</td><td>Liability</td><td style="text-align:right" class="amt-amt">$3,412</td></tr>
+                <tr><td class="amt-amt">2200</td><td>SBA Loan</td><td>Long-term liability</td><td style="text-align:right" class="amt-amt">$142,000</td></tr>
+                <tr><td class="amt-amt">4000</td><td>Sales</td><td>Revenue</td><td style="text-align:right" class="amt-amt">$18,460</td></tr>
+                <tr><td class="amt-amt">5010</td><td>Food &amp; Beverage COGS</td><td>COGS</td><td style="text-align:right" class="amt-amt">$2,840</td></tr>
+                <tr><td class="amt-amt">6010</td><td>Payroll Expense</td><td>Expense</td><td style="text-align:right" class="amt-amt">$3,000</td></tr>
+                <tr><td class="amt-amt">6020</td><td>Rent</td><td>Expense</td><td style="text-align:right" class="amt-amt">$2,200</td></tr>
+                <tr><td class="amt-amt">6030</td><td>Insurance</td><td>Expense</td><td style="text-align:right" class="amt-amt">$890</td></tr>
+                <tr><td class="amt-amt">6040</td><td>Marketing</td><td>Expense</td><td style="text-align:right" class="amt-amt">$650</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PAYROLL ============ -->
+      <section class="tab-content" id="t-payroll">
+        <div class="page-hdr">
+          <div><h1>Payroll</h1><div class="subtitle">Run payroll, file taxes, manage benefits and HR.</div></div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="openConn('quickbooks')">Sync to QuickBooks</button>
+            <button class="btn btn-coral-sm" onclick="openConn('payroll-picker')">Set up payroll</button>
+          </div>
+        </div>
+
+        <div class="action-banner" id="payroll-banner">
+          <span class="ab-tag">●  Setup</span>
+          <div class="ab-text"><strong>Pick a payroll provider to get started.</strong> Gusto, ADP, Homebase, Paychex, or QuickBooks Time. We pre-fill your EIN and connect funding to Mercury.</div>
+          <button class="ab-btn" onclick="openConn('payroll-picker')">Choose →</button>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Next pay date</div><div class="kpi-value" id="pr-next">—</div><div class="kpi-meta" id="pr-next-sub">Connect a provider</div></div>
+          <div class="kpi"><div class="kpi-label">Active employees</div><div class="kpi-value" id="pr-emp">0</div><div class="kpi-meta">Add team after setup</div></div>
+          <div class="kpi"><div class="kpi-label">YTD wages</div><div class="kpi-value" id="pr-ytd">$0</div><div class="kpi-meta">Year-to-date</div></div>
+          <div class="kpi feature"><div class="kpi-label">Q1 taxes</div><div class="kpi-value" id="pr-tax">—</div><div class="kpi-meta">Federal + state</div></div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'payroll-overview')">Overview</button>
+          <button class="subnav-tab" onclick="switchSub(this,'payroll-roster')">Roster</button>
+          <button class="subnav-tab" onclick="switchSub(this,'payroll-runs')">Pay runs</button>
+          <button class="subnav-tab" onclick="switchSub(this,'payroll-benefits')">Benefits &amp; HR</button>
+        </div>
+
+        <div class="subnav-content active" id="payroll-overview">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><h3>Recent pay runs</h3></div>
+                <div id="payroll-empty" style="text-align:center;padding:48px 20px">
+                  <div style="font-size:42px;margin-bottom:10px">◇</div>
+                  <h3 style="font-family:'Fraunces',serif;font-size:18px;color:var(--ink-900);margin-bottom:6px">No pay runs yet</h3>
+                  <p style="font-size:13px;color:var(--ink-500);margin-bottom:14px">Choose a provider, add employees, run your first payroll.</p>
+                  <button class="btn btn-coral-sm" onclick="openConn('payroll-picker')">Set up payroll →</button>
+                </div>
+                <table class="tbl" id="payroll-runs-tbl" style="display:none">
+                  <thead><tr><th>Pay date</th><th>Period</th><th>Employees</th><th style="text-align:right">Gross</th><th style="text-align:right">Net</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>May 8</td><td>Apr 26 – May 7</td><td>4</td><td style="text-align:right" class="amt-amt">$8,640</td><td style="text-align:right" class="amt-amt">$6,330</td><td><span class="pill amber">Pending approval</span></td></tr>
+                    <tr><td>Apr 25</td><td>Apr 12 – 25</td><td>4</td><td style="text-align:right" class="amt-amt">$8,420</td><td style="text-align:right" class="amt-amt">$6,140</td><td><span class="pill green">Paid</span></td></tr>
+                    <tr><td>Apr 11</td><td>Mar 29 – Apr 11</td><td>4</td><td style="text-align:right" class="amt-amt">$7,890</td><td style="text-align:right" class="amt-amt">$5,810</td><td><span class="pill green">Paid</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <aside>
+              <div class="action-stack">
+                <div class="action-card">
+                  <div class="ac-icon">●</div>
+                  <h4>Required connections</h4>
+                  <div class="conn-chip" id="conn-payroll-prov" onclick="openConn('payroll-picker')"><div class="brand-logo bl-gusto">G</div><div class="cc-info"><h5 id="conn-payroll-name">Choose payroll provider</h5><p>Gusto, ADP, Homebase…</p></div><span class="pill gray" id="conn-payroll-pill">Setup</span></div>
+                  <div class="conn-chip"><div class="brand-logo bl-mercury">M</div><div class="cc-info"><h5>Mercury (funding)</h5><p>Wages debit from</p></div><span class="pill green">Active</span></div>
+                  <div class="conn-chip" onclick="openConn('quickbooks')"><div class="brand-logo bl-quickbooks">qb</div><div class="cc-info"><h5>QuickBooks Online</h5><p>Sync wage entries</p></div><span class="pill gray">Setup</span></div>
+                </div>
+                <div class="action-card info">
+                  <div class="ac-icon">▤</div>
+                  <h4>Compliance calendar</h4>
+                  <p>Q2 941 due Jul 31 · NV MBT due Jul 31 · W-2/1099 distribution Jan 31. Auto-filed.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="payroll-roster">
+          <div class="card">
+            <div class="card-header"><h3>Roster</h3><button class="btn btn-coral-sm" onclick="openConn('add-employee')">+ Add employee</button></div>
+            <div id="emp-empty" style="text-align:center;padding:40px 20px">
+              <div style="font-size:36px;margin-bottom:8px">◇</div>
+              <p style="font-size:13px;color:var(--ink-500);margin-bottom:14px">No employees yet — set up payroll first.</p>
+              <button class="btn btn-coral-sm" onclick="openConn('payroll-picker')">Set up payroll →</button>
+            </div>
+            <table class="tbl" id="emp-list" style="display:none">
+              <thead><tr><th>Employee</th><th>Role</th><th>Comp</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6B5CE8,#5040C5);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">MR</div><div><strong>Maria Rodriguez</strong><div style="font-size:11px;color:var(--ink-500)">maria@donutnv.com</div></div></div></td><td>Shift Lead</td><td class="amt-amt">$22.00/hr</td><td><span class="pill green">Active</span></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B6AE8,#1E4FB8);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">DK</div><div><strong>Devon King</strong><div style="font-size:11px;color:var(--ink-500)">devon@donutnv.com</div></div></div></td><td>Crew</td><td class="amt-amt">$18.00/hr</td><td><span class="pill green">Active</span></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#E8734A,#C45A36);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">SL</div><div><strong>Sarah Liu</strong><div style="font-size:11px;color:var(--ink-500)">sarah@donutnv.com</div></div></div></td><td>Crew</td><td class="amt-amt">$18.00/hr</td><td><span class="pill green">Active</span></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1A6B6B,#0A3D3D);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">JS</div><div><strong>Jordan Smith</strong><div style="font-size:11px;color:var(--ink-500)">Owner officer</div></div></div></td><td>Owner</td><td class="amt-amt">$5,000/mo</td><td><span class="pill green">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="payroll-runs">
+          <div class="card">
+            <table class="tbl">
+              <thead><tr><th>Pay date</th><th>Period</th><th>Type</th><th>EE</th><th style="text-align:right">Gross</th><th style="text-align:right">Taxes</th><th style="text-align:right">Net</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>May 8</td><td>Apr 26 – May 7</td><td>Bi-weekly</td><td>4</td><td style="text-align:right" class="amt-amt">$8,640</td><td style="text-align:right" class="amt-amt">$2,310</td><td style="text-align:right" class="amt-amt">$6,330</td><td><span class="pill amber">Pending</span></td></tr>
+                <tr><td>Apr 25</td><td>Apr 12 – 25</td><td>Bi-weekly</td><td>4</td><td style="text-align:right" class="amt-amt">$8,420</td><td style="text-align:right" class="amt-amt">$2,280</td><td style="text-align:right" class="amt-amt">$6,140</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>Apr 11</td><td>Mar 29 – Apr 11</td><td>Bi-weekly</td><td>4</td><td style="text-align:right" class="amt-amt">$7,890</td><td style="text-align:right" class="amt-amt">$2,080</td><td style="text-align:right" class="amt-amt">$5,810</td><td><span class="pill green">Paid</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="payroll-benefits">
+          <div class="grid-3">
+            <div class="mkt-card"><div class="mk-logo"><div class="brand-logo bl-gusto">G</div></div><h3>Health benefits</h3><p>Group medical, dental, vision via Gusto + SimplyInsured.</p><div class="mk-price">$8<small>/employee/mo</small></div><button class="mk-cta" onclick="openCheckout('payroll-benefits')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-logo"><div class="brand-logo" style="background:#0066CC">G</div></div><h3>Guideline 401(k)</h3><p>Auto-enroll 401(k) integrated with Gusto.</p><div class="mk-price">$40<small>/mo + $6/participant</small></div><button class="mk-cta" onclick="openCheckout('payroll-401k')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-logo"><div class="brand-logo bl-next">n</div></div><h3>Workers' Comp</h3><p>NEXT pay-as-you-go workers comp.</p><div class="mk-price">Pay as you go</div><button class="mk-cta" onclick="openCheckout('payroll-wc')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>HR concierge</h3><p>On-demand HR advisors and employee handbook.</p><div class="mk-price">$59<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('payroll-hr')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-logo"><div class="brand-logo bl-homebase">H</div></div><h3>Homebase Time</h3><p>Scheduling, tip tracking, timesheets to payroll.</p><div class="mk-price">Free<small> for 1st location</small></div><button class="mk-cta" onclick="openCheckout('payroll-time')">Subscribe</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ INSURANCE ============ -->
+      <section class="tab-content" id="t-insurance">
+        <div class="page-hdr">
+          <div><h1>Insurance</h1><div class="subtitle">Three ways to cover your business. Pick what works for you.</div></div>
+        </div>
+
+        <div class="ins-paths">
+          <div class="ins-path" onclick="openConn('invite-agent')">
+            <div class="ip-icon">📨</div>
+            <h3>Invite your agent</h3>
+            <p>Already have an agent? Invite them in. They get view-only access to your policies, COIs, and renewal calendar.</p>
+            <div class="ip-cta">Invite agent →</div>
+          </div>
+          <div class="ins-path" onclick="switchSub(document.querySelectorAll('#t-insurance .subnav-tab')[1],'ins-shop')">
+            <div class="ip-icon">🛒</div>
+            <h3>Shop our providers</h3>
+            <p>Compare quotes from NEXT, Hiscox, Thimble, and State Farm — all franchise-friendly carriers.</p>
+            <div class="ip-cta">Compare quotes →</div>
+          </div>
+          <div class="ins-path featured" onclick="openCheckout('coverpanda-insurance')">
+            <div class="ip-icon">🛡️</div>
+            <h3>CoverPanda Insurance</h3>
+            <p>Our turnkey program — GL, workers comp, professional liability — bundled with member discount and direct carrier relationships.</p>
+            <div class="ip-cta">Get a quote in 60s →</div>
+          </div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'ins-policies')">My policies</button>
+          <button class="subnav-tab" onclick="switchSub(this,'ins-shop')">Shop providers <span class="count">4</span></button>
+          <button class="subnav-tab" onclick="switchSub(this,'ins-cois')">COIs &amp; certificates</button>
+          <button class="subnav-tab" onclick="switchSub(this,'ins-claims')">Claims</button>
+        </div>
+
+        <div class="subnav-content active" id="ins-policies">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-statefarm">SF</div><div><h3>General Liability</h3><p style="font-size:11px;color:var(--ink-500)">State Farm · Policy #GL-892144</p></div></div><span class="pill green">Active</span></div>
+              <table class="tbl" style="margin-top:10px">
+                <tr><td style="border:none;padding:6px 0">Premium</td><td style="border:none;padding:6px 0;text-align:right" class="amt-amt">$890/mo</td></tr>
+                <tr><td style="border:none;padding:6px 0">Coverage</td><td style="border:none;padding:6px 0;text-align:right" class="amt-amt">$1M / $2M</td></tr>
+                <tr><td style="border:none;padding:6px 0">Renewal</td><td style="border:none;padding:6px 0;text-align:right">Jan 1, 2027</td></tr>
+                <tr><td style="border:none;padding:6px 0">Agent</td><td style="border:none;padding:6px 0;text-align:right">Mike Halsey</td></tr>
+              </table>
+              <button class="btn btn-secondary" style="margin-top:12px;width:100%">View policy →</button>
+            </div>
+            <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;border-style:dashed">
+              <div style="font-size:32px;margin-bottom:10px">+</div>
+              <h3 style="font-family:'Fraunces',serif;font-size:16px;color:var(--ink-900);margin-bottom:4px">Add a policy</h3>
+              <p style="font-size:12px;color:var(--ink-500);margin-bottom:14px">Workers comp, professional liability, cyber, BOP…</p>
+              <button class="btn btn-coral-sm" onclick="switchSub(document.querySelectorAll('#t-insurance .subnav-tab')[1],'ins-shop')">Get a quote</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="ins-shop">
+          <p style="font-size:13px;color:var(--ink-600);margin-bottom:14px">Get quotes side-by-side. We pre-fill your business details so you fill out one form, not five.</p>
+          <div class="grid-3">
+            <div class="card">
+              <div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-next">n</div><h3 style="font-size:14px">NEXT Insurance</h3></div><span class="pill coral">10% off</span></div>
+              <p style="font-size:12px;color:var(--ink-600);margin-bottom:12px">GL + WC + commercial auto. Built for small business, instant quotes.</p>
+              <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:10px">From $79<small style="font-size:11px;color:var(--ink-500);font-weight:400;font-family:'DM Sans',sans-serif">/mo</small></div>
+              <button class="btn btn-primary" style="width:100%" onclick="openCheckout('insurance-next')">Get quote</button>
+            </div>
+            <div class="card">
+              <div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-hiscox">H</div><h3 style="font-size:14px">Hiscox</h3></div></div>
+              <p style="font-size:12px;color:var(--ink-600);margin-bottom:12px">Professional liability, BOP, and cyber for service businesses.</p>
+              <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:10px">From $112<small style="font-size:11px;color:var(--ink-500);font-weight:400;font-family:'DM Sans',sans-serif">/mo</small></div>
+              <button class="btn btn-primary" style="width:100%" onclick="openCheckout('insurance-hiscox')">Get quote</button>
+            </div>
+            <div class="card">
+              <div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-thimble">t</div><h3 style="font-size:14px">Thimble</h3></div></div>
+              <p style="font-size:12px;color:var(--ink-600);margin-bottom:12px">On-demand by-the-hour or by-the-job liability for events &amp; popups.</p>
+              <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:10px">$5<small style="font-size:11px;color:var(--ink-500);font-weight:400;font-family:'DM Sans',sans-serif">/hr</small></div>
+              <button class="btn btn-primary" style="width:100%" onclick="openCheckout('insurance-thimble')">Get quote</button>
+            </div>
+            <div class="card">
+              <div class="card-header"><div style="display:flex;align-items:center;gap:10px"><div class="brand-logo bl-statefarm">SF</div><h3 style="font-size:14px">State Farm</h3></div><span class="pill green">Current carrier</span></div>
+              <p style="font-size:12px;color:var(--ink-600);margin-bottom:12px">Local agent relationships, multi-policy discount, claims service.</p>
+              <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:10px">$890<small style="font-size:11px;color:var(--ink-500);font-weight:400;font-family:'DM Sans',sans-serif">/mo</small></div>
+              <button class="btn btn-secondary" style="width:100%">Renew</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="ins-cois">
+          <div class="card">
+            <div class="card-header"><h3>Certificates of insurance (COIs)</h3><button class="btn btn-coral-sm">+ Request COI</button></div>
+            <table class="tbl">
+              <thead><tr><th>Holder</th><th>Type</th><th>Issued</th><th>Expires</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><strong>Springfield Center LLC</strong><div style="font-size:11px;color:var(--ink-500)">Landlord</div></td><td>GL · $1M / $2M</td><td>Apr 1, 2026</td><td>Jan 1, 2027</td><td style="text-align:right"><button class="btn btn-secondary">Download</button></td></tr>
+                <tr><td><strong>DonutNV Franchising LLC</strong><div style="font-size:11px;color:var(--ink-500)">Franchisor</div></td><td>GL + WC</td><td>Mar 14, 2026</td><td>Jan 1, 2027</td><td style="text-align:right"><button class="btn btn-secondary">Download</button></td></tr>
+                <tr><td><strong>Mercy Hospital</strong><div style="font-size:11px;color:var(--ink-500)">Catering client</div></td><td>GL · 1M</td><td>May 1, 2026</td><td>Aug 1, 2026</td><td style="text-align:right"><button class="btn btn-secondary">Download</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="ins-claims">
+          <div class="card" style="text-align:center;padding:40px">
+            <div style="font-size:36px;margin-bottom:10px">✓</div>
+            <h3 style="font-family:'Fraunces',serif;font-size:18px;color:var(--ink-900);margin-bottom:6px">No active claims</h3>
+            <p style="font-size:13px;color:var(--ink-500);margin-bottom:14px">If something happens, file a claim and we'll loop in your agent and carrier.</p>
+            <button class="btn btn-secondary" onclick="toast('Starting claim process','success')">File a claim</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MARKETPLACE ============ -->
+      <section class="tab-content" id="t-marketplace">
+        <div class="page-hdr">
+          <div><h1>Marketplace</h1><div class="subtitle">Member pricing across accounting, payroll, marketing, comms, and SaaS tools.</div></div>
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-pill active" onclick="filterMkt(this,'all')">All</button>
+          <button class="filter-pill" onclick="filterMkt(this,'accounting')">Accounting</button>
+          <button class="filter-pill" onclick="filterMkt(this,'payroll')">Payroll &amp; HR</button>
+          <button class="filter-pill" onclick="filterMkt(this,'insurance')">Insurance</button>
+          <button class="filter-pill" onclick="filterMkt(this,'marketing')">Marketing</button>
+          <button class="filter-pill" onclick="filterMkt(this,'comms')">Communication</button>
+          <button class="filter-pill" onclick="filterMkt(this,'saas')">SaaS &amp; productivity</button>
+          <button class="filter-pill" onclick="filterMkt(this,'legal')">Legal</button>
+        </div>
+
+        <div class="mkt-grid">
+          <!-- Accounting -->
+          <div class="mkt-card" data-cat="accounting"><span class="mk-tag">Popular</span><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>Monthly bookkeeping</h3><p>Dedicated bookkeeper, monthly closes, tax-ready financials.</p><div class="mk-price">$250<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('bookkeeping')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>Tax preparation</h3><p>Annual federal + state returns by a franchise CPA.</p><div class="mk-price">$1,500<small>/yr</small></div><button class="mk-cta" onclick="openCheckout('tax-prep')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>CPA consultation</h3><p>30 min 1:1 with a franchise CPA.</p><div class="mk-price">$150<small>/hr</small></div><button class="mk-cta" onclick="openCheckout('cpa-consult')">Book now</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-logo"><div class="brand-logo bl-quickbooks">qb</div></div><h3>QuickBooks Online</h3><p>Industry-standard accounting software. Member 20% off.</p><div class="mk-price">$70<small>/mo · $56 member</small></div><button class="mk-cta" onclick="openConn('quickbooks')">Connect</button></div>
+          <div class="mkt-card" data-cat="accounting"><span class="mk-tag">Premium</span><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>Fractional CFO</h3><p>Monthly strategic planning + forecasting.</p><div class="mk-price">$1,500<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('cfo')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>Sales tax filing</h3><p>Quarterly returns in every state you operate.</p><div class="mk-price">$99<small>/qtr</small></div><button class="mk-cta" onclick="openCheckout('sales-tax')">Get started</button></div>
+
+          <!-- Payroll -->
+          <div class="mkt-card" data-cat="payroll"><span class="mk-tag">3 mo free</span><div class="mk-logo"><div class="brand-logo bl-gusto">G</div></div><h3>Gusto Payroll</h3><p>Full-service payroll, automated taxes in all 50 states.</p><div class="mk-price">$49<small>/mo + $6/employee</small></div><button class="mk-cta" onclick="openConn('gusto')">Connect</button></div>
+          <div class="mkt-card" data-cat="payroll"><div class="mk-logo"><div class="brand-logo bl-adp">ADP</div></div><h3>ADP RUN</h3><p>Enterprise payroll for multi-unit operators.</p><div class="mk-price">From $79<small>/mo</small></div><button class="mk-cta" onclick="openConn('adp')">Connect</button></div>
+          <div class="mkt-card" data-cat="payroll"><div class="mk-logo"><div class="brand-logo bl-homebase">H</div></div><h3>Homebase</h3><p>Free scheduling, tip tracking, payroll for hourly teams.</p><div class="mk-price">Free<small> · paid plans from $20/mo</small></div><button class="mk-cta" onclick="openConn('homebase')">Connect</button></div>
+
+          <!-- Insurance -->
+          <div class="mkt-card" data-cat="insurance"><span class="mk-tag">10% off</span><div class="mk-logo"><div class="brand-logo bl-next">n</div></div><h3>NEXT Insurance</h3><p>GL + WC + commercial auto. Instant quotes online.</p><div class="mk-price">From $79<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('insurance-next')">Get quote</button></div>
+          <div class="mkt-card" data-cat="insurance"><div class="mk-logo"><div class="brand-logo bl-hiscox">H</div></div><h3>Hiscox</h3><p>Professional liability, BOP, cyber.</p><div class="mk-price">From $112<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('insurance-hiscox')">Get quote</button></div>
+          <div class="mkt-card" data-cat="insurance"><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>CoverPanda Insurance</h3><p>Bundled GL/WC/PL with direct carrier relationships.</p><div class="mk-price">Custom<small> · 60s quote</small></div><button class="mk-cta" onclick="openCheckout('coverpanda-insurance')">Get quote</button></div>
+
+          <!-- Marketing -->
+          <div class="mkt-card" data-cat="marketing"><div class="mk-logo"><div class="brand-logo bl-mailchimp">M</div></div><h3>Mailchimp</h3><p>Email marketing for catering &amp; loyalty campaigns.</p><div class="mk-price">25% off<small> 6 months</small></div><button class="mk-cta" onclick="openCheckout('mailchimp')">Activate</button></div>
+          <div class="mkt-card" data-cat="marketing"><div class="mk-logo"><div class="brand-logo bl-canva">C</div></div><h3>Canva Pro</h3><p>Design tool for menus, flyers, social posts.</p><div class="mk-price">30% off<small> annual</small></div><button class="mk-cta" onclick="openCheckout('canva')">Activate</button></div>
+          <div class="mkt-card" data-cat="marketing"><div class="mk-logo"><div class="brand-logo bl-meta">f</div></div><h3>Meta Ads (managed)</h3><p>Geo-targeted Facebook + Instagram ads, managed by us.</p><div class="mk-price">$199<small>/mo + ad spend</small></div><button class="mk-cta" onclick="openCheckout('marketing-meta')">Get started</button></div>
+          <div class="mkt-card" data-cat="marketing"><div class="mk-logo"><div class="brand-logo bl-google-ads">G</div></div><h3>Google Ads (managed)</h3><p>Local Search + Maps ads, optimized for QSR.</p><div class="mk-price">$199<small>/mo + ad spend</small></div><button class="mk-cta" onclick="openCheckout('marketing-google')">Get started</button></div>
+          <div class="mkt-card" data-cat="marketing"><div class="mk-logo"><div class="brand-logo bl-yelp">Y</div></div><h3>Yelp Ads</h3><p>Sponsored placement + review management.</p><div class="mk-price">From $300<small>/mo ad spend</small></div><button class="mk-cta" onclick="openCheckout('marketing-yelp')">Get started</button></div>
+
+          <!-- Communication -->
+          <div class="mkt-card" data-cat="comms"><div class="mk-logo"><div class="brand-logo bl-openphone">○</div></div><h3>OpenPhone</h3><p>Business phone with shared inbox for the team.</p><div class="mk-price">20% off<small> annual</small></div><button class="mk-cta" onclick="openCheckout('openphone')">Activate</button></div>
+          <div class="mkt-card" data-cat="comms"><div class="mk-logo"><div class="brand-logo bl-slack">#</div></div><h3>Slack</h3><p>Team chat, file sharing, integrations.</p><div class="mk-price">3 mo<small> Pro free</small></div><button class="mk-cta" onclick="openCheckout('slack')">Activate</button></div>
+          <div class="mkt-card" data-cat="comms"><div class="mk-logo"><div class="brand-logo bl-zoom">zm</div></div><h3>Zoom</h3><p>Video calls for catering consults &amp; team meetings.</p><div class="mk-price">20% off<small> Business</small></div><button class="mk-cta" onclick="openCheckout('zoom')">Activate</button></div>
+          <div class="mkt-card" data-cat="comms"><div class="mk-logo"><div class="brand-logo bl-ringcentral">R</div></div><h3>RingCentral</h3><p>Cloud phone system with auto-attendant.</p><div class="mk-price">15% off</div><button class="mk-cta" onclick="openCheckout('ringcentral')">Activate</button></div>
+
+          <!-- SaaS -->
+          <div class="mkt-card" data-cat="saas"><div class="mk-logo"><div class="brand-logo bl-googleworkspace">G</div></div><h3>Google Workspace</h3><p>Gmail, Drive, Docs, Meet for your domain.</p><div class="mk-price">20% off<small> 1st year</small></div><button class="mk-cta" onclick="openCheckout('googleworkspace')">Activate</button></div>
+          <div class="mkt-card" data-cat="saas"><div class="mk-logo"><div class="brand-logo bl-microsoft">▦</div></div><h3>Microsoft 365</h3><p>Outlook, Word, Excel, Teams for business.</p><div class="mk-price">15% off</div><button class="mk-cta" onclick="openCheckout('microsoft365')">Activate</button></div>
+          <div class="mkt-card" data-cat="saas"><div class="mk-logo"><div class="brand-logo bl-notion">N</div></div><h3>Notion</h3><p>Operating manual, SOPs, training docs.</p><div class="mk-price">Free<small> Team plan</small></div><button class="mk-cta" onclick="openCheckout('notion')">Activate</button></div>
+          <div class="mkt-card" data-cat="saas"><div class="mk-logo"><div class="brand-logo bl-stripe">s</div></div><h3>Stripe Payments</h3><p>Card processing for catering invoices &amp; online orders.</p><div class="mk-price">Standard rates</div><button class="mk-cta" onclick="openCheckout('stripe')">Activate</button></div>
+
+          <!-- Legal -->
+          <div class="mkt-card" data-cat="legal"><div class="mk-logo"><div class="brand-logo bl-rocketlawyer">R</div></div><h3>Rocket Lawyer</h3><p>Legal docs, attorney consultations on demand.</p><div class="mk-price">50% off<small> 1st month</small></div><button class="mk-cta" onclick="openCheckout('rocket-lawyer')">Activate</button></div>
+          <div class="mkt-card" data-cat="legal"><div class="mk-logo"><div class="brand-logo bl-legalzoom">L</div></div><h3>LegalZoom</h3><p>Trademark filings, contract review, registered agent.</p><div class="mk-price">10% off</div><button class="mk-cta" onclick="openCheckout('legalzoom')">Activate</button></div>
+          <div class="mkt-card" data-cat="legal"><div class="mk-logo"><div class="brand-logo bl-coverpanda">P</div></div><h3>Legal review (1 hr)</h3><p>Lease, employment agreement, FDD interpretation.</p><div class="mk-price">$200<small>/hr</small></div><button class="mk-cta" onclick="openCheckout('legal-review')">Book</button></div>
+        </div>
+      </section>
+
+      <!-- ============ COMMUNITY ============ -->
+      <section class="tab-content" id="t-community">
+        <div class="page-hdr"><div><h1>Community</h1><div class="subtitle">Founders, operators, and experts. Built for franchise owners.</div></div></div>
+
+        <div class="community-layout">
+          <aside class="com-side">
+            <div class="com-side-section">
+              <div class="com-side-title">Browse</div>
+              <div class="com-side-item active"><span style="font-size:14px">▦</span> Feed</div>
+              <div class="com-side-item"><span style="font-size:14px">●</span> Latest</div>
+              <div class="com-side-item"><span style="font-size:14px">★</span> Top this week</div>
+            </div>
+            <div class="com-side-section">
+              <div class="com-side-title">Getting started</div>
+              <div class="com-side-item"><span style="font-size:14px">◌</span> Start here</div>
+              <div class="com-side-item"><span style="font-size:14px">▤</span> What is an FDD?</div>
+              <div class="com-side-item"><span style="font-size:14px">◧</span> LLC vs S-Corp</div>
+              <div class="com-side-item"><span style="font-size:14px">◐</span> Reading your P&amp;L</div>
+            </div>
+            <div class="com-side-section">
+              <div class="com-side-title">CoverPanda community</div>
+              <div class="com-side-item"><span style="font-size:14px">◔</span> Member intros</div>
+              <div class="com-side-item"><span style="font-size:14px">◇</span> Weekly events</div>
+              <div class="com-side-item"><span style="font-size:14px">◑</span> Member chat</div>
+              <div class="com-side-item"><span style="font-size:14px">⌖</span> By concept</div>
+            </div>
+            <div class="com-side-section">
+              <div class="com-side-title">Free courses</div>
+              <div class="com-side-item"><span style="font-size:14px">▢</span> CoverPanda University</div>
+              <div class="com-side-item"><span style="font-size:14px">▤</span> Bookkeeping basics</div>
+              <div class="com-side-item"><span style="font-size:14px">◧</span> Tax prep for QSR</div>
+              <div class="com-side-item"><span style="font-size:14px">◭</span> Multi-unit playbook</div>
+            </div>
+          </aside>
+
+          <main class="com-feed">
+            <div class="com-post">
+              <div class="cp-hdr">
+                <div class="cp-av" style="background:linear-gradient(135deg,#1A6B6B,#0A3D3D)">TB</div>
+                <div class="cp-meta"><h5>Taylor Byington <span class="role-tag" style="background:var(--coral-50);color:var(--coral)">Founder</span></h5><p>Posted in Weekly Events · Aug 16</p></div>
+              </div>
+              <div class="cp-body">
+                Join us every week for <strong>Weekly Q&amp;A w/ Taylor</strong> — a live session for franchise operators. Bring your hardest questions: pricing, royalty negotiation, multi-unit ops, hiring.<br><br>This week: <strong>opening your second location</strong>. SBA financing, hiring before opening, and how to not crater your first store while you do it.
+              </div>
+              <div class="cp-actions"><span>♡ 28</span><span>↩ Reply (12)</span><span>↗ Share</span></div>
+            </div>
+
+            <div class="com-post">
+              <div class="cp-hdr">
+                <div class="cp-av" style="background:linear-gradient(135deg,#E8734A,#C45A36)">CF</div>
+                <div class="cp-meta"><h5>Carla Fields <span class="role-tag" style="background:var(--blue-50);color:var(--blue)">Multi-unit Crumbl</span></h5><p>Posted in By Concept · 2 days ago</p></div>
+              </div>
+              <div class="cp-body">
+                Tampa Crumbl group here (4 units). How are you handling <strong>shared marketing budgets</strong> across locations? We're spending too much per ticket on Meta — geo-fencing might be overlapping.
+              </div>
+              <div class="cp-actions"><span>♡ 14</span><span>↩ Reply (8)</span><span>↗ Share</span></div>
+            </div>
+
+            <div class="com-post">
+              <div class="cp-hdr">
+                <div class="cp-av" style="background:linear-gradient(135deg,#3B6AE8,#1E4FB8)">KT</div>
+                <div class="cp-meta"><h5>Kayden Thomson <span class="role-tag" style="background:var(--violet-50);color:var(--violet)">CoverPanda</span></h5><p>Posted in Latest · 4 days ago</p></div>
+              </div>
+              <div class="cp-body">
+                <strong>Shipped:</strong> Multi-location toggle (top of your sidebar). Switch between unit-level views without leaving the page.
+              </div>
+              <div class="cp-actions"><span>♡ 36</span><span>↩ Reply (4)</span><span>↗ Share</span></div>
+            </div>
+          </main>
+        </div>
+      </section>
+
+      <!-- ============ SETUP ============ -->
+      <section class="tab-content" id="t-setup">
+        <div class="page-hdr">
+          <div><h1>Setup</h1><div class="subtitle">Entity formation, business profile, documents, and connections.</div></div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'setup-company')">Company</button>
+          <button class="subnav-tab" onclick="switchSub(this,'setup-formation')">Formation</button>
+          <button class="subnav-tab" onclick="switchSub(this,'setup-connections')">Connections</button>
+          <button class="subnav-tab" onclick="switchSub(this,'setup-billing')">Billing</button>
+        </div>
+
+        <div class="subnav-content active" id="setup-company">
+          <div class="grid-main-wide">
+            <div>
+              <div class="field-block">
+                <div class="field-block-hdr"><h3>Owner</h3><p>The person legally responsible for this entity.</p></div>
+                <div class="field-block-body">
+                  <div class="field-row-d"><label>Full name</label><div><input value="Jordan Smith"></div></div>
+                  <div class="field-row-d"><label>Email</label><div><input value="jordan@donutnv.com"></div></div>
+                  <div class="field-row-d"><label>Mobile</label><div><input value="(702) 555-0119"></div></div>
+                </div>
+              </div>
+              <div class="field-block">
+                <div class="field-block-hdr"><h3>Company</h3><p>Updates here flow to all integrations.</p></div>
+                <div class="field-block-body">
+                  <div class="field-row-d"><label>Legal name</label><div><input value="Smith QSR Holdings LLC"></div></div>
+                  <div class="field-row-d"><label>DBA</label><div><input value="DonutNV — Springfield"></div></div>
+                  <div class="field-row-d"><label>Entity type</label><div><select><option>LLC</option><option>S-Corp</option><option>C-Corp</option></select></div></div>
+                  <div class="field-row-d"><label>EIN</label><div><input value="84-1234567"></div></div>
+                  <div class="field-row-d"><label>State</label><div><select><option>Nevada</option></select></div></div>
+                  <div class="field-row-d"><label>Industry</label><div><select><option>Food Services &amp; QSR</option></select></div></div>
+                </div>
+              </div>
+            </div>
+            <aside>
+              <div class="action-stack">
+                <div class="action-card"><div class="ac-icon">▤</div><h4>Company documents</h4><p>3 of 3 uploaded · Last updated May 4</p><button class="ac-btn">My documents ›</button></div>
+                <div class="action-card info"><div class="ac-icon">◑</div><h4>Free consultation</h4><p>Have a question? Ask our experts about business matters.</p><button class="ac-btn">Book now ›</button></div>
+                <div class="action-card success"><div class="ac-icon">✓</div><h4>Compliance up to date</h4><p>Annual report filed. RA active through 2027.</p></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="setup-formation">
+          <div class="card">
+            <div class="card-header"><h3>Current formation status</h3><span class="pill green">Active</span></div>
+            <div style="display:flex;align-items:center;gap:0;margin:12px 0">
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">Filed</div></div>
+              <div style="flex:1;height:2px;background:var(--green)"></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">Approved</div></div>
+              <div style="flex:1;height:2px;background:var(--green)"></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">EIN issued</div></div>
+              <div style="flex:1;height:2px;background:var(--green)"></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">OA signed</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="setup-connections">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Banking</h3></div>
+              <div class="conn-chip"><div class="brand-logo bl-mercury">M</div><div class="cc-info"><h5>Mercury</h5><p>Checking + savings</p></div><span class="pill green">Active</span></div>
+              <div class="conn-chip" onclick="openConn('plaid')"><div class="brand-logo bl-plaid">P</div><div class="cc-info"><h5>Other bank (via Plaid)</h5><p>Chase, BofA, Wells, Cap One, Citi</p></div><span class="pill gray">Connect</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Cards</h3></div>
+              <div class="conn-chip"><div class="brand-logo bl-ramp">R</div><div class="cc-info"><h5>Ramp</h5><p>Corporate cards · 1.5% cashback</p></div><span class="pill green">Active</span></div>
+              <div class="conn-chip" onclick="openConn('cards')"><div class="brand-logo bl-brex">B</div><div class="cc-info"><h5>Brex</h5><p>Alternative card</p></div><span class="pill gray">Connect</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Accounting &amp; payroll</h3></div>
+              <div class="conn-chip" onclick="openConn('quickbooks')"><div class="brand-logo bl-quickbooks">qb</div><div class="cc-info"><h5>QuickBooks Online</h5><p>Sync accounting</p></div><span class="pill gray">Connect</span></div>
+              <div class="conn-chip" onclick="openConn('payroll-picker')"><div class="brand-logo bl-gusto">G</div><div class="cc-info"><h5>Payroll provider</h5><p>Gusto, ADP, Homebase</p></div><span class="pill gray">Connect</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>POS &amp; payments</h3></div>
+              <div class="conn-chip"><div class="brand-logo bl-stripe">s</div><div class="cc-info"><h5>Stripe</h5><p>Payment processing</p></div><span class="pill green">Active</span></div>
+              <div class="conn-chip" onclick="openConn('pos')"><div class="brand-logo bl-toast">T</div><div class="cc-info"><h5>POS</h5><p>Toast, Square, Clover, Lightspeed</p></div><span class="pill gray">Connect</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="setup-billing">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><h3>Active subscriptions</h3><span id="sub-mrr" class="meta">$149/mo MRR</span></div>
+                <div id="sub-list"></div>
+              </div>
+            </div>
+            <aside>
+              <div class="action-card">
+                <div class="ac-icon">▥</div>
+                <h4>Payment method</h4>
+                <p style="margin-bottom:8px">Visa •••• 4242 · Default</p>
+                <p style="font-size:11px;color:var(--ink-500);margin-bottom:12px">Expires 12/28</p>
+                <button class="ac-btn">Update card</button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- ============ MODALS ========================== -->
+<!-- ============================================== -->
+
+<!-- Universal checkout -->
+<div class="modal-bg" id="checkout-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('checkout-modal')">×</button>
+    <div class="m-progress"><div class="active" id="ck-mp-1"></div><div id="ck-mp-2"></div><div id="ck-mp-3"></div></div>
+    <div class="modal-step active" id="ck-1">
+      <h2 id="ck-title">Subscribe</h2>
+      <p class="m-sub" id="ck-sub">Review and confirm.</p>
+      <div class="partner-strip">
+        <div id="ck-logo-mount"><div class="brand-logo bl-coverpanda">P</div></div>
+        <div style="flex:1"><h4 id="ck-name">Service</h4><p id="ck-desc">—</p></div>
+      </div>
+      <div class="summary-box">
+        <div class="sb-row"><span id="ck-line-name">—</span><span id="ck-line-price">—</span></div>
+        <div class="sb-row" style="font-size:11px;color:var(--ink-500)"><span>Member discount</span><span style="color:var(--green)">−15%</span></div>
+        <div class="sb-row total"><span id="ck-total-label">Today's charge</span><span id="ck-total">$0.00</span></div>
+      </div>
+      <div id="ck-billing-existing">
+        <div style="font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Bills to existing method</div>
+        <div class="payment-method"><div class="pm-icon">▥</div><div class="pm-info"><h5>Visa •••• 4242</h5><p>Default · Added to your CoverPanda subscription</p></div></div>
+      </div>
+      <button class="btn-modal" onclick="ckNext(2)" id="ck-confirm-btn">Add to Subscription →</button>
+      <button class="btn-modal-2" onclick="closeModal('checkout-modal')">Cancel</button>
+    </div>
+    <div class="modal-step" id="ck-2">
+      <h2>Processing</h2>
+      <p class="m-sub">Charging your card and provisioning the service.</p>
+      <div class="connection-progress" id="ck-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Validating payment method</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Charging via Stripe</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Adding to subscription</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Provisioning service</div>
+      </div>
+    </div>
+    <div class="modal-step" id="ck-3">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>You're subscribed</h3><p id="ck-success-msg">Your subscription is active.</p></div>
+      <div class="summary-box" style="margin-top:18px"><div class="sb-row"><span>Receipt #</span><span id="ck-receipt">CP-78421</span></div><div class="sb-row"><span>Charged to</span><span>Visa •••• 4242</span></div><div class="sb-row total"><span>Amount</span><span id="ck-success-amt">$0.00</span></div></div>
+      <button class="btn-modal" onclick="ckDone()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- QuickBooks -->
+<div class="modal-bg" id="quickbooks-modal">
+  <div class="modal wide">
+    <button class="m-close" onclick="closeModal('quickbooks-modal')">×</button>
+    <div class="m-progress"><div class="active"></div><div></div><div></div><div></div></div>
+    <div class="modal-step active" id="qb-1">
+      <h2>Connect QuickBooks Online</h2>
+      <p class="m-sub">Sync your books and automate journal entries.</p>
+      <div class="partner-strip"><div class="brand-logo lg bl-quickbooks">qb</div><div style="flex:1"><h4>Intuit QuickBooks Online</h4><p>You'll be sent to Intuit to authorize the connection.</p></div></div>
+      <div class="scope-list"><h5>What CoverPanda can do</h5><div class="scope-item">Read &amp; write your chart of accounts</div><div class="scope-item">Post journal entries from connected sources</div><div class="scope-item">Read invoices, expenses, customer records</div><div class="scope-item">Reconcile bank-feed transactions</div></div>
+      <button class="btn-modal" onclick="qbStep(2)">Connect with Intuit →</button>
+      <button class="btn-modal-2" onclick="closeModal('quickbooks-modal')">Not now</button>
+    </div>
+    <div class="modal-step" id="qb-2">
+      <h2>Authorize CoverPanda</h2>
+      <p class="m-sub">Sign in to your Intuit account.</p>
+      <div class="oauth-frame"><div class="of-logo-wrap"><div class="brand-logo lg bl-quickbooks">qb</div></div><h4>Intuit OAuth · Sign in</h4><p>intuit.com/connect/oauth2</p></div>
+      <div class="field"><label>Intuit email</label><input value="jordan@donutnv.com"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-modal" onclick="qbStep(3)">Sign in &amp; Continue →</button>
+      <button class="btn-modal-2" onclick="qbStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="qb-3">
+      <h2>Choose your company file</h2>
+      <p class="m-sub">Found 1 active company under this Intuit account.</p>
+      <div class="acc-pick selected"><div class="brand-logo bl-quickbooks">qb</div><div class="ap-info"><h5>Smith QSR Holdings LLC</h5><p>QBO Plus · 1 user</p></div><span class="pill green">Recommended</span></div>
+      <div class="acc-pick"><div style="font-size:22px;color:var(--ink-400)">+</div><div class="ap-info"><h5>Create a new QBO company</h5><p>We'll provision a fresh file</p></div></div>
+      <button class="btn-modal" onclick="qbStep(4)">Authorize &amp; Sync →</button>
+    </div>
+    <div class="modal-step" id="qb-4">
+      <h2>Setting up your books</h2>
+      <p class="m-sub">Importing chart of accounts and mapping connected sources.</p>
+      <div class="connection-progress" id="qb-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Authorizing OAuth</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Importing chart of accounts</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Mapping Stripe → 4000 Sales</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Mapping Gusto → 6010 Payroll</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">5</div>Backfilling 90 days</div>
+      </div>
+    </div>
+    <div class="modal-step" id="qb-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>QuickBooks connected</h3><p>Future activity will auto-post nightly.</p></div>
+      <button class="btn-modal" onclick="finishConn('quickbooks')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payroll provider picker -->
+<div class="modal-bg" id="payroll-picker-modal">
+  <div class="modal wide">
+    <button class="m-close" onclick="closeModal('payroll-picker-modal')">×</button>
+    <h2>Pick a payroll provider</h2>
+    <p class="m-sub">All five integrate with QuickBooks. We pre-fill your EIN and link Mercury for funding.</p>
+    <div class="brand-grid" style="grid-template-columns:repeat(2,1fr);gap:10px">
+      <button class="brand-pick" onclick="closeModal('payroll-picker-modal');openConn('gusto')">
+        <div class="brand-logo lg bl-gusto">G</div>
+        <h5>Gusto</h5>
+        <p style="font-size:10px;color:var(--ink-500)">$49/mo + $6/EE · 3 mo free</p>
+        <span class="pill coral" style="margin-top:4px">Recommended</span>
+      </button>
+      <button class="brand-pick" onclick="closeModal('payroll-picker-modal');openConn('adp')">
+        <div class="brand-logo lg bl-adp">ADP</div>
+        <h5>ADP RUN</h5>
+        <p style="font-size:10px;color:var(--ink-500)">From $79/mo</p>
+      </button>
+      <button class="brand-pick" onclick="closeModal('payroll-picker-modal');openConn('homebase')">
+        <div class="brand-logo lg bl-homebase">H</div>
+        <h5>Homebase</h5>
+        <p style="font-size:10px;color:var(--ink-500)">Free + scheduling</p>
+      </button>
+      <button class="brand-pick" onclick="closeModal('payroll-picker-modal');openConn('paychex')">
+        <div class="brand-logo lg bl-paychex">P</div>
+        <h5>Paychex</h5>
+        <p style="font-size:10px;color:var(--ink-500)">Custom pricing</p>
+      </button>
+    </div>
+    <button class="btn-modal-2" onclick="closeModal('payroll-picker-modal')">I'll decide later</button>
+  </div>
+</div>
+
+<!-- Generic Gusto/ADP/Homebase/Paychex setup modal — reuses one shell -->
+<div class="modal-bg" id="payroll-setup-modal">
+  <div class="modal wide">
+    <button class="m-close" onclick="closeModal('payroll-setup-modal')">×</button>
+    <div class="m-progress"><div class="active"></div><div></div><div></div><div></div><div></div></div>
+    <div class="modal-step active" id="ps-1">
+      <h2 id="ps-title">Set up payroll</h2>
+      <p class="m-sub" id="ps-sub">Full-service payroll, automated tax filings.</p>
+      <div class="partner-strip"><div id="ps-logo-mount"></div><div style="flex:1"><h4 id="ps-name">Provider</h4><p id="ps-meta">—</p></div></div>
+      <div class="scope-list"><h5>What we'll do</h5><div class="scope-item">Provision a company file linked to your EIN</div><div class="scope-item">File state tax registrations (NV SUI / MBT)</div><div class="scope-item">Set up direct deposit from Mercury</div><div class="scope-item">Map wages to QuickBooks (if connected)</div></div>
+      <button class="btn-modal" onclick="psStep(2)">Continue →</button>
+      <button class="btn-modal-2" onclick="closeModal('payroll-setup-modal')">Not now</button>
+    </div>
+    <div class="modal-step" id="ps-2">
+      <h2>Confirm your company</h2>
+      <p class="m-sub">We'll create your company with these details.</p>
+      <div class="field-row-mod"><div class="field"><label>Legal name</label><input value="Smith QSR Holdings LLC"></div><div class="field"><label>EIN</label><input value="84-1234567"></div></div>
+      <div class="field-row-mod"><div class="field"><label>Pay schedule</label><select><option>Bi-weekly</option><option>Weekly</option></select></div><div class="field"><label>First pay date</label><input value="May 8, 2026"></div></div>
+      <button class="btn-modal" onclick="psStep(3)">Continue →</button>
+      <button class="btn-modal-2" onclick="psStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="ps-3">
+      <h2>Funding bank account</h2>
+      <p class="m-sub">Where wages and tax payments will debit from.</p>
+      <div class="acc-pick selected"><div class="brand-logo bl-mercury">M</div><div class="ap-info"><h5>Mercury Checking ••••4821</h5><p>Connected · Default funding source</p></div><div class="ap-bal">$24,830</div></div>
+      <div class="acc-pick" onclick="closeModal('payroll-setup-modal');openConn('plaid')"><div style="font-size:22px;color:var(--ink-400)">+</div><div class="ap-info"><h5>Connect a different bank</h5><p>Use Plaid to add Chase, BofA, Wells</p></div></div>
+      <button class="btn-modal" onclick="psStep(4)">Use Mercury →</button>
+      <button class="btn-modal-2" onclick="psStep(2)">← Back</button>
+    </div>
+    <div class="modal-step" id="ps-4">
+      <h2 id="ps-prov-title">Setting up payroll</h2>
+      <p class="m-sub">Provisioning your company and registering with state agencies.</p>
+      <div class="connection-progress" id="ps-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Creating <span class="ps-prov">Gusto</span> company</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Verifying EIN with IRS</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Registering NV state SUI</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Linking Mercury for ACH debit</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">5</div>Mapping payroll → QuickBooks</div>
+      </div>
+    </div>
+    <div class="modal-step" id="ps-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3 id="ps-success-h">Payroll is live</h3><p>Add employees and run your first pay run from the Payroll tab.</p></div>
+      <button class="btn-modal" onclick="finishConn('payroll')">Go to Payroll</button>
+    </div>
+  </div>
+</div>
+
+<!-- Plaid bank picker -->
+<div class="modal-bg" id="plaid-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('plaid-modal')">×</button>
+    <div class="plaid-header"><div class="brand-logo bl-plaid sm">P</div><h4>Plaid · Securely connect your bank</h4><span class="ph-tag">256-bit encryption</span></div>
+    <div class="modal-step active" id="pl-1">
+      <h2>Choose your bank</h2>
+      <p class="m-sub">Plaid links your bank read-only — we never see your credentials.</p>
+      <div class="brand-grid">
+        <button class="brand-pick" onclick="plStep(2,'Chase')"><div class="brand-logo bl-chase">C</div><h5>Chase</h5></button>
+        <button class="brand-pick" onclick="plStep(2,'Bank of America')"><div class="brand-logo bl-bofa">BA</div><h5>BofA</h5></button>
+        <button class="brand-pick" onclick="plStep(2,'Wells Fargo')"><div class="brand-logo bl-wellsfargo">WF</div><h5>Wells Fargo</h5></button>
+        <button class="brand-pick" onclick="plStep(2,'Mercury')"><div class="brand-logo bl-mercury">M</div><h5>Mercury</h5></button>
+        <button class="brand-pick" onclick="plStep(2,'Capital One')"><div class="brand-logo bl-capitalone">C1</div><h5>Capital One</h5></button>
+        <button class="brand-pick" onclick="plStep(2,'Citi')"><div class="brand-logo bl-citi">Citi</div><h5>Citi</h5></button>
+      </div>
+      <button class="btn-modal-2" onclick="closeModal('plaid-modal')">Cancel</button>
+    </div>
+    <div class="modal-step" id="pl-2">
+      <h2>Sign in to <span id="pl-bank-name">Chase</span></h2>
+      <p class="m-sub">Credentials sent directly to your bank.</p>
+      <div class="oauth-frame"><div class="of-logo-wrap" id="pl-oauth-logo"></div><h4>Online Banking · Sign in</h4><p id="pl-oauth-url">chase.com/oauth</p></div>
+      <div class="field"><label>Username</label><input value="jordan.smith"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-modal" onclick="plStep(3)">Sign in →</button>
+      <button class="btn-modal-2" onclick="plStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="pl-3">
+      <h2>Pick accounts to link</h2>
+      <div class="acc-pick selected"><div style="font-size:22px">◐</div><div class="ap-info"><h5>Business Checking</h5><p>••••8821</p></div><div class="ap-bal">$24,830</div></div>
+      <div class="acc-pick"><div style="font-size:22px">◑</div><div class="ap-info"><h5>Business Savings</h5><p>••••8822</p></div><div class="ap-bal">$15,000</div></div>
+      <button class="btn-modal" onclick="plStep(4)">Link Accounts →</button>
+    </div>
+    <div class="modal-step" id="pl-4">
+      <h2>Linking accounts</h2>
+      <div class="connection-progress" id="pl-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Authenticating with bank</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Pulling account metadata</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Backfilling 24 months</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Syncing balances</div>
+      </div>
+    </div>
+    <div class="modal-step" id="pl-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>Bank linked</h3><p><strong id="pl-bank-done">Chase</strong> Business Checking is now linked.</p></div>
+      <button class="btn-modal" onclick="finishConn('plaid')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Card picker (Ramp/Brex) -->
+<div class="modal-bg" id="cards-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('cards-modal')">×</button>
+    <h2>Connect a corporate card</h2>
+    <p class="m-sub">Pick a card provider — auto-syncs spend to your books.</p>
+    <div class="brand-grid" style="grid-template-columns:1fr 1fr">
+      <button class="brand-pick" onclick="closeModal('cards-modal');toast('Connecting Ramp','success');setTimeout(()=>finishConn('cards'),1500)">
+        <div class="brand-logo lg bl-ramp">R</div>
+        <h5>Ramp</h5>
+        <p style="font-size:10px;color:var(--ink-500)">1.5% cashback · Currently active</p>
+        <span class="pill green" style="margin-top:4px">Recommended</span>
+      </button>
+      <button class="brand-pick" onclick="closeModal('cards-modal');toast('Connecting Brex','success');setTimeout(()=>finishConn('cards'),1500)">
+        <div class="brand-logo lg bl-brex">B</div>
+        <h5>Brex</h5>
+        <p style="font-size:10px;color:var(--ink-500)">Points rewards</p>
+      </button>
+    </div>
+    <button class="btn-modal-2" onclick="closeModal('cards-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- POS modal -->
+<div class="modal-bg" id="pos-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('pos-modal')">×</button>
+    <div class="m-progress"><div class="active"></div><div></div><div></div><div></div></div>
+    <div class="modal-step active" id="pos-1">
+      <h2>Connect your POS</h2>
+      <p class="m-sub">Auto-import sales, tips, and labor hours.</p>
+      <div class="brand-grid">
+        <button class="brand-pick" onclick="posStep(2,'Toast')"><div class="brand-logo bl-toast">T</div><h5>Toast</h5></button>
+        <button class="brand-pick" onclick="posStep(2,'Square')"><div class="brand-logo bl-square">▢</div><h5>Square</h5></button>
+        <button class="brand-pick" onclick="posStep(2,'Clover')"><div class="brand-logo bl-clover">☘</div><h5>Clover</h5></button>
+        <button class="brand-pick" onclick="posStep(2,'Lightspeed')"><div class="brand-logo bl-lightspeed">L</div><h5>Lightspeed</h5></button>
+        <button class="brand-pick" onclick="posStep(2,'Revel')"><div class="brand-logo bl-revel">R</div><h5>Revel</h5></button>
+        <button class="brand-pick" onclick="posStep(2,'Stripe Terminal')"><div class="brand-logo bl-stripe">s</div><h5>Stripe Term</h5></button>
+      </div>
+      <button class="btn-modal-2" onclick="closeModal('pos-modal')">Cancel</button>
+    </div>
+    <div class="modal-step" id="pos-2">
+      <h2>Sign in to <span id="pos-system">Toast</span></h2>
+      <div class="oauth-frame"><div class="of-logo-wrap" id="pos-oauth-logo"></div><h4>OAuth Authorization</h4><p id="pos-oauth-url">api.toasttab.com/oauth</p></div>
+      <div class="field"><label>Email</label><input value="jordan@donutnv.com"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-modal" onclick="posStep(3)">Authorize →</button>
+      <button class="btn-modal-2" onclick="posStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="pos-3">
+      <h2>Pick your locations</h2>
+      <div class="acc-pick selected"><div style="font-size:22px">⌖</div><div class="ap-info"><h5>DonutNV — Springfield</h5><p>125 S Main St · Active</p></div><div class="ap-bal" style="color:var(--green)">Active</div></div>
+      <button class="btn-modal" onclick="posStep(4)">Sync Selected →</button>
+    </div>
+    <div class="modal-step" id="pos-4">
+      <h2>Importing POS data</h2>
+      <div class="connection-progress" id="pos-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Authenticating</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Pulling menu &amp; catalog</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Backfilling 90 days of sales</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Mapping revenue → QuickBooks</div>
+      </div>
+    </div>
+    <div class="modal-step" id="pos-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>POS connected</h3><p>Sales sync hourly. Daily settlement entries post to QuickBooks.</p></div>
+      <button class="btn-modal" onclick="finishConn('pos')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Invite agent -->
+<div class="modal-bg" id="invite-agent-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('invite-agent-modal')">×</button>
+    <h2>Invite your insurance agent</h2>
+    <p class="m-sub">They get view-only access to your policies, COIs, and renewal calendar.</p>
+    <div class="field-row-mod"><div class="field"><label>Agent name</label><input placeholder="Mike Halsey"></div><div class="field"><label>Agency</label><input placeholder="State Farm — Las Vegas"></div></div>
+    <div class="field"><label>Agent email</label><input placeholder="mike@statefarmlv.com"></div>
+    <div class="field"><label>Note (optional)</label><textarea placeholder="Mike, please come help us audit our coverage." rows="3"></textarea></div>
+    <button class="btn-modal" onclick="closeModal('invite-agent-modal');toast('Invitation sent','success')">Send invite →</button>
+    <button class="btn-modal-2" onclick="closeModal('invite-agent-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- Add employee -->
+<div class="modal-bg" id="add-employee-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('add-employee-modal')">×</button>
+    <h2>Add an employee</h2>
+    <p class="m-sub">Send a self-onboarding link or fill out details now.</p>
+    <div class="field-row-mod"><div class="field"><label>First name</label><input placeholder="Maria"></div><div class="field"><label>Last name</label><input placeholder="Rodriguez"></div></div>
+    <div class="field"><label>Work email</label><input placeholder="maria@donutnv.com"></div>
+    <div class="field-row-mod"><div class="field"><label>Role</label><select><option>Crew</option><option>Shift Lead</option><option>Manager</option></select></div><div class="field"><label>Comp type</label><select><option>Hourly</option><option>Salary</option></select></div></div>
+    <button class="btn-modal" onclick="closeModal('add-employee-modal');toast('Self-onboarding link sent','success')">Send onboarding link →</button>
+    <button class="btn-modal-2" onclick="closeModal('add-employee-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- Drawer -->
+<div class="drawer-bg" id="drawer-bg" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr"><h3>Notifications</h3><button class="m-close" onclick="closeDrawer()" style="position:static">×</button></div>
+  <div class="drawer-body">
+    <div class="notif"><div class="n-icon" style="background:var(--coral-50);color:var(--coral)">●</div><div class="n-info"><h5>Pay run needs your approval</h5><p>May 8 bi-weekly · 4 employees · $8,640 gross.</p><div class="n-time">2h ago</div></div></div>
+    <div class="notif"><div class="n-icon" style="background:var(--amber-50);color:var(--amber)">⌖</div><div class="n-info"><h5>2 transactions need a category</h5><p>Mercury wire $420 and Stripe refund $84.50.</p><div class="n-time">Today</div></div></div>
+    <div class="notif"><div class="n-icon" style="background:var(--green-50);color:var(--green)">✓</div><div class="n-info"><h5>April books closed</h5><p>P&amp;L signed by your bookkeeper. Net profit $6,120.</p><div class="n-time">Yesterday</div></div></div>
+    <div class="notif"><div class="n-icon" style="background:var(--blue-50);color:var(--blue)">◇</div><div class="n-info"><h5>Q1 taxes filed</h5><p>941, FUTA, NV MBT, NV SUI all filed Apr 30.</p><div class="n-time">May 1</div></div></div>
+  </div>
+</div>
+
+<!-- Cmd palette -->
+<div class="cmd-palette-bg" id="cmd-palette-bg" onclick="closeCmd(event)">
+  <div class="cmd-palette" onclick="event.stopPropagation()">
+    <div class="cmd-palette-input"><span style="font-size:20px;color:var(--ink-500)">⌕</span><input id="cmd-input" placeholder="Search or jump to…"></div>
+    <div class="cmd-palette-results">
+      <div class="cmd-section">Jump to</div>
+      <div class="cmd-result" onclick="navTo('today');closeCmd()"><div class="cr-icon">◐</div><div class="cr-info"><h5>Today</h5><p>Sales, labor, deposits</p></div></div>
+      <div class="cmd-result" onclick="navTo('finance');closeCmd()"><div class="cr-icon">$</div><div class="cr-info"><h5>Finance</h5><p>Cash, accounts, transactions</p></div></div>
+      <div class="cmd-result" onclick="navTo('accounting');closeCmd()"><div class="cr-icon">📚</div><div class="cr-info"><h5>Accounting</h5><p>Books and reports</p></div></div>
+      <div class="cmd-result" onclick="navTo('insurance');closeCmd()"><div class="cr-icon">🛡️</div><div class="cr-info"><h5>Insurance</h5><p>Policies, COIs, claims</p></div></div>
+      <div class="cmd-section">Connect</div>
+      <div class="cmd-result" onclick="closeCmd();openConn('quickbooks')"><div class="cr-icon"><div class="brand-logo sm bl-quickbooks">qb</div></div><div class="cr-info"><h5>Connect QuickBooks</h5></div></div>
+      <div class="cmd-result" onclick="closeCmd();openConn('payroll-picker')"><div class="cr-icon"><div class="brand-logo sm bl-gusto">G</div></div><div class="cr-info"><h5>Set up payroll</h5><p>Gusto, ADP, Homebase</p></div></div>
+      <div class="cmd-result" onclick="closeCmd();openConn('plaid')"><div class="cr-icon"><div class="brand-logo sm bl-plaid">P</div></div><div class="cr-info"><h5>Connect bank via Plaid</h5></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ STATE (persisted to localStorage as 'coverpanda:v1') ============
+   The same key is used by index.html (V1) so signup / milestones / connections
+   stay in sync across both prototypes on the same machine. */
+const STORAGE_KEY='coverpanda:v1';
+const DEFAULT_APP={
+  signup:{path:'new',completed:false},
+  billingOnFile:false,
+  customerEmail:'jordan@donutnv.com',
+  connections:{quickbooks:false,payroll:false,plaid:false,pos:false,cards:true,insurance:true},
+  payrollProvider:null,
+  subscriptions:[],
+  activeCheckout:null,
+  currentLocation:'SP',
+  milestones:{business:false,bank:false,cards:false,finance:false,accounting:false,quickbooks:false,payroll:false,insurance:false},
+  pillDismissed:false
+};
+
+function loadState(){
+  try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return JSON.parse(JSON.stringify(DEFAULT_APP));
+    const saved=JSON.parse(raw);return Object.assign(JSON.parse(JSON.stringify(DEFAULT_APP)),saved);
+  }catch(e){return JSON.parse(JSON.stringify(DEFAULT_APP))}
+}
+function saveState(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(APP))}catch(e){}
+}
+const APP=loadState();
+
+/* Service catalog with brand logos */
+const LOGO=(cls,txt)=>`<div class="brand-logo ${cls}">${txt}</div>`;
+const SERVICES={
+  'bookkeeping':{name:'Monthly Bookkeeping',desc:'Dedicated bookkeeper, monthly closes.',price:250,interval:'mo',logo:LOGO('bl-coverpanda','P')},
+  'tax-prep':{name:'Tax Preparation',desc:'Annual federal + state returns.',price:1500,interval:'yr',logo:LOGO('bl-coverpanda','P')},
+  'cpa-consult':{name:'CPA Consultation (30 min)',desc:'30 min with a franchise CPA.',price:150,interval:'one-time',logo:LOGO('bl-coverpanda','P')},
+  'sales-tax':{name:'Sales Tax Filing',desc:'Quarterly returns in every state.',price:99,interval:'qtr',logo:LOGO('bl-coverpanda','P')},
+  'cfo':{name:'Fractional CFO',desc:'Strategic financial planning.',price:1500,interval:'mo',logo:LOGO('bl-coverpanda','P')},
+  'payroll-benefits':{name:'Health Benefits',desc:'Group medical, dental, vision.',price:8,interval:'employee/mo',logo:LOGO('bl-gusto','G')},
+  'payroll-401k':{name:'Guideline 401(k)',desc:'Auto-enroll integrated with Gusto.',price:40,interval:'mo + $6/participant',logo:LOGO('','G')},
+  'payroll-wc':{name:"Workers' Comp",desc:'NEXT pay-as-you-go.',price:75,interval:'mo est.',logo:LOGO('bl-next','n')},
+  'payroll-hr':{name:'HR Concierge',desc:'On-demand HR advisors.',price:59,interval:'mo',logo:LOGO('bl-coverpanda','P')},
+  'payroll-time':{name:'Homebase Time',desc:'Scheduling and tip tracking.',price:0,interval:'free for 1 location',logo:LOGO('bl-homebase','H')},
+  'insurance-next':{name:'NEXT Insurance',desc:'GL + WC + commercial auto.',price:79,interval:'mo',logo:LOGO('bl-next','n')},
+  'insurance-hiscox':{name:'Hiscox',desc:'Professional liability + BOP.',price:112,interval:'mo',logo:LOGO('bl-hiscox','H')},
+  'insurance-thimble':{name:'Thimble',desc:'On-demand event coverage.',price:5,interval:'hr',logo:LOGO('bl-thimble','t')},
+  'coverpanda-insurance':{name:'CoverPanda Insurance',desc:'Bundled GL/WC/PL with direct carrier relationships.',price:240,interval:'mo est.',logo:LOGO('bl-coverpanda','P')},
+  'mailchimp':{name:'Mailchimp',desc:'Email marketing.',price:13,interval:'mo',logo:LOGO('bl-mailchimp','M')},
+  'canva':{name:'Canva Pro',desc:'Design tool.',price:9,interval:'mo',logo:LOGO('bl-canva','C')},
+  'marketing-meta':{name:'Meta Ads (managed)',desc:'Geo-targeted social ads.',price:199,interval:'mo',logo:LOGO('bl-meta','f')},
+  'marketing-google':{name:'Google Ads (managed)',desc:'Local Search + Maps ads.',price:199,interval:'mo',logo:LOGO('bl-google-ads','G')},
+  'marketing-yelp':{name:'Yelp Ads',desc:'Sponsored Yelp placement.',price:300,interval:'mo',logo:LOGO('bl-yelp','Y')},
+  'openphone':{name:'OpenPhone',desc:'Business phone with shared inbox.',price:15,interval:'mo',logo:LOGO('bl-openphone','○')},
+  'slack':{name:'Slack',desc:'Team chat and integrations.',price:8,interval:'mo',logo:LOGO('bl-slack','#')},
+  'zoom':{name:'Zoom',desc:'Video calls.',price:15,interval:'mo',logo:LOGO('bl-zoom','zm')},
+  'ringcentral':{name:'RingCentral',desc:'Cloud phone system.',price:30,interval:'mo',logo:LOGO('bl-ringcentral','R')},
+  'googleworkspace':{name:'Google Workspace',desc:'Gmail, Drive, Docs, Meet.',price:6,interval:'mo',logo:LOGO('bl-googleworkspace','G')},
+  'microsoft365':{name:'Microsoft 365',desc:'Outlook, Office, Teams.',price:8,interval:'mo',logo:LOGO('bl-microsoft','▦')},
+  'notion':{name:'Notion',desc:'Operating manual + SOPs.',price:0,interval:'free Team plan',logo:LOGO('bl-notion','N')},
+  'stripe':{name:'Stripe Payments',desc:'Card processing.',price:0,interval:'standard rates',logo:LOGO('bl-stripe','s')},
+  'rocket-lawyer':{name:'Rocket Lawyer',desc:'Legal docs and consultations.',price:40,interval:'mo',logo:LOGO('bl-rocketlawyer','R')},
+  'legalzoom':{name:'LegalZoom',desc:'Trademarks, contracts.',price:79,interval:'mo',logo:LOGO('bl-legalzoom','L')},
+  'legal-review':{name:'Legal Review (1 hr)',desc:'Lease, employment, FDD review.',price:200,interval:'hr',logo:LOGO('bl-coverpanda','P')}
+};
+
+/* Sidebar nav definition (canonical order) */
+const NAV=[
+  {key:'today',icon:'◐',label:'Today'},
+  {key:'finance',icon:'$',label:'Finance'},
+  {key:'sales',icon:'◭',label:'Sales'},
+  {key:'accounting',icon:'▤',label:'Accounting'},
+  {key:'payroll',icon:'◇',label:'Payroll'},
+  {key:'insurance',icon:'⛨',label:'Insurance'},
+  {key:'_section_grow'},
+  {key:'marketplace',icon:'▦',label:'Marketplace'},
+  {key:'community',icon:'◔',label:'Community'},
+  {key:'_section_account'},
+  {key:'setup',icon:'⚙',label:'Setup'}
+];
+
+function buildNav(){
+  const root=document.getElementById('sb-nav');root.innerHTML='';
+  NAV.forEach(item=>{
+    if(item.key==='_section_grow'){const d=document.createElement('div');d.className='sb-section';d.textContent='Grow';root.appendChild(d);return}
+    if(item.key==='_section_account'){const d=document.createElement('div');d.className='sb-section';d.textContent='Account';root.appendChild(d);return}
+    const el=document.createElement('div');
+    el.className='nav-item'+(item.key==='today'?' active':'');
+    el.dataset.key=item.key;
+    el.innerHTML=`<span class="nav-icon">${item.icon}</span> ${item.label}`;
+    el.onclick=()=>navTo(item.key);
+    root.appendChild(el);
+  });
+}
+
+/* ============ NAV / ROUTING ============ */
+const VISIT_TICKS={finance:'finance',accounting:'accounting',insurance:'insurance'};
+function navTo(name){
+  const target=document.getElementById('t-'+name);if(!target){console.warn('no tab',name);return}
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.key===name));
+  // reset sub-nav to first
+  const tabs=target.querySelectorAll('.subnav-tab');
+  const conts=target.querySelectorAll('.subnav-content');
+  if(tabs.length){
+    tabs.forEach(t=>t.classList.remove('active'));tabs[0].classList.add('active');
+    conts.forEach(c=>c.classList.remove('active'));conts[0].classList.add('active');
+  }
+  // Auto-tick milestones on first visit to certain tabs
+  if(VISIT_TICKS[name]&&!APP.milestones[VISIT_TICKS[name]]){
+    setMilestone(VISIT_TICKS[name]);
+  }
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function goToMilestones(){
+  navTo('today');
+  setTimeout(()=>{const el=document.getElementById('milestones');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},80);
+}
+function switchSub(btn,id){
+  const parent=btn.closest('.tab-content');
+  parent.querySelectorAll('.subnav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
+  parent.querySelectorAll('.subnav-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+}
+
+/* ============ LOCATIONS ============ */
+function toggleLocations(e){e.stopPropagation();document.getElementById('loc-menu').classList.toggle('open')}
+function pickLocation(e,id,name,sub){
+  e.stopPropagation();
+  document.getElementById('ls-mark').textContent=id;
+  document.getElementById('ls-name').textContent=name;
+  document.getElementById('ls-sub').textContent=sub;
+  document.getElementById('loc-menu').classList.remove('open');
+  document.querySelectorAll('#loc-menu .lm-item').forEach(i=>i.classList.toggle('active',i.dataset.id===id));
+  APP.currentLocation=id;
+  toast('Switched to '+name,'success');
+}
+document.addEventListener('click',(e)=>{if(!e.target.closest('.location-switcher'))document.getElementById('loc-menu')?.classList.remove('open')});
+
+/* ============ SIGN UP ============ */
+function signPath(el){el.parentElement.querySelectorAll('.dark-path').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');APP.signup.path=el.dataset.p}
+function signNext(step){
+  document.querySelectorAll('.su-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('su-'+step).classList.add('active');
+  document.querySelectorAll('.signup-card .progress div').forEach((d,i)=>{d.classList.remove('done','active');if(i+1<step)d.classList.add('done');if(i+1===step)d.classList.add('active')});
+}
+function finishSignup(){
+  APP.billingOnFile=true;
+  APP.signup.completed=true;
+  APP.milestones.business=true;
+  if(!APP.subscriptions.find(s=>s.id==='plan-growth')){
+    APP.subscriptions.push({id:'plan-growth',name:'Growth Plan',price:149,interval:'mo',logo:LOGO('bl-coverpanda','P')});
+    APP.subscriptions.push({id:'entity-formation',name:'LLC Formation + EIN',price:0,interval:'one-time',logo:LOGO('bl-coverpanda','P')});
+  }
+  saveState();
+  refreshSubs();
+  refreshMilestones();
+  toast('Welcome to CoverPanda — your account is live','success');
+  enterApp();
+}
+function enterApp(){
+  // If they've signed up before, fast-track them straight in
+  APP.signup.completed=true;APP.milestones.business=true;saveState();
+  go('s-app');navTo('today');refreshMilestones();
+}
+function resetAccount(){
+  // Useful escape hatch — wipes localStorage, reloads to signup
+  try{localStorage.removeItem(STORAGE_KEY)}catch(e){}
+  location.reload();
+}
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+
+/* ============ MILESTONES ============ */
+function setMilestone(key){
+  if(!APP.milestones[key]){APP.milestones[key]=true;saveState();refreshMilestones()}
+}
+function refreshMilestones(){
+  const items=document.querySelectorAll('#ms-list .ms-step');
+  const total=Object.keys(APP.milestones).length;
+  let done=Object.values(APP.milestones).filter(Boolean).length;
+  // Update milestone widget on Today
+  if(items.length){
+    items.forEach(el=>{
+      const k=el.dataset.key;
+      if(APP.milestones[k]){el.classList.add('done');el.classList.remove('active')}
+      else el.classList.remove('done')
+    });
+    let activeMarked=false;
+    items.forEach(el=>{
+      if(APP.milestones[el.dataset.key]){el.classList.remove('active')}
+      else if(!activeMarked){el.classList.add('active');activeMarked=true}
+      else{el.classList.remove('active')}
+    });
+    const doneEl=document.getElementById('ms-done');if(doneEl)doneEl.textContent=done;
+    const fillEl=document.getElementById('ms-bar-fill');if(fillEl)fillEl.style.width=((done/total)*100)+'%';
+    const cardEl=document.getElementById('milestones');
+    if(cardEl){cardEl.style.display=(done===total)?'none':'block'}
+  }
+  // Update persistent topbar pill
+  const pill=document.getElementById('setup-pill');
+  if(pill){
+    const visible=done<total&&!APP.pillDismissed;
+    pill.classList.toggle('show',visible);
+    const cnt=document.getElementById('sp-count');if(cnt)cnt.textContent=done+'/'+total;
+    const f=document.getElementById('sp-mini-fill');if(f)f.style.width=((done/total)*100)+'%';
+  }
+}
+
+/* ============ MODALS ============ */
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+
+/* ============ CHECKOUT ============ */
+function openCheckout(id){
+  const s=SERVICES[id];if(!s){toast('Service not found','error');return}
+  if(APP.subscriptions.find(x=>x.id===id)){toast('Already subscribed to '+s.name,'success');return}
+  APP.activeCheckout=id;
+  document.getElementById('ck-title').textContent='Subscribe — '+s.name;
+  document.getElementById('ck-sub').textContent=APP.billingOnFile?'Adding to your existing subscription.':'Confirm and add a payment method.';
+  document.getElementById('ck-logo-mount').innerHTML=`<div style="margin-right:0">${s.logo}</div>`;
+  document.getElementById('ck-name').textContent=s.name;
+  document.getElementById('ck-desc').textContent=s.desc;
+  const interval=s.interval||'mo';
+  document.getElementById('ck-line-name').textContent=s.name+' ('+interval+')';
+  const memberPrice=Math.round(s.price*0.85*100)/100;
+  document.getElementById('ck-line-price').textContent=s.price?'$'+s.price:'Free';
+  const due=s.price?(interval.includes('mo')||interval.includes('qtr')?memberPrice:s.price*0.85):0;
+  document.getElementById('ck-total').textContent='$'+due.toFixed(2);
+  document.getElementById('ck-confirm-btn').textContent=APP.billingOnFile?'Add to Subscription →':'Pay $'+due.toFixed(2)+' →';
+  ['ck-1','ck-2','ck-3'].forEach((sid,i)=>document.getElementById(sid).classList.toggle('active',i===0));
+  ['ck-mp-1','ck-mp-2','ck-mp-3'].forEach((m,i)=>{const el=document.getElementById(m);el.classList.remove('done','active');if(i===0)el.classList.add('active')});
+  openModal('checkout-modal');
+}
+function ckNext(step){
+  document.querySelectorAll('#checkout-modal .modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ck-'+step).classList.add('active');
+  ['ck-mp-1','ck-mp-2','ck-mp-3'].forEach((m,i)=>{const el=document.getElementById(m);el.classList.remove('done','active');if(i<step-1)el.classList.add('done');if(i===step-1)el.classList.add('active')});
+  if(step===2)runProgress('ck-progress-list',()=>ckNext(3));
+  if(step===3){
+    const s=SERVICES[APP.activeCheckout];
+    const memberPrice=Math.round(s.price*0.85*100)/100;
+    APP.subscriptions.push({id:APP.activeCheckout,name:s.name,price:memberPrice,interval:s.interval,logo:s.logo});
+    APP.billingOnFile=true;refreshSubs();
+    document.getElementById('ck-receipt').textContent='CP-'+(70000+Math.floor(Math.random()*9999));
+    document.getElementById('ck-success-amt').textContent='$'+(s.price?memberPrice:0).toFixed(2);
+  }
+}
+function ckDone(){const id=APP.activeCheckout;closeModal('checkout-modal');saveState();toast(SERVICES[id].name+' is now active','success')}
+
+/* ============ SUBSCRIPTIONS ============ */
+function refreshSubs(){
+  const list=document.getElementById('sub-list');if(!list)return;
+  list.innerHTML='';
+  let mrr=0;
+  APP.subscriptions.forEach(s=>{
+    const ivl=(s.interval||'').includes('mo')?'/mo':(s.interval||'').includes('yr')?'/yr':(s.interval||'').includes('qtr')?'/qtr':'';
+    if(ivl==='/mo')mrr+=s.price;if(ivl==='/yr')mrr+=s.price/12;if(ivl==='/qtr')mrr+=s.price/3;
+    const row=document.createElement('div');row.className='conn-chip';
+    row.innerHTML=`${s.logo||LOGO('bl-coverpanda','P')}<div class="cc-info"><h5>${s.name}</h5><p>${s.interval}</p></div><span class="amt-amt" style="font-weight:700">$${s.price.toFixed(2)}<small style="font-size:10px;color:var(--ink-500);font-weight:400">${ivl||' one-time'}</small></span>`;
+    list.appendChild(row);
+  });
+  const mrrEl=document.getElementById('sub-mrr');if(mrrEl)mrrEl.textContent='$'+mrr.toFixed(0)+'/mo MRR';
+}
+
+/* ============ CONNECTIONS ============ */
+function openConn(kind){
+  const map={
+    quickbooks:'quickbooks-modal',
+    plaid:'plaid-modal',
+    pos:'pos-modal',
+    cards:'cards-modal',
+    'add-employee':'add-employee-modal',
+    'invite-agent':'invite-agent-modal',
+    'payroll-picker':'payroll-picker-modal',
+    gusto:'payroll-setup-modal',
+    adp:'payroll-setup-modal',
+    homebase:'payroll-setup-modal',
+    paychex:'payroll-setup-modal'
+  };
+  const id=map[kind];if(!id){console.warn('unknown conn',kind);return}
+  if(kind==='quickbooks')resetSteps('qb',5);
+  if(kind==='plaid')resetSteps('pl',5);
+  if(kind==='pos')resetSteps('pos',5);
+  if(['gusto','adp','homebase','paychex'].includes(kind)){
+    APP.payrollProvider=kind;
+    const meta={
+      gusto:{name:'Gusto',logoCls:'bl-gusto',logoTxt:'G',meta:'$49/mo + $6/EE · 3 mo free · Cancel anytime'},
+      adp:{name:'ADP RUN',logoCls:'bl-adp',logoTxt:'ADP',meta:'From $79/mo · Enterprise-grade'},
+      homebase:{name:'Homebase',logoCls:'bl-homebase',logoTxt:'H',meta:'Free + scheduling · Paid from $20/mo'},
+      paychex:{name:'Paychex',logoCls:'bl-paychex',logoTxt:'P',meta:'Custom pricing · Contact for quote'}
+    }[kind];
+    document.getElementById('ps-title').textContent='Set up '+meta.name;
+    document.getElementById('ps-name').textContent=meta.name;
+    document.getElementById('ps-meta').textContent=meta.meta;
+    document.getElementById('ps-logo-mount').innerHTML=`<div class="brand-logo lg ${meta.logoCls}">${meta.logoTxt}</div>`;
+    document.getElementById('ps-success-h').textContent=meta.name+' is live';
+    document.querySelectorAll('.ps-prov').forEach(e=>e.textContent=meta.name);
+    resetSteps('ps',5);
+  }
+  openModal(id);
+}
+function resetSteps(prefix,n){
+  for(let i=1;i<=n;i++){const el=document.getElementById(prefix+'-'+i);if(el)el.classList.toggle('active',i===1)}
+  const modalIds={qb:'quickbooks-modal',pl:'plaid-modal',pos:'pos-modal',ps:'payroll-setup-modal'};
+  const dots=document.querySelectorAll('#'+modalIds[prefix]+' .m-progress div');
+  dots.forEach((d,i)=>{d.classList.remove('done','active');if(i===0)d.classList.add('active')});
+}
+function showStep(prefix,step){
+  const modalIds={qb:'quickbooks-modal',pl:'plaid-modal',pos:'pos-modal',ps:'payroll-setup-modal'};
+  document.querySelectorAll('#'+modalIds[prefix]+' .modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(prefix+'-'+step).classList.add('active');
+  const dots=document.querySelectorAll('#'+modalIds[prefix]+' .m-progress div');
+  const visible=Math.min(step,dots.length);
+  dots.forEach((d,i)=>{d.classList.remove('done','active');if(i<visible-1)d.classList.add('done');if(i===visible-1)d.classList.add('active')});
+}
+function runProgress(listId,onDone){
+  const items=document.querySelectorAll('#'+listId+' .cp-step');
+  items.forEach(it=>it.classList.remove('active','done'));
+  if(items[0])items[0].classList.add('active');
+  let i=0;
+  const t=setInterval(()=>{
+    items[i].classList.remove('active');items[i].classList.add('done');i++;
+    if(i<items.length)items[i].classList.add('active');
+    else{clearInterval(t);setTimeout(onDone,400)}
+  },500);
+}
+function qbStep(s){showStep('qb',s);if(s===4)runProgress('qb-progress-list',()=>qbStep(5))}
+function psStep(s){showStep('ps',s);if(s===4)runProgress('ps-progress-list',()=>psStep(5))}
+function plStep(s,bank){
+  if(bank){
+    APP.plaidBank=bank;
+    document.getElementById('pl-bank-name').textContent=bank;
+    document.getElementById('pl-bank-done').textContent=bank;
+    const m={Chase:{cls:'bl-chase',txt:'C',url:'chase.com/oauth'},'Bank of America':{cls:'bl-bofa',txt:'BA',url:'bankofamerica.com/oauth'},'Wells Fargo':{cls:'bl-wellsfargo',txt:'WF',url:'wellsfargo.com/oauth'},Mercury:{cls:'bl-mercury',txt:'M',url:'mercury.com/oauth'},'Capital One':{cls:'bl-capitalone',txt:'C1',url:'capitalone.com/oauth'},Citi:{cls:'bl-citi',txt:'Citi',url:'citi.com/oauth'}}[bank];
+    document.getElementById('pl-oauth-logo').innerHTML=`<div class="brand-logo lg ${m.cls}">${m.txt}</div>`;
+    document.getElementById('pl-oauth-url').textContent=m.url;
+  }
+  showStep('pl',s);if(s===4)runProgress('pl-progress-list',()=>plStep(5));
+}
+function posStep(s,sys){
+  if(sys){
+    APP.posSystem=sys;
+    document.getElementById('pos-system').textContent=sys;
+    const m={Toast:{cls:'bl-toast',txt:'T',url:'api.toasttab.com/oauth'},Square:{cls:'bl-square',txt:'▢',url:'connect.squareup.com/oauth'},Clover:{cls:'bl-clover',txt:'☘',url:'sandbox.dev.clover.com/oauth'},Lightspeed:{cls:'bl-lightspeed',txt:'L',url:'cloud.lightspeedapp.com/oauth'},Revel:{cls:'bl-revel',txt:'R',url:'oauth.revelup.com'},'Stripe Terminal':{cls:'bl-stripe',txt:'s',url:'connect.stripe.com/oauth'}}[sys];
+    document.getElementById('pos-oauth-logo').innerHTML=`<div class="brand-logo lg ${m.cls}">${m.txt}</div>`;
+    document.getElementById('pos-oauth-url').textContent=m.url;
+  }
+  showStep('pos',s);if(s===4)runProgress('pos-progress-list',()=>posStep(5));
+}
+function finishConn(kind){
+  APP.connections[kind]=true;
+  const map={quickbooks:'quickbooks-modal',plaid:'plaid-modal',pos:'pos-modal',cards:'cards-modal',payroll:'payroll-setup-modal'};
+  if(map[kind])closeModal(map[kind]);
+
+  if(kind==='payroll'){
+    setMilestone('payroll');
+    document.getElementById('payroll-banner').style.display='none';
+    document.getElementById('payroll-empty').style.display='none';
+    document.getElementById('payroll-runs-tbl').style.display='table';
+    document.getElementById('emp-empty').style.display='none';
+    document.getElementById('emp-list').style.display='table';
+    document.getElementById('pr-next').textContent='May 8';
+    document.getElementById('pr-next-sub').textContent='Bi-weekly · 4 EE';
+    document.getElementById('pr-emp').textContent='4';
+    document.getElementById('pr-ytd').textContent='$48,200';
+    document.getElementById('pr-tax').textContent='✓ Filed';
+    const provName={gusto:'Gusto',adp:'ADP RUN',homebase:'Homebase',paychex:'Paychex'}[APP.payrollProvider]||'Payroll';
+    const provLogo={gusto:LOGO('bl-gusto','G'),adp:LOGO('bl-adp','ADP'),homebase:LOGO('bl-homebase','H'),paychex:LOGO('bl-paychex','P')}[APP.payrollProvider]||LOGO('bl-coverpanda','P');
+    const chip=document.getElementById('conn-payroll-prov');
+    if(chip){chip.querySelector('.brand-logo').outerHTML=provLogo;chip.querySelector('h5').textContent=provName+' connected';chip.querySelector('p').textContent='Active';document.getElementById('conn-payroll-pill').className='pill green';document.getElementById('conn-payroll-pill').textContent='Active'}
+    if(!APP.subscriptions.find(s=>s.id==='payroll-prov')){
+      APP.subscriptions.push({id:'payroll-prov',name:provName+' (3 mo trial)',price:0,interval:'mo (free trial)',logo:provLogo});
+      refreshSubs();
+    }
+  }
+  if(kind==='quickbooks')setMilestone('quickbooks');
+  if(kind==='plaid')setMilestone('bank');
+  if(kind==='cards')setMilestone('cards');
+
+  saveState();
+  toast({quickbooks:'QuickBooks connected — backfilling 90 days',plaid:(APP.plaidBank||'Bank')+' linked',pos:(APP.posSystem||'POS')+' connected',cards:'Card connected',payroll:'Payroll is live — first pay run May 8'}[kind]||'Connected','success');
+}
+
+/* ============ FILTERS ============ */
+function filterMkt(btn,cat){
+  btn.parentElement.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('#t-marketplace .mkt-card').forEach(c=>{c.style.display=cat==='all'||c.dataset.cat===cat?'flex':'none'});
+}
+
+/* ============ DRAWER & CMD ============ */
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-bg').classList.add('open');document.getElementById('notif-dot').style.display='none'}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-bg').classList.remove('open')}
+function openCmd(){document.getElementById('cmd-palette-bg').classList.add('open');setTimeout(()=>document.getElementById('cmd-input').focus(),50)}
+function closeCmd(e){if(e&&e.target!==document.getElementById('cmd-palette-bg'))return;document.getElementById('cmd-palette-bg').classList.remove('open')}
+document.addEventListener('keydown',(e)=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd()}
+  if(e.key==='Escape'){closeCmd({target:document.getElementById('cmd-palette-bg')});closeDrawer();document.querySelectorAll('.modal-bg.open').forEach(m=>closeModal(m.id))}
+});
+
+/* ============ TOAST ============ */
+function toast(msg,kind){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div');t.className='toast '+(kind||'');t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2400);
+}
+
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded',()=>{
+  buildNav();
+  refreshSubs();
+  // If signup was completed in a prior session, skip the dark welcome screen
+  if(APP.signup&&APP.signup.completed){
+    go('s-app');navTo('today');
+  }
+  refreshMilestones();
+});
+
+/* Expose a reset for the user (callable from console or sb-foot menu) */
+window.resetCoverPanda=resetAccount;
+</script>
+
+</body>
+</html>

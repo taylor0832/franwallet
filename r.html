@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shared report — Fran Wallet</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--teal:#0A3D3D;--teal-mid:#1A6B6B;--teal-soft:#E8F4F4;
+--coral:#E8734A;--coral-light:#F09070;
+--green:#2EAE6D;--red:#E74C4C;
+--bg:#F7F8FA;--g100:#F0F2F5;--g200:#E4E7EC;--g400:#98A2B3;--g500:#667085;--g700:#344054;--g900:#101828;
+--serif:'Fraunces',Georgia,serif;--sans:'DM Sans',-apple-system,system-ui,sans-serif;
+--fran-mark:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' x2='0' y1='0' y2='1'><stop offset='0' stop-color='%23217676'/><stop offset='1' stop-color='%230A3D3D'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='url(%23g)'/><path d='M18 13 H46 V22 H27 V30 H42 V38 H27 V52 H18 Z' fill='%23ffffff'/><circle cx='44' cy='49' r='3.2' fill='%23E8734A'/></svg>");
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--g700);-webkit-font-smoothing:antialiased}
+.top{background:var(--teal);color:#fff;padding:14px 0}
+.top-in{max-width:760px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:10px}
+.top .mark{width:30px;height:30px;border-radius:8px;background:var(--fran-mark) center/contain no-repeat}
+.top .brand{font-family:var(--serif);font-size:17px;font-weight:700;color:#fff;text-decoration:none}
+.top .cta{margin-left:auto;background:var(--coral);color:#fff;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;text-decoration:none}
+.top .cta:hover{background:var(--coral-light)}
+.wrap{max-width:760px;margin:0 auto;padding:30px 20px 60px}
+h1{font-family:var(--serif);font-size:24px;color:var(--g900);letter-spacing:-.4px}
+.meta{font-size:12.5px;color:var(--g500);margin:4px 0 20px}
+h2{font-family:var(--serif);font-size:17px;color:var(--teal);margin:26px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--g100)}
+td{padding:8px 14px;border-bottom:1px solid var(--g100);vertical-align:top}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--g900);font-weight:600}
+tr.hd td{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--g500);background:#fff}
+tr.tot td{background:var(--teal);color:#fff;font-weight:700}
+tr.tot td:last-child{font-family:var(--serif);font-size:15px}
+td.neg{color:var(--red)}
+.foot{margin-top:34px;background:linear-gradient(135deg,#0A3D3D 0%,#1A6B6B 100%);border-radius:16px;padding:22px;color:#fff;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.foot h3{font-family:var(--serif);font-size:17px}
+.foot p{font-size:12.5px;color:rgba(255,255,255,.7);margin-top:2px}
+.foot a{margin-left:auto;background:var(--coral);color:#fff;font-size:13px;font-weight:700;padding:10px 16px;border-radius:9px;text-decoration:none;white-space:nowrap}
+.err{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:30px;text-align:center;color:var(--g500)}
+@media(max-width:560px){.foot a{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <span class="mark"></span><a class="brand" href="https://franwallet.com">Fran</a>
+  <a class="cta" href="https://franwallet.com/wallet.html">Open your free wallet →</a>
+</div></div>
+<div class="wrap" id="app"><div class="err">Loading report…</div></div>
+<script>
+const FN = 'https://nlshvthmcnwuygaeague.supabase.co/functions/v1/share';
+const app = document.getElementById('app');
+const esc = (s)=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+(async ()=>{
+  const id = new URLSearchParams(location.search).get('id');
+  if(!id){ app.innerHTML = '<div class="err">This link is missing its report id.</div>'; return; }
+  try{
+    const res = await fetch(FN + '?id=' + encodeURIComponent(id));
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok){
+      app.innerHTML = `<div class="err">${res.status===410 ? 'This shared report has expired.' : 'This report was not found, or the link was revoked.'}<br><br><a href="https://franwallet.com" style="color:var(--coral)">franwallet.com</a></div>`;
+      return;
+    }
+    const p = data.payload || {};
+    const when = data.created_at ? new Date(data.created_at).toLocaleDateString('en-US',{month:'long', day:'numeric', year:'numeric'}) : '';
+    let html = `<h1>${esc(data.title)}</h1><p class="meta">Shared ${when} · read-only · numbers from connected QuickBooks at share time</p>`;
+    (p.sheets||[]).forEach(s=>{
+      html += `<h2>${esc(s.name)}</h2><table>` + (s.aoa||[]).map(row=>{
+        if(!row || !row.length) return '';
+        const isHd = String(row[0]).toLowerCase()==='line';
+        const isTot = /net income|equity|net change/i.test(String(row[0])) && typeof row[1] === 'number' || /^net income$/i.test(String(row[0]));
+        const cls = isHd ? 'hd' : (isTot ? 'tot' : '');
+        return `<tr class="${cls}">` + row.map((c,i)=>{
+          const v = (typeof c==='number') ? ((c<0?'-$':'$')+Math.abs(c).toLocaleString()) : esc(c);
+          return `<td class="${(typeof c==='number'&&c<0)?'neg':''}"${i===0?'':' style="text-align:right"'}>${v}</td>`;
+        }).join('') + '</tr>';
+      }).join('') + `</table>`;
+    });
+    html += `<div class="foot"><div><h3>Made with Fran Wallet</h3><p>Books, payroll, banking and reports for franchise operators. Free account.</p></div><a href="https://franwallet.com/wallet.html">Open your free wallet →</a></div>`;
+    app.innerHTML = html;
+  }catch(e){
+    app.innerHTML = '<div class="err">Could not load this report. Check your connection and refresh.</div>';
+  }
+})();
+</script>
+</body>
+</html>

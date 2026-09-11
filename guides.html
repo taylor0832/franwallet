@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guides — Fran, the Franchise Wallet</title>
+<meta name="description" content="Plain-English guides for franchise operators: FDDs, entities, royalties, financing, unit economics. Free from Fran Wallet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--teal:#0A3D3D;--teal-mid:#1A6B6B;--teal-soft:#E8F4F4;--teal-softer:#F2F9F9;
+--coral:#E8734A;--coral-light:#F09070;--coral-bg:#FFF5F0;
+--green:#2EAE6D;--green-bg:#E6F7EE;
+--bg:#F7F8FA;--white:#FFF;
+--g100:#F0F2F5;--g200:#E4E7EC;--g400:#98A2B3;--g500:#667085;--g600:#475467;--g700:#344054;--g800:#1D2939;--g900:#101828;
+--r-md:10px;--r-lg:14px;--r-xl:20px;
+--serif:'Fraunces',Georgia,serif;--sans:'DM Sans',-apple-system,system-ui,sans-serif;
+--fran-mark:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' x2='0' y1='0' y2='1'><stop offset='0' stop-color='%23217676'/><stop offset='1' stop-color='%230A3D3D'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='url(%23g)'/><rect x='.6' y='.6' width='62.8' height='62.8' rx='13.4' fill='none' stroke='%23ffffff' stroke-opacity='.14'/><path d='M18 13 H46 V22 H27 V30 H42 V38 H27 V52 H18 Z' fill='%23ffffff'/><circle cx='44' cy='49' r='3.2' fill='%23E8734A'/></svg>");
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--g800);-webkit-font-smoothing:antialiased}
+a{color:var(--coral);text-decoration:none}
+a:hover{text-decoration:underline}
+.top{background:var(--teal);color:#fff;padding:16px 0}
+.top-in{max-width:860px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:10px}
+.top .mark{width:32px;height:32px;border-radius:8px;background:var(--fran-mark) center/contain no-repeat;flex-shrink:0}
+.top .brand{font-family:var(--serif);font-size:18px;font-weight:700;color:#fff}
+.top .tag{font-size:11px;color:rgba(255,255,255,.55);margin-left:6px}
+.top .cta{margin-left:auto;background:var(--coral);color:#fff;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;white-space:nowrap}
+.top .cta:hover{background:var(--coral-light);text-decoration:none}
+.wrap{max-width:860px;margin:0 auto;padding:34px 22px 60px}
+.crumb{font-size:12px;color:var(--g500);margin-bottom:18px}
+h1.page{font-family:var(--serif);font-size:30px;color:var(--g900);letter-spacing:-.6px;margin-bottom:8px}
+.sub{color:var(--g500);font-size:14px;line-height:1.6;max-width:640px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px}
+.gcard{background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);padding:22px;display:block;color:inherit;transition:all .2s}
+.gcard:hover{transform:translateY(-2px);border-color:var(--g200);box-shadow:0 8px 24px rgba(10,61,61,.06);text-decoration:none}
+.gcard .gi{font-size:26px;margin-bottom:10px;display:block}
+.gcard h3{font-family:var(--serif);font-size:17px;color:var(--g900);margin-bottom:5px;letter-spacing:-.2px}
+.gcard p{font-size:12.5px;color:var(--g500);line-height:1.5}
+.gcard .go{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:var(--coral)}
+article{background:#fff;border:1px solid var(--g100);border-radius:var(--r-xl);padding:38px 40px;margin-top:8px}
+article h1{font-family:var(--serif);font-size:27px;color:var(--g900);letter-spacing:-.5px;line-height:1.2;margin-bottom:18px}
+article h2{font-family:var(--serif);font-size:19px;color:var(--g900);margin:26px 0 10px;letter-spacing:-.2px}
+article h3{font-size:15px;font-weight:700;color:var(--g800);margin:20px 0 8px}
+article p{font-size:14.5px;line-height:1.75;color:var(--g700);margin-bottom:14px}
+article ul,article ol{margin:0 0 14px 22px}
+article li{font-size:14.5px;line-height:1.7;color:var(--g700);margin-bottom:6px}
+article strong{color:var(--g900);font-weight:700}
+article em{font-style:italic}
+article hr{border:none;border-top:1px solid var(--g100);margin:24px 0}
+article a{font-weight:600}
+.foot-cta{margin-top:22px;background:linear-gradient(135deg,#0A3D3D 0%,#1A6B6B 100%);border-radius:var(--r-xl);padding:26px;color:#fff;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.foot-cta h3{font-family:var(--serif);font-size:19px;letter-spacing:-.2px}
+.foot-cta p{font-size:13px;color:rgba(255,255,255,.7);margin-top:3px}
+.foot-cta a{margin-left:auto;background:var(--coral);color:#fff;font-size:13px;font-weight:700;padding:11px 18px;border-radius:9px;white-space:nowrap}
+.foot-cta a:hover{background:var(--coral-light);text-decoration:none}
+footer{max-width:860px;margin:0 auto;padding:0 22px 40px;color:var(--g400);font-size:12px}
+footer a{color:var(--g500)}
+@media(max-width:640px){.grid{grid-template-columns:1fr}article{padding:26px 20px}h1.page{font-size:25px}.foot-cta a{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <span class="mark"></span><a class="brand" href="index.html" style="color:#fff">Fran</a><span class="tag">the Franchise Wallet</span>
+  <a class="cta" href="wallet.html">Open your free wallet →</a>
+</div></div>
+
+<div class="wrap" id="app"></div>
+
+<footer>Free guides from Fran Wallet · <a href="index.html">franwallet.com</a> · <a href="skills.html">Skills &amp; templates library</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
+
+<script>
+/* ---- PostHog (Fran Wallet org · project 531033) ---- */
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_sgBgHWWwCgArAVu2udMCD9LbH7RESavBuRxhpLBNsZHi',{api_host:'https://us.i.posthog.com'});
+
+// Arriving via someone's share link? Remember the code until this visitor signs up.
+{ const r = new URLSearchParams(location.search).get('ref'); if(r) localStorage.setItem('fran_ref', r); }
+
+const GUIDES = [
+  {slug:'what-is-an-fdd',            icon:'📄', title:'What is an FDD?',                     desc:'Plain-English breakdown of all 23 items — and the three that decide whether you sign.'},
+  {slug:'llc-vs-s-corp',             icon:'🏛️', title:'LLC vs. S-Corp',                      desc:'The legal wrapper vs. the tax election — and when the S-Corp election starts paying for itself.'},
+  {slug:'how-to-read-your-pl',       icon:'📊', title:'How to Read Your P&L',                 desc:'Your P&L tells a story in four acts. The 10-minute monthly routine that catches drift early.'},
+  {slug:'understanding-royalties',   icon:'💰', title:'Understanding Royalties',              desc:'Fixed vs. percentage, the ad fund, and how the franchise load reshapes your unit economics.'},
+  {slug:'sba-vs-robs-vs-conventional',icon:'🏦', title:'SBA vs. ROBS vs. Conventional',       desc:'The three ways to fund a franchise — what each trades, and how to actually decide.'},
+  {slug:'the-14-registration-states', icon:'📍', title:'The Registration States',             desc:'Why CA/NY/IL/etc. change the buying process — and the free background check hiding in it.'},
+  {slug:'franchise-unit-economics',  icon:'🧮', title:'Franchise Unit Economics',             desc:'AUV, prime cost, occupancy, the franchise load, break-even: the five numbers that decide everything.'},
+];
+
+/* Minimal markdown → HTML for our own guide files (headings, lists, bold/italic, links, hr). */
+function mdToHtml(md){
+  const esc = (s)=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = (s)=> s
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  const lines = md.split('\n');
+  let html='', list=null, para=[];
+  const flushPara=()=>{ if(para.length){ html+='<p>'+inline(esc(para.join(' ')))+'</p>'; para=[]; } };
+  const flushList=()=>{ if(list){ html+=`</${list}>`; list=null; } };
+  for(const raw of lines){
+    const l = raw.trimEnd();
+    if(/^---+$/.test(l.trim())){ flushPara(); flushList(); html+='<hr>'; continue; }
+    if(/^### /.test(l)){ flushPara(); flushList(); html+='<h3>'+inline(esc(l.slice(4)))+'</h3>'; continue; }
+    if(/^## /.test(l)){ flushPara(); flushList(); html+='<h2>'+inline(esc(l.slice(3)))+'</h2>'; continue; }
+    if(/^# /.test(l)){ flushPara(); flushList(); html+='<h1>'+inline(esc(l.slice(2)))+'</h1>'; continue; }
+    if(/^[-*] /.test(l)){ flushPara(); if(list!=='ul'){ flushList(); html+='<ul>'; list='ul'; } html+='<li>'+inline(esc(l.slice(2)))+'</li>'; continue; }
+    if(/^\d+\. /.test(l)){ flushPara(); if(list!=='ol'){ flushList(); html+='<ol>'; list='ol'; } html+='<li>'+inline(esc(l.replace(/^\d+\. /,'')))+'</li>'; continue; }
+    if(l.trim()===''){ flushPara(); flushList(); continue; }
+    para.push(l.trim());
+  }
+  flushPara(); flushList();
+  return html;
+}
+
+const app = document.getElementById('app');
+const slug = new URLSearchParams(location.search).get('g');
+const guide = GUIDES.find(g=>g.slug===slug);
+
+function renderIndex(){
+  document.title = 'Guides — Fran, the Franchise Wallet';
+  app.innerHTML = `
+    <h1 class="page">Franchise guides, in plain English</h1>
+    <p class="sub">The stuff every operator has to figure out — FDDs, entities, royalties, financing, unit economics — written straight, free, no signup. From the team behind Fran Wallet.</p>
+    <div class="grid">` +
+    GUIDES.map(g=>`<a class="gcard" href="guides.html?g=${g.slug}"><span class="gi">${g.icon}</span><h3>${g.title}</h3><p>${g.desc}</p><span class="go">Read the guide →</span></a>`).join('') +
+    `</div>
+    <div class="foot-cta"><div><h3>Nine free operator skills &amp; templates</h3><p>Daily labor budget, FDD interrogator, SBA readiness pack, and more — free with a Fran Wallet account.</p></div><a href="wallet.html">Open your free wallet →</a></div>`;
+  try{ posthog.capture('guides_index_viewed'); }catch(_){}
+}
+
+async function renderGuide(){
+  document.title = guide.title + ' — Fran Guides';
+  app.innerHTML = `<div class="crumb"><a href="guides.html">← All guides</a></div><article>Loading…</article>`;
+  try{
+    const res = await fetch('guides/' + guide.slug + '.md');
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const md = await res.text();
+    app.querySelector('article').innerHTML = mdToHtml(md);
+    app.innerHTML += `<div class="foot-cta"><div><h3>Put it to work in your Wallet</h3><p>Free account: the operator toolkit, your setup dashboard, and every connection — books, payroll, banking.</p></div><a href="wallet.html">Open your free wallet →</a></div>`;
+    try{ posthog.capture('guide_viewed',{slug:guide.slug}); }catch(_){}
+  }catch(e){
+    app.querySelector('article').innerHTML = '<p>Could not load this guide. <a href="guides.html">Back to all guides</a>.</p>';
+  }
+}
+
+guide ? renderGuide() : renderIndex();
+</script>
+</body>
+</html>

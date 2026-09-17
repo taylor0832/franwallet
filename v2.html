@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoverPanda V2 — Franchise OS</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0A3D3D;--teal-700:#0D4F4F;--teal-600:#1A6B6B;--teal-50:#F2F9F9;--teal-100:#E8F4F4;
+  --coral:#E8734A;--coral-light:#F09070;--coral-50:#FFF5F0;
+  --green:#1F9D5C;--green-50:#E6F5EC;--red:#DC4444;--red-50:#FDECEC;
+  --blue:#3B6AE8;--blue-50:#EBF1FD;--violet:#6B5CE8;--violet-50:#EFEDFD;
+  --amber:#D9881F;--amber-50:#FFF6E6;
+  --bg:#FAFAF7;--surface:#FFFFFF;
+  --ink-900:#0E1015;--ink-800:#1B1F26;--ink-700:#363B45;--ink-600:#5C6370;--ink-500:#8B91A0;--ink-400:#B0B5C0;--ink-300:#D8DBE2;--ink-200:#EAECEF;--ink-100:#F2F4F6;--ink-50:#F8F9FB;
+  --r-xs:4px;--r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-2xl:20px;--r-3xl:28px;
+  --shadow-xs:0 1px 2px rgba(14,16,21,.04);
+  --shadow-sm:0 1px 3px rgba(14,16,21,.06),0 1px 2px rgba(14,16,21,.03);
+  --shadow-md:0 4px 12px rgba(14,16,21,.06),0 2px 4px rgba(14,16,21,.04);
+  --shadow-lg:0 12px 32px rgba(14,16,21,.10),0 4px 12px rgba(14,16,21,.06);
+  --shadow-xl:0 24px 60px rgba(14,16,21,.14);
+  --border:1px solid var(--ink-200);
+  --border-strong:1px solid var(--ink-300);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html,body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink-800);font-size:14px;line-height:1.45;overflow-x:hidden}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+a{color:inherit;text-decoration:none}
+.serif{font-family:'Fraunces',serif;letter-spacing:-.01em}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes drawIn{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+.anim{animation:fadeUp .35s cubic-bezier(.2,.8,.2,1) both}
+.anim-1{animation-delay:.05s}.anim-2{animation-delay:.10s}.anim-3{animation-delay:.15s}.anim-4{animation-delay:.20s}.anim-5{animation-delay:.25s}
+
+/* Screens */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;animation:fadeIn .25s ease}
+
+/* ============ SIGN UP ============ */
+.signup{flex-direction:column;background:radial-gradient(circle at 20% 0%,#0F4646 0%,#0A2828 60%,#06181C 100%);color:#fff;align-items:stretch}
+.signup-top{display:flex;justify-content:space-between;align-items:center;padding:22px 36px;border-bottom:1px solid rgba(255,255,255,.06)}
+.signup-top .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+.signup-top .brand .dot{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#F09070,#E8734A);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff}
+.signup-top .help{font-size:13px;color:rgba(255,255,255,.5)}
+.signup-top .help a{color:#F09070;cursor:pointer;font-weight:500}
+.signup-body{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:48px 24px}
+.signup-card{width:100%;max-width:540px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-2xl);padding:36px;backdrop-filter:blur(8px)}
+.signup-card .progress{display:flex;gap:6px;margin-bottom:28px}
+.signup-card .progress div{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;transition:all .3s}
+.signup-card .progress div.done{background:rgba(232,115,74,.5)}
+.signup-card .progress div.active{background:linear-gradient(90deg,#F09070,#E8734A);box-shadow:0 0 12px rgba(232,115,74,.4)}
+.signup-card h1{font-family:'Fraunces',serif;font-size:30px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px;line-height:1.15}
+.signup-card .sub{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:28px;line-height:1.55}
+.su-step{display:none}.su-step.active{display:block;animation:fadeUp .3s cubic-bezier(.2,.8,.2,1)}
+.dark-field{margin-bottom:14px}
+.dark-field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px}
+.dark-field input,.dark-field select{width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);color:#fff;outline:none;transition:all .15s}
+.dark-field input:focus,.dark-field select:focus{border-color:rgba(232,115,74,.6);background:rgba(255,255,255,.06)}
+.dark-field input::placeholder{color:rgba(255,255,255,.3)}
+.dark-field select option{background:#0A2828;color:#fff}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dark-paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.dark-path{background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.08);border-radius:var(--r-lg);padding:20px;cursor:pointer;transition:all .2s;text-align:left}
+.dark-path:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.04)}
+.dark-path.selected{border-color:#E8734A;background:rgba(232,115,74,.06)}
+.dark-path .icon{font-size:24px;margin-bottom:10px}
+.dark-path h4{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:4px}
+.dark-path p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5}
+.btn-coral{width:100%;padding:13px;background:linear-gradient(180deg,#F09070,#E8734A);color:#fff;font-weight:600;border-radius:var(--r-md);transition:all .2s;box-shadow:0 4px 14px rgba(232,115,74,.25)}
+.btn-coral:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,115,74,.35)}
+.btn-back{margin-top:8px;background:none;color:rgba(255,255,255,.45);font-size:13px;width:100%;padding:8px}
+.btn-back:hover{color:#fff}
+.signup-foot{padding:20px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.04)}
+.summary-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-md);padding:14px;margin-bottom:14px}
+.summary-card .row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:rgba(255,255,255,.7)}
+.summary-card .row.total{padding-top:10px;margin-top:6px;border-top:1px solid rgba(255,255,255,.1);color:#fff;font-weight:600;font-size:15px}
+
+/* ============ APP CHROME ============ */
+.app{display:flex;width:100%;min-height:100vh;background:var(--bg)}
+.sidebar{width:236px;background:var(--surface);border-right:var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:40}
+.sb-brand{padding:20px 22px;display:flex;align-items:center;gap:10px;border-bottom:var(--border)}
+.sb-brand .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0F4646,#0A2828);display:flex;align-items:center;justify-content:center;color:#F09070;font-weight:700;font-size:16px;font-family:'Fraunces',serif}
+.sb-brand .name{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--ink-900)}
+
+.location-switcher{margin:14px 16px 8px;background:var(--ink-50);border:var(--border);border-radius:var(--r-md);padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;position:relative}
+.location-switcher:hover{border-color:var(--ink-300);background:#fff}
+.location-switcher .ls-mark{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#F09070,#E8734A);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.location-switcher .ls-info{flex:1;min-width:0}
+.location-switcher .ls-info h5{font-size:12px;font-weight:600;color:var(--ink-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.location-switcher .ls-info p{font-size:10px;color:var(--ink-500)}
+.location-switcher .ls-chev{color:var(--ink-400);font-size:10px}
+
+.location-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-lg);padding:6px;z-index:60;display:none;animation:scaleIn .15s ease}
+.location-menu.open{display:block}
+.location-menu .lm-item{padding:9px 10px;border-radius:var(--r-sm);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .1s}
+.location-menu .lm-item:hover{background:var(--ink-50)}
+.location-menu .lm-item .lm-mark{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.location-menu .lm-item .lm-info{flex:1;min-width:0}
+.location-menu .lm-item .lm-info h5{font-size:12px;font-weight:600}
+.location-menu .lm-item .lm-info p{font-size:10px;color:var(--ink-500)}
+.location-menu .lm-item .lm-check{color:var(--coral);font-size:12px;display:none}
+.location-menu .lm-item.active .lm-check{display:block}
+.location-menu .lm-add{padding:9px 10px;border-radius:var(--r-sm);font-size:12px;color:var(--coral);font-weight:600;cursor:pointer;border-top:var(--border);margin-top:4px;padding-top:10px}
+
+.sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
+.sb-section{padding:0 12px;margin:18px 0 8px;font-size:10px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-md);font-size:13px;font-weight:500;color:var(--ink-700);cursor:pointer;transition:all .12s;margin-bottom:1px;position:relative}
+.nav-item:hover{background:var(--ink-50);color:var(--ink-900)}
+.nav-item.active{background:var(--ink-900);color:#fff}
+.nav-item.active .nav-icon{color:#F09070}
+.nav-item .nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-500);flex-shrink:0}
+.nav-item.active .nav-icon{color:#F09070}
+.nav-item .nav-badge{margin-left:auto;background:var(--coral);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.nav-item.active .nav-badge{background:#fff;color:var(--ink-900)}
+.nav-divider{height:1px;background:var(--ink-200);margin:12px 12px}
+
+.sb-foot{padding:12px 14px;border-top:var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .12s}
+.sb-foot:hover{background:var(--ink-50)}
+.sb-foot .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1A6B6B,#0A3D3D);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sb-foot .info{flex:1;min-width:0}
+.sb-foot .info h5{font-size:12px;font-weight:600;color:var(--ink-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-foot .info p{font-size:10px;color:var(--ink-500)}
+
+.main{flex:1;margin-left:236px;display:flex;flex-direction:column;min-width:0}
+.topbar{height:56px;background:rgba(250,250,247,.85);backdrop-filter:blur(12px);border-bottom:var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:30}
+.cmd-bar{flex:1;max-width:520px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border:var(--border);border-radius:var(--r-md);font-size:13px;color:var(--ink-500);cursor:pointer;transition:all .15s}
+.cmd-bar:hover{border-color:var(--ink-300)}
+.cmd-bar .cmd-icon{font-size:14px}
+.cmd-bar .cmd-text{flex:1}
+.cmd-bar .cmd-kbd{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;background:var(--ink-100);border-radius:4px;color:var(--ink-600);font-weight:500}
+.tb-spacer{flex:1}
+.tb-icon-btn{width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;color:var(--ink-600);transition:all .12s;position:relative}
+.tb-icon-btn:hover{background:var(--ink-100);color:var(--ink-900)}
+.tb-icon-btn .dot-notif{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--coral);border:1.5px solid var(--bg)}
+
+.content{flex:1;padding:28px 36px 60px;max-width:1320px;width:100%;animation:fadeUp .3s ease}
+.tab-content{display:none}.tab-content.active{display:block;animation:fadeUp .3s cubic-bezier(.2,.8,.2,1)}
+
+.page-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;gap:24px}
+.page-hdr h1{font-family:'Fraunces',serif;font-size:30px;font-weight:600;letter-spacing:-.025em;line-height:1.1;color:var(--ink-900)}
+.page-hdr .subtitle{font-size:14px;color:var(--ink-600);margin-top:4px}
+.page-hdr-actions{display:flex;gap:8px;flex-shrink:0}
+
+.btn{padding:9px 16px;border-radius:var(--r-md);font-weight:500;font-size:13px;transition:all .15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-primary{background:var(--ink-900);color:#fff}
+.btn-primary:hover{background:var(--ink-800);transform:translateY(-1px)}
+.btn-coral-sm{background:linear-gradient(180deg,#F09070,#E8734A);color:#fff;box-shadow:0 2px 8px rgba(232,115,74,.20)}
+.btn-coral-sm:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,115,74,.30)}
+.btn-secondary{background:var(--surface);border:var(--border);color:var(--ink-700)}
+.btn-secondary:hover{border-color:var(--ink-300);color:var(--ink-900)}
+.btn-ghost{color:var(--ink-600)}
+.btn-ghost:hover{background:var(--ink-100);color:var(--ink-900)}
+
+/* Cards */
+.card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:20px;transition:all .15s}
+.card.hover:hover{box-shadow:var(--shadow-md);border-color:var(--ink-300)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-header h3{font-size:13px;font-weight:600;color:var(--ink-700);letter-spacing:-.005em}
+.card-header .meta{font-size:11px;color:var(--ink-500)}
+.card-header .link{font-size:12px;color:var(--coral);font-weight:500;cursor:pointer}
+.card-header .link:hover{text-decoration:underline}
+
+/* KPI Tiles */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:18px}
+.kpi-label{font-size:11px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.kpi-label .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.kpi-value{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--ink-900);letter-spacing:-.02em;line-height:1.1}
+.kpi-meta{font-size:11px;color:var(--ink-500);margin-top:6px;display:flex;align-items:center;gap:6px}
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.kpi-delta.up{background:var(--green-50);color:var(--green)}
+.kpi-delta.down{background:var(--red-50);color:var(--red)}
+.kpi-delta.flat{background:var(--ink-100);color:var(--ink-600)}
+.kpi.feature{background:linear-gradient(135deg,#0F4646,#0A2828);color:#fff;border-color:transparent}
+.kpi.feature .kpi-label{color:rgba(255,255,255,.55)}
+.kpi.feature .kpi-value{color:#fff}
+.kpi.feature .kpi-meta{color:rgba(255,255,255,.5)}
+.kpi.feature .kpi-delta.up{background:rgba(31,157,92,.2);color:#5EE89D}
+
+/* Grid layouts */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-main{display:grid;grid-template-columns:1fr 340px;gap:18px}
+.grid-main-wide{display:grid;grid-template-columns:1fr 380px;gap:18px}
+
+/* Tables */
+.tbl{width:100%;border-collapse:separate;border-spacing:0}
+.tbl th{text-align:left;padding:10px 12px;font-size:10px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;border-bottom:var(--border)}
+.tbl td{padding:13px 12px;font-size:13px;color:var(--ink-700);border-bottom:1px solid var(--ink-100)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr.row-link{cursor:pointer;transition:background .1s}
+.tbl tr.row-link:hover td{background:var(--ink-50)}
+.amt-pos{color:var(--green);font-weight:600}
+.amt-neg{color:var(--ink-800);font-weight:500}
+.amt-amt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+
+/* Pills / chips */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px}
+.pill.green{background:var(--green-50);color:var(--green)}
+.pill.amber{background:var(--amber-50);color:var(--amber)}
+.pill.red{background:var(--red-50);color:var(--red)}
+.pill.blue{background:var(--blue-50);color:var(--blue)}
+.pill.violet{background:var(--violet-50);color:var(--violet)}
+.pill.coral{background:var(--coral-50);color:var(--coral)}
+.pill.gray{background:var(--ink-100);color:var(--ink-600)}
+.pill.dark{background:var(--ink-900);color:#fff}
+
+/* Sub-navigation (horizontal) */
+.subnav{display:flex;align-items:center;gap:2px;border-bottom:var(--border);margin-bottom:24px;padding:0;overflow-x:auto}
+.subnav-tab{padding:10px 14px;font-size:13px;font-weight:500;color:var(--ink-600);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.subnav-tab:hover{color:var(--ink-900)}
+.subnav-tab.active{color:var(--ink-900);border-bottom-color:var(--ink-900);font-weight:600}
+.subnav-tab .count{background:var(--ink-100);color:var(--ink-600);font-size:10px;padding:1px 7px;border-radius:9px;font-weight:600}
+.subnav-tab.active .count{background:var(--ink-900);color:#fff}
+.subnav-content{display:none}
+.subnav-content.active{display:block;animation:fadeUp .25s ease}
+
+/* Filter pills */
+.filter-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-pill{padding:6px 12px;border-radius:14px;background:var(--surface);border:var(--border);font-size:12px;color:var(--ink-700);cursor:pointer;transition:all .15s}
+.filter-pill:hover{border-color:var(--ink-300)}
+.filter-pill.active{background:var(--ink-900);color:#fff;border-color:var(--ink-900)}
+
+/* Charts */
+.chart-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:20px;position:relative}
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:140px;margin-top:14px}
+.chart-bar{flex:1;background:linear-gradient(180deg,var(--teal-600),var(--teal));border-radius:4px 4px 0 0;position:relative;transition:all .2s;min-height:6px}
+.chart-bar:hover{background:linear-gradient(180deg,#F09070,#E8734A);transform:translateY(-2px)}
+.chart-bar.muted{background:linear-gradient(180deg,var(--ink-300),var(--ink-200))}
+.chart-bar.coral{background:linear-gradient(180deg,#F09070,#E8734A)}
+.chart-x{display:flex;gap:8px;margin-top:6px}
+.chart-x span{flex:1;text-align:center;font-size:10px;color:var(--ink-500);font-weight:500}
+.chart-legend{display:flex;gap:14px;margin-top:14px;font-size:11px;color:var(--ink-600)}
+.chart-legend .lg{display:flex;align-items:center;gap:5px}
+.chart-legend .sw{width:10px;height:10px;border-radius:2px}
+
+/* Donut visual */
+.donut-wrap{display:flex;align-items:center;gap:18px}
+.donut{width:120px;height:120px;flex-shrink:0;position:relative}
+.donut-list{flex:1}
+.donut-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+.donut-row .sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.donut-row .lbl{flex:1;color:var(--ink-700)}
+.donut-row .val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--ink-900)}
+
+/* Folder card (Reports tab) */
+.folder-stack{display:flex;flex-direction:column;gap:8px}
+.folder-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:14px}
+.folder-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-sm);transform:translateX(2px)}
+.folder-card .fc-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.folder-card .fc-info{flex:1;min-width:0}
+.folder-card .fc-info h4{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:2px}
+.folder-card .fc-info p{font-size:11px;color:var(--ink-500)}
+.folder-card .fc-arrow{color:var(--ink-400);font-size:16px}
+
+/* Doula-style right-aligned action cards */
+.action-stack{display:flex;flex-direction:column;gap:14px}
+.action-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:18px}
+.action-card.warning{background:linear-gradient(135deg,#FFF5F0 0%,#FFEDE3 100%);border-color:rgba(232,115,74,.25)}
+.action-card.info{background:linear-gradient(135deg,#EBF1FD 0%,#DCE7FB 100%);border-color:rgba(59,106,232,.2)}
+.action-card.success{background:linear-gradient(135deg,#E6F5EC 0%,#D5EFDD 100%);border-color:rgba(31,157,92,.2)}
+.action-card .ac-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
+.action-card h4{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:4px}
+.action-card p{font-size:12px;color:var(--ink-700);line-height:1.5;margin-bottom:12px}
+.action-card .ac-btn{padding:8px 14px;background:var(--ink-900);color:#fff;border-radius:var(--r-md);font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.action-card .ac-btn:hover{background:var(--ink-800)}
+
+/* Connection chips */
+.conn-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border:var(--border);border-radius:var(--r-md);background:var(--surface);transition:all .15s;cursor:pointer;margin-bottom:6px}
+.conn-chip:hover{border-color:var(--ink-300)}
+.conn-chip .cc-mark{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.conn-chip .cc-info{flex:1;min-width:0}
+.conn-chip .cc-info h5{font-size:12px;font-weight:600;color:var(--ink-900)}
+.conn-chip .cc-info p{font-size:10px;color:var(--ink-500)}
+
+/* Doula-inspired form fields */
+.field-block{background:var(--surface);border:var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px}
+.field-block-hdr{padding:18px 20px;border-bottom:var(--border)}
+.field-block-hdr h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink-900)}
+.field-block-hdr p{font-size:12px;color:var(--ink-500);margin-top:2px}
+.field-block-body{padding:8px 0}
+.field-row-d{display:grid;grid-template-columns:160px 1fr;align-items:center;padding:10px 20px;gap:14px;border-bottom:1px solid var(--ink-100)}
+.field-row-d:last-child{border-bottom:none}
+.field-row-d label{font-size:13px;color:var(--ink-700);font-weight:500}
+.field-row-d input,.field-row-d select{width:100%;padding:9px 12px;border:1px solid transparent;border-radius:var(--r-sm);background:var(--ink-50);font-size:13px;outline:none;transition:all .15s}
+.field-row-d input:hover,.field-row-d select:hover{background:var(--ink-100)}
+.field-row-d input:focus,.field-row-d select:focus{background:#fff;border-color:var(--ink-300)}
+.field-row-d .copy-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;color:var(--ink-400);font-size:13px;padding:4px}
+.field-row-d .input-wrap{position:relative}
+
+/* Action banner */
+.action-banner{display:flex;align-items:center;gap:14px;padding:18px 22px;border-radius:var(--r-lg);margin-bottom:20px;background:linear-gradient(135deg,#FFF5F0 0%,#FFEDE3 100%);border:1px solid rgba(232,115,74,.2)}
+.action-banner.success{background:linear-gradient(135deg,#E6F5EC 0%,#D5EFDD 100%);border-color:rgba(31,157,92,.2)}
+.action-banner .ab-tag{padding:5px 11px;background:var(--coral);color:#fff;font-size:11px;font-weight:600;border-radius:14px;display:flex;align-items:center;gap:5px;flex-shrink:0}
+.action-banner.success .ab-tag{background:var(--green)}
+.action-banner .ab-text{flex:1;font-size:13px;color:var(--ink-800)}
+.action-banner .ab-text strong{color:var(--ink-900);font-weight:600}
+.action-banner .ab-btn{padding:8px 16px;background:var(--ink-900);color:#fff;border-radius:var(--r-md);font-size:12px;font-weight:500}
+
+/* Today timeline */
+.timeline-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:20px}
+.timeline{position:relative;padding-left:14px}
+.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--ink-200)}
+.tl-item{position:relative;padding:8px 0 8px 18px;display:flex;gap:10px;align-items:flex-start}
+.tl-item::before{content:'';position:absolute;left:-2px;top:14px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--ink-300)}
+.tl-item.done::before{background:var(--green);border-color:var(--green)}
+.tl-item.active::before{background:var(--coral);border-color:var(--coral);box-shadow:0 0 0 4px rgba(232,115,74,.12)}
+.tl-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-500);width:48px;flex-shrink:0;margin-top:1px}
+.tl-body{flex:1;font-size:13px;color:var(--ink-800)}
+.tl-body small{display:block;font-size:11px;color:var(--ink-500);margin-top:1px}
+
+/* Locations grid */
+.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.loc-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:18px;cursor:pointer;transition:all .15s}
+.loc-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.loc-card .lc-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.loc-card .lc-mark{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;flex-shrink:0}
+.loc-card .lc-name h4{font-size:14px;font-weight:600;color:var(--ink-900)}
+.loc-card .lc-name p{font-size:11px;color:var(--ink-500)}
+.loc-card .lc-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding-top:12px;border-top:var(--border)}
+.loc-card .lc-stat{font-size:11px;color:var(--ink-500)}
+.loc-card .lc-stat strong{display:block;font-family:'Fraunces',serif;font-size:18px;color:var(--ink-900);font-weight:600;margin-top:2px}
+
+/* Marketplace cards */
+.mkt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mkt-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:20px;transition:all .15s;position:relative;display:flex;flex-direction:column}
+.mkt-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.mkt-card .mk-tag{position:absolute;top:14px;right:14px;font-size:9px;font-weight:700;color:var(--coral);background:var(--coral-50);padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
+.mkt-card .mk-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+.mkt-card h3{font-size:14px;font-weight:600;color:var(--ink-900);margin-bottom:6px}
+.mkt-card p{font-size:12px;color:var(--ink-600);line-height:1.5;margin-bottom:14px;flex:1}
+.mkt-card .mk-price{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--ink-900);margin-bottom:14px}
+.mkt-card .mk-price small{font-size:11px;font-weight:400;color:var(--ink-500);font-family:'DM Sans',sans-serif}
+.mkt-card .mk-cta{padding:9px;background:var(--ink-900);color:#fff;font-size:12px;font-weight:500;border-radius:var(--r-md);transition:all .15s;width:100%}
+.mkt-card .mk-cta:hover{background:var(--ink-800);transform:translateY(-1px)}
+.mkt-card.subscribed .mk-cta{background:var(--green-50);color:var(--green);border:1px solid var(--green);cursor:default}
+
+/* Community sub-nav (Doola style) */
+.community-layout{display:grid;grid-template-columns:240px 1fr;gap:24px}
+.com-side{position:sticky;top:80px;align-self:flex-start;background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:14px}
+.com-side-section{margin-bottom:18px}
+.com-side-section:last-child{margin-bottom:0}
+.com-side-title{font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;padding:0 10px;margin-bottom:6px}
+.com-side-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--ink-700);cursor:pointer;transition:all .12s}
+.com-side-item:hover{background:var(--ink-50)}
+.com-side-item.active{background:var(--ink-900);color:#fff}
+.com-side-item .em{font-size:14px;width:18px;text-align:center}
+
+.com-feed{display:flex;flex-direction:column;gap:14px}
+.com-post{background:var(--surface);border:var(--border);border-radius:var(--r-lg);padding:22px}
+.com-post .cp-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.com-post .cp-av{width:36px;height:36px;border-radius:50%;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.com-post .cp-meta h5{font-size:13px;font-weight:600;color:var(--ink-900);display:flex;align-items:center;gap:6px}
+.com-post .cp-meta .role-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em}
+.com-post .cp-meta p{font-size:11px;color:var(--ink-500)}
+.com-post .cp-body{font-size:13px;color:var(--ink-700);line-height:1.6}
+.com-post .cp-body strong{color:var(--ink-900);font-weight:600}
+.com-post .cp-event-card{margin-top:14px;border:var(--border);border-radius:var(--r-md);overflow:hidden}
+.com-post .cp-event-img{height:120px;background:linear-gradient(135deg,#FBC8A8 0%,#F09070 50%,#E8734A 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-size:36px}
+.com-post .cp-event-body{padding:14px}
+.com-post .cp-event-body h4{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--ink-900)}
+.com-post .cp-event-body .when{font-size:12px;color:var(--ink-600);margin-bottom:8px}
+.com-post .cp-event-body .meta{display:flex;gap:8px;flex-wrap:wrap}
+.com-post .cp-actions{display:flex;gap:14px;margin-top:14px;padding-top:14px;border-top:var(--border);font-size:12px;color:var(--ink-500)}
+.com-post .cp-actions span{cursor:pointer;display:flex;align-items:center;gap:5px}
+.com-post .cp-actions span:hover{color:var(--ink-900)}
+
+.community-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding:14px 18px;background:var(--surface);border:var(--border);border-radius:var(--r-lg)}
+.community-top .ct-tabs{display:flex;gap:4px;background:var(--ink-100);padding:3px;border-radius:var(--r-md)}
+.community-top .ct-tab{padding:6px 14px;font-size:12px;font-weight:500;color:var(--ink-600);border-radius:6px;cursor:pointer;transition:all .15s}
+.community-top .ct-tab.active{background:#fff;color:var(--ink-900);box-shadow:var(--shadow-xs)}
+.community-top .ct-search{padding:8px 14px;border:var(--border);border-radius:18px;font-size:12px;outline:none;width:200px}
+
+/* Course / guide cards */
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.course-card{background:var(--surface);border:var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:all .15s}
+.course-card:hover{border-color:var(--ink-300);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.course-card .cc-cover{height:100px;display:flex;align-items:center;justify-content:center;font-size:32px}
+.course-card .cc-body{padding:14px}
+.course-card .cc-body h4{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:4px}
+.course-card .cc-body p{font-size:11px;color:var(--ink-500);line-height:1.5}
+.course-card .cc-meta{margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ink-500)}
+
+/* Modals */
+.modal-bg{position:fixed;inset:0;background:rgba(11,15,23,.6);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:48px 20px;overflow-y:auto;animation:fadeIn .2s}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:var(--r-2xl);width:100%;max-width:520px;padding:32px;position:relative;box-shadow:var(--shadow-xl);animation:scaleIn .25s cubic-bezier(.2,.8,.2,1)}
+.modal.wide{max-width:680px}
+.modal .m-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ink-100);font-size:14px;color:var(--ink-700);display:flex;align-items:center;justify-content:center}
+.modal .m-close:hover{background:var(--ink-200)}
+.modal h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.02em;color:var(--ink-900);margin-bottom:6px}
+.modal .m-sub{font-size:13px;color:var(--ink-600);margin-bottom:22px;line-height:1.5}
+.modal .m-progress{display:flex;gap:6px;margin-bottom:22px}
+.modal .m-progress div{flex:1;height:3px;background:var(--ink-200);border-radius:2px;transition:all .3s}
+.modal .m-progress div.done{background:var(--green)}
+.modal .m-progress div.active{background:var(--coral)}
+.modal-step{display:none}.modal-step.active{display:block;animation:fadeUp .25s ease}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink-700);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--ink-200);border-radius:var(--r-md);font-size:13px;outline:none;transition:all .15s;background:#fff}
+.field input:focus,.field select:focus{border-color:var(--ink-900)}
+.field-row-mod{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.summary-box{background:var(--ink-50);border:var(--border);border-radius:var(--r-md);padding:14px;margin-bottom:16px}
+.summary-box .sb-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-700);padding:3px 0}
+.summary-box .sb-row.total{padding-top:8px;margin-top:6px;border-top:var(--border);font-weight:600;color:var(--ink-900)}
+
+.payment-method{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--ink-900);background:var(--ink-50);border-radius:var(--r-md);margin-bottom:14px}
+.payment-method .pm-icon{width:38px;height:38px;border-radius:8px;background:var(--ink-900);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.payment-method .pm-info{flex:1}
+.payment-method .pm-info h5{font-size:13px;font-weight:600;color:var(--ink-900)}
+.payment-method .pm-info p{font-size:11px;color:var(--ink-500)}
+
+.connection-progress{display:flex;flex-direction:column;gap:6px;margin:18px 0}
+.cp-step{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--ink-50);border-radius:var(--r-md);font-size:13px;color:var(--ink-600);transition:all .3s}
+.cp-step.active{background:var(--coral-50);color:var(--ink-900);font-weight:500}
+.cp-step.done{background:var(--green-50);color:var(--green)}
+.cp-step .cp-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:var(--ink-200);color:var(--ink-600);flex-shrink:0}
+.cp-step.active .cp-icon{display:none}
+.cp-step.done .cp-icon{background:var(--green);color:#fff}
+.cp-step .cp-spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink-200);border-top-color:var(--coral);animation:spin .7s linear infinite;display:none;flex-shrink:0}
+.cp-step.active .cp-spinner{display:block}
+
+.success-box{text-align:center;padding:14px 0 8px}
+.success-box .sb-circle{width:64px;height:64px;border-radius:50%;background:var(--green-50);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--green);margin:0 auto 14px}
+.success-box h3{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink-900);margin-bottom:6px}
+.success-box p{font-size:13px;color:var(--ink-600);line-height:1.5}
+
+.btn-modal{width:100%;padding:12px;background:var(--ink-900);color:#fff;font-size:14px;font-weight:500;border-radius:var(--r-md);transition:all .15s;margin-top:8px}
+.btn-modal:hover{background:var(--ink-800)}
+.btn-modal.coral{background:linear-gradient(180deg,#F09070,#E8734A)}
+.btn-modal-2{width:100%;padding:11px;border:var(--border);background:#fff;color:var(--ink-700);font-size:13px;font-weight:500;border-radius:var(--r-md);margin-top:8px}
+
+.partner-strip{display:flex;align-items:center;gap:14px;padding:14px;background:var(--ink-50);border-radius:var(--r-md);margin-bottom:16px}
+.partner-strip .ps-mark{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.partner-strip h4{font-size:14px;font-weight:600;color:var(--ink-900)}
+.partner-strip p{font-size:12px;color:var(--ink-600)}
+
+.scope-list{background:var(--ink-50);border-radius:var(--r-md);padding:14px;margin-bottom:14px}
+.scope-list h5{font-size:11px;font-weight:600;color:var(--ink-600);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.scope-list .scope-item{font-size:12px;color:var(--ink-700);padding:3px 0;display:flex;gap:8px;align-items:center}
+.scope-list .scope-item::before{content:'✓';color:var(--green);font-weight:700}
+
+.bank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.bank-pill{padding:14px 8px;border:var(--border);border-radius:var(--r-md);text-align:center;cursor:pointer;transition:all .15s;background:#fff}
+.bank-pill:hover{border-color:var(--ink-900);transform:translateY(-1px)}
+.bank-pill .bp-icon{font-size:22px;margin-bottom:4px}
+.bank-pill h5{font-size:12px;font-weight:500}
+
+.acc-pick{padding:12px 14px;border:1.5px solid var(--ink-200);border-radius:var(--r-md);margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s}
+.acc-pick:hover{border-color:var(--ink-400)}
+.acc-pick.selected{border-color:var(--ink-900);background:var(--ink-50)}
+.acc-pick .ap-info{flex:1}
+.acc-pick h5{font-size:13px;font-weight:600;color:var(--ink-900)}
+.acc-pick p{font-size:11px;color:var(--ink-500)}
+.acc-pick .ap-bal{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+
+.oauth-frame{background:var(--ink-50);border-radius:var(--r-md);padding:18px;margin-bottom:14px;text-align:center}
+.oauth-frame .of-logo{font-size:34px;margin-bottom:6px}
+.oauth-frame h4{font-size:14px;font-weight:600;color:var(--ink-900);margin-bottom:4px}
+.oauth-frame p{font-size:12px;color:var(--ink-500);font-family:'JetBrains Mono',monospace}
+
+/* Notifications drawer */
+.drawer-bg{position:fixed;inset:0;background:rgba(11,15,23,.4);backdrop-filter:blur(2px);z-index:150;display:none;animation:fadeIn .15s}
+.drawer-bg.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:380px;background:#fff;z-index:151;transform:translateX(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-xl)}
+.drawer.open{transform:translateX(0)}
+.drawer-hdr{padding:18px 20px;border-bottom:var(--border);display:flex;justify-content:space-between;align-items:center}
+.drawer-hdr h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+.drawer-tabs{display:flex;padding:0 20px;border-bottom:var(--border);gap:14px}
+.drawer-tab{padding:10px 0;font-size:12px;font-weight:500;color:var(--ink-500);border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px}
+.drawer-tab.active{color:var(--ink-900);border-bottom-color:var(--ink-900);font-weight:600}
+.drawer-body{flex:1;overflow-y:auto;padding:8px 0}
+.notif{padding:14px 20px;border-bottom:1px solid var(--ink-100);display:flex;gap:12px;cursor:pointer;transition:background .12s}
+.notif:hover{background:var(--ink-50)}
+.notif .n-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.notif .n-info{flex:1;min-width:0}
+.notif .n-info h5{font-size:13px;font-weight:600;color:var(--ink-900);margin-bottom:2px}
+.notif .n-info p{font-size:12px;color:var(--ink-600);line-height:1.45}
+.notif .n-time{font-size:10px;color:var(--ink-400);margin-top:4px;font-family:'JetBrains Mono',monospace}
+.notif.unread{background:linear-gradient(90deg,var(--coral-50) 0%,transparent 8%)}
+.notif.unread::before{content:'';position:absolute;left:8px;top:24px;width:6px;height:6px;border-radius:50%;background:var(--coral)}
+.notif{position:relative}
+
+/* Command palette */
+.cmd-palette-bg{position:fixed;inset:0;background:rgba(11,15,23,.5);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-start;justify-content:center;padding-top:120px;animation:fadeIn .15s}
+.cmd-palette-bg.open{display:flex}
+.cmd-palette{width:100%;max-width:540px;background:#fff;border-radius:var(--r-xl);box-shadow:var(--shadow-xl);overflow:hidden;animation:scaleIn .15s ease}
+.cmd-palette-input{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:var(--border)}
+.cmd-palette-input .cmd-i{font-size:20px;color:var(--ink-500)}
+.cmd-palette-input input{flex:1;border:none;outline:none;font-size:15px;color:var(--ink-900)}
+.cmd-palette-input input::placeholder{color:var(--ink-400)}
+.cmd-palette-results{max-height:400px;overflow-y:auto;padding:8px 0}
+.cmd-section{padding:6px 20px;font-size:10px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em}
+.cmd-result{padding:10px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;font-size:13px}
+.cmd-result:hover,.cmd-result.focused{background:var(--ink-50)}
+.cmd-result .cr-icon{width:28px;height:28px;border-radius:6px;background:var(--ink-100);display:flex;align-items:center;justify-content:center;font-size:14px}
+.cmd-result .cr-info{flex:1}
+.cmd-result .cr-info h5{font-size:13px;font-weight:500;color:var(--ink-900)}
+.cmd-result .cr-info p{font-size:11px;color:var(--ink-500)}
+.cmd-result .cr-kbd{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-500);background:var(--ink-100);padding:2px 6px;border-radius:3px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink-900);color:#fff;padding:12px 22px;border-radius:var(--r-md);font-size:13px;font-weight:500;z-index:1000;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);animation:fadeUp .25s ease}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+
+/* Plaid header */
+.plaid-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:#fff;border-bottom:var(--border);margin:-32px -32px 22px;border-radius:var(--r-2xl) var(--r-2xl) 0 0}
+.plaid-header .ph-mark{width:30px;height:30px;border-radius:7px;background:#000;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.plaid-header h4{font-size:14px;font-weight:600}
+.plaid-header .ph-tag{margin-left:auto;font-size:10px;color:var(--ink-500)}
+</style>
+</head>
+<body>
+
+<!-- ===== SIGN UP ===== -->
+<div class="screen signup active" id="s-signup">
+  <div class="signup-top">
+    <div class="brand"><div class="dot">P</div><span>CoverPanda</span></div>
+    <div class="help">Already with us? <a onclick="skipToApp()">Sign in →</a></div>
+  </div>
+
+  <div class="signup-body">
+    <div class="signup-card">
+      <div class="progress">
+        <div class="active"></div><div></div><div></div>
+      </div>
+
+      <div class="su-step active" id="su-1">
+        <h1>Welcome to your franchise OS</h1>
+        <p class="sub">Banking, books, payroll, taxes, and your franchise community — in one workspace. 15 minutes to launch.</p>
+        <div class="dark-paths">
+          <button class="dark-path selected" data-p="new" onclick="signPath(this)"><div class="icon">🏛️</div><h4>New entity</h4><p>Form an LLC, S-Corp, or C-Corp from scratch.</p></button>
+          <button class="dark-path" data-p="migrate" onclick="signPath(this)"><div class="icon">📦</div><h4>Migrate existing</h4><p>I have a business — bring it under management.</p></button>
+        </div>
+        <button class="btn-coral" onclick="signNext(2)">Continue →</button>
+      </div>
+
+      <div class="su-step" id="su-2">
+        <h1>Tell us about you</h1>
+        <p class="sub">This becomes your CoverPanda login.</p>
+        <div class="row-2">
+          <div class="dark-field"><label>First name</label><input id="s-first" placeholder="Jordan"></div>
+          <div class="dark-field"><label>Last name</label><input id="s-last" placeholder="Smith"></div>
+        </div>
+        <div class="dark-field"><label>Work email</label><input id="s-email" placeholder="jordan@donutnv.com"></div>
+        <div class="row-2">
+          <div class="dark-field"><label>Brand</label><select id="s-brand"><option>DonutNV</option><option>Crumbl</option><option>Crispy Cones</option><option>Stella's Ice Cream</option><option>Jimmy John's</option><option>Other</option></select></div>
+          <div class="dark-field"><label>State</label><select id="s-state"><option>Nevada</option><option>Florida</option><option>Texas</option><option>Delaware</option><option>Wyoming</option></select></div>
+        </div>
+        <button class="btn-coral" onclick="signNext(3)">Continue →</button>
+        <button class="btn-back" onclick="signNext(1)">← Back</button>
+      </div>
+
+      <div class="su-step" id="su-3">
+        <h1>Confirm and pay</h1>
+        <p class="sub">Growth plan — full workspace, all integrations, members-only marketplace pricing.</p>
+        <div class="summary-card">
+          <div class="row"><span>LLC formation</span><span>$297</span></div>
+          <div class="row"><span>NV state filing</span><span>$425</span></div>
+          <div class="row"><span>Registered Agent (1st year)</span><span>Included</span></div>
+          <div class="row"><span>Growth plan (monthly)</span><span>$149/mo</span></div>
+          <div class="row total"><span>Due today</span><span>$871.00</span></div>
+        </div>
+        <div class="row-2">
+          <div class="dark-field"><label>Card</label><input placeholder="4242 4242 4242 4242"></div>
+          <div class="dark-field"><label>MM/YY</label><input placeholder="12/28"></div>
+        </div>
+        <div class="row-2">
+          <div class="dark-field"><label>CVC</label><input placeholder="123"></div>
+          <div class="dark-field"><label>ZIP</label><input placeholder="89015"></div>
+        </div>
+        <button class="btn-coral" onclick="finishSignup()">Create Account & Pay →</button>
+        <button class="btn-back" onclick="signNext(2)">← Back</button>
+      </div>
+    </div>
+  </div>
+  <div class="signup-foot">Secured by Stripe · Encrypted in transit & at rest · CoverPanda © 2026</div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div class="screen app" id="s-app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="sb-brand"><div class="logo">P</div><div class="name">CoverPanda</div></div>
+
+    <div class="location-switcher" onclick="toggleLocations(event)">
+      <div class="ls-mark" id="ls-mark">SP</div>
+      <div class="ls-info">
+        <h5 id="ls-name">DonutNV — Springfield</h5>
+        <p id="ls-sub">Smith QSR Holdings · 1 of 3</p>
+      </div>
+      <div class="ls-chev">▾</div>
+
+      <div class="location-menu" id="loc-menu">
+        <div class="lm-item active" onclick="pickLocation(event,'SP','DonutNV — Springfield','Active · Main')">
+          <div class="lm-mark" style="background:linear-gradient(135deg,#F09070,#E8734A)">SP</div>
+          <div class="lm-info"><h5>DonutNV — Springfield</h5><p>Active · Main</p></div>
+          <div class="lm-check">✓</div>
+        </div>
+        <div class="lm-item" onclick="pickLocation(event,'HD','DonutNV — Henderson','Opening Aug 1')">
+          <div class="lm-mark" style="background:linear-gradient(135deg,#3B6AE8,#1E4FB8)">HD</div>
+          <div class="lm-info"><h5>DonutNV — Henderson</h5><p>Opening Aug 1</p></div>
+          <div class="lm-check">✓</div>
+        </div>
+        <div class="lm-item" onclick="pickLocation(event,'PT','Smith QSR Holdings','Portfolio rollup')">
+          <div class="lm-mark" style="background:linear-gradient(135deg,#1A6B6B,#0A3D3D)">PT</div>
+          <div class="lm-info"><h5>Smith QSR Holdings</h5><p>Portfolio rollup</p></div>
+          <div class="lm-check">✓</div>
+        </div>
+        <div class="lm-add" onclick="toast('Open the Setup tab to add a location','success')">+ Add new location</div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="nav-item active" onclick="navTo('today',this)"><span class="nav-icon">◐</span> Today</div>
+      <div class="nav-item" onclick="navTo('money',this)"><span class="nav-icon">$</span> Money</div>
+      <div class="nav-item" onclick="navTo('team',this)"><span class="nav-icon">◇</span> Team</div>
+      <div class="nav-item" onclick="navTo('locations',this)"><span class="nav-icon">⌖</span> Locations</div>
+
+      <div class="sb-section">Grow</div>
+      <div class="nav-item" onclick="navTo('marketplace',this)"><span class="nav-icon">▤</span> Marketplace</div>
+      <div class="nav-item" onclick="navTo('community',this)"><span class="nav-icon">◔</span> Community</div>
+
+      <div class="sb-section">Account</div>
+      <div class="nav-item" onclick="navTo('setup',this)"><span class="nav-icon">⚙</span> Setup</div>
+    </nav>
+
+    <div class="sb-foot" onclick="toast('Profile menu','success')">
+      <div class="av" id="av">JS</div>
+      <div class="info">
+        <h5 id="user-name">Jordan Smith</h5>
+        <p id="user-role">Owner · DonutNV</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN COLUMN ============ -->
+  <div class="main">
+    <div class="topbar">
+      <button class="cmd-bar" onclick="openCmd()">
+        <span class="cmd-icon">⌕</span>
+        <span class="cmd-text">Search or ask anything…</span>
+        <span class="cmd-kbd">⌘K</span>
+      </button>
+      <div class="tb-spacer"></div>
+      <button class="tb-icon-btn" onclick="toast('Help center','success')" title="Help">?</button>
+      <button class="tb-icon-btn" onclick="openDrawer()" title="Notifications" id="notif-btn">
+        ⚐
+        <span class="dot-notif" id="notif-dot"></span>
+      </button>
+    </div>
+
+    <div class="content" id="content-root">
+
+      <!-- ===== TODAY ===== -->
+      <section class="tab-content active" id="t-today">
+        <div class="page-hdr">
+          <div>
+            <h1>Today, <span id="today-date">Tuesday May 5</span></h1>
+            <div class="subtitle">DonutNV — Springfield · Live now · 2:47p MT</div>
+          </div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="navTo('money',document.querySelectorAll('.nav-item')[1])">Open books</button>
+            <button class="btn btn-coral-sm" onclick="openConn('pos')">Connect POS for live sales</button>
+          </div>
+        </div>
+
+        <div class="action-banner">
+          <span class="ab-tag">●  Action</span>
+          <div class="ab-text"><strong>Pay run for May 8 needs your approval.</strong> 4 employees · $8,640 gross · Funds debit Mercury May 6.</div>
+          <button class="ab-btn" onclick="openConn('gusto')">Review →</button>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi anim anim-1">
+            <div class="kpi-label"><span class="pulse"></span>Sales today</div>
+            <div class="kpi-value">$1,842</div>
+            <div class="kpi-meta"><span class="kpi-delta up">↑ 18%</span> vs Tue last week</div>
+          </div>
+          <div class="kpi anim anim-2">
+            <div class="kpi-label">Labor today</div>
+            <div class="kpi-value">$348</div>
+            <div class="kpi-meta"><span class="kpi-delta flat">18.9%</span> of sales · target 22%</div>
+          </div>
+          <div class="kpi anim anim-3">
+            <div class="kpi-label">Tickets</div>
+            <div class="kpi-value">87</div>
+            <div class="kpi-meta"><span class="kpi-delta up">↑ 12</span> avg ticket $21.17</div>
+          </div>
+          <div class="kpi feature anim anim-4">
+            <div class="kpi-label">Cash position</div>
+            <div class="kpi-value">$39,830</div>
+            <div class="kpi-meta">Mercury + Savings · runway 4.7mo</div>
+          </div>
+        </div>
+
+        <div class="grid-main-wide">
+          <div>
+            <div class="chart-card anim anim-2" style="margin-bottom:18px">
+              <div class="card-header">
+                <div>
+                  <h3>Daily revenue · 14 days</h3>
+                  <p style="font-size:11px;color:var(--ink-500);margin-top:2px">From Stripe Terminal · syncing every 15 min</p>
+                </div>
+                <div class="filter-row" style="margin-bottom:0">
+                  <button class="filter-pill active">14d</button>
+                  <button class="filter-pill">30d</button>
+                  <button class="filter-pill">90d</button>
+                </div>
+              </div>
+              <div class="chart-bars" id="rev-bars">
+                <div class="chart-bar" style="height:42%"></div>
+                <div class="chart-bar" style="height:58%"></div>
+                <div class="chart-bar" style="height:51%"></div>
+                <div class="chart-bar" style="height:67%"></div>
+                <div class="chart-bar" style="height:74%"></div>
+                <div class="chart-bar" style="height:82%"></div>
+                <div class="chart-bar muted" style="height:65%"></div>
+                <div class="chart-bar" style="height:48%"></div>
+                <div class="chart-bar" style="height:62%"></div>
+                <div class="chart-bar" style="height:71%"></div>
+                <div class="chart-bar" style="height:78%"></div>
+                <div class="chart-bar" style="height:85%"></div>
+                <div class="chart-bar" style="height:92%"></div>
+                <div class="chart-bar coral" style="height:58%"></div>
+              </div>
+              <div class="chart-x">
+                <span>Apr 22</span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span>Today</span>
+              </div>
+              <div class="chart-legend"><div class="lg"><div class="sw" style="background:var(--teal)"></div>Closed days</div><div class="lg"><div class="sw" style="background:var(--coral)"></div>Today (live)</div><div class="lg"><div class="sw" style="background:var(--ink-300)"></div>Sunday — closed</div></div>
+            </div>
+
+            <div class="card anim anim-3" style="margin-bottom:18px">
+              <div class="card-header">
+                <h3>Today's operating timeline</h3>
+                <span class="meta">Auto-tracked · Toast + Mercury + Gusto</span>
+              </div>
+              <div class="timeline">
+                <div class="tl-item done"><div class="tl-time">06:30</div><div class="tl-body">Opening checklist complete <small>Maria R · 5 of 5 tasks</small></div></div>
+                <div class="tl-item done"><div class="tl-time">07:14</div><div class="tl-body">First sale of day · $14.50 · Card <small>Stripe Terminal #1</small></div></div>
+                <div class="tl-item done"><div class="tl-time">10:42</div><div class="tl-body">Sysco delivery received · $1,245 <small>Auto-categorized to COGS</small></div></div>
+                <div class="tl-item done"><div class="tl-time">12:08</div><div class="tl-body">Lunch rush peak · 31 tickets in 47 min <small>Service time avg 4:12</small></div></div>
+                <div class="tl-item active"><div class="tl-time">14:47</div><div class="tl-body">You are here · Mid-afternoon lull <small>3 walk-ins last hour</small></div></div>
+                <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body">Second shift starts · Devon clocks in</div></div>
+                <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body">Close · Stripe settlement runs at 21:30</div></div>
+              </div>
+            </div>
+
+            <div class="card anim anim-4">
+              <div class="card-header">
+                <h3>Recent transactions</h3>
+                <span class="link" onclick="navTo('money',document.querySelectorAll('.nav-item')[1])">All transactions →</span>
+              </div>
+              <table class="tbl">
+                <thead><tr><th>Date</th><th>Description</th><th>Source</th><th style="text-align:right">Amount</th><th>Category</th></tr></thead>
+                <tbody>
+                  <tr class="row-link"><td>2:47p</td><td>POS settlement</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$1,842.00</td><td><span class="pill green">Revenue</span></td></tr>
+                  <tr class="row-link"><td>10:42a</td><td>Sysco Foods</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt amt-neg">−$1,245.00</td><td><span class="pill amber">COGS</span></td></tr>
+                  <tr class="row-link"><td>9:15a</td><td>Meta Ads (DonutNV Springfield)</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt amt-neg">−$ 84.00</td><td><span class="pill blue">Marketing</span></td></tr>
+                  <tr class="row-link"><td>Yesterday</td><td>Rent payment</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt amt-neg">−$2,200.00</td><td><span class="pill blue">Rent</span></td></tr>
+                  <tr class="row-link"><td>Yesterday</td><td>Unknown wire · review</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt amt-neg">−$ 420.00</td><td><span class="pill red">Uncategorized</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <aside>
+            <div class="action-stack anim anim-3">
+              <div class="action-card warning">
+                <div class="ac-icon">▲</div>
+                <h4>2 transactions need your input</h4>
+                <p>Categorize them before month-end so your books close clean.</p>
+                <button class="ac-btn" onclick="navTo('money',document.querySelectorAll('.nav-item')[1])">Review →</button>
+              </div>
+              <div class="action-card">
+                <div class="ac-icon">●</div>
+                <h4>Connections</h4>
+                <p style="margin-bottom:8px">Plug in the rest to unlock Today's full picture.</p>
+                <div class="conn-chip" onclick="openConn('pos')"><div class="cc-mark" style="background:var(--ink-100)">⊞</div><div class="cc-info"><h5>Connect POS</h5><p>Toast, Square, Clover</p></div><span class="pill gray">Setup</span></div>
+                <div class="conn-chip" onclick="openConn('quickbooks')"><div class="cc-mark" style="background:var(--ink-100)">▤</div><div class="cc-info"><h5>Connect QuickBooks</h5><p>Sync wage entries</p></div><span class="pill gray">Setup</span></div>
+                <div class="conn-chip" onclick="openConn('gusto')"><div class="cc-mark" style="background:var(--ink-100)">◇</div><div class="cc-info"><h5>Set up Gusto</h5><p>3 mo free</p></div><span class="pill gray">Setup</span></div>
+              </div>
+              <div class="action-card info">
+                <div class="ac-icon">◇</div>
+                <h4>Office hours with Taylor</h4>
+                <p>30 min · Friday afternoons · Open Q&A for franchise operators.</p>
+                <button class="ac-btn" onclick="navTo('community',document.querySelectorAll('.nav-item')[5])">Reserve a spot →</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===== MONEY ===== -->
+      <section class="tab-content" id="t-money">
+        <div class="page-hdr">
+          <div>
+            <h1>Money</h1>
+            <div class="subtitle">Cash, books, and tax in one place.</div>
+          </div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="openConn('plaid')">+ Add bank</button>
+            <button class="btn btn-primary" onclick="toast('Exporting CSV…','success')">Export</button>
+          </div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'money-home')">Accounting Home</button>
+          <button class="subnav-tab" onclick="switchSub(this,'money-reports')">Reports <span class="count">12</span></button>
+          <button class="subnav-tab" onclick="switchSub(this,'money-in')">Money in</button>
+          <button class="subnav-tab" onclick="switchSub(this,'money-out')">Money out</button>
+          <button class="subnav-tab" onclick="switchSub(this,'money-accounts')">Accounts</button>
+          <button class="subnav-tab" onclick="switchSub(this,'money-tax')">Tax center</button>
+        </div>
+
+        <!-- Money: Accounting Home -->
+        <div class="subnav-content active" id="money-home">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Revenue MTD</div><div class="kpi-value">$18,460</div><div class="kpi-meta"><span class="kpi-delta up">↑ 11%</span> vs LM</div></div>
+            <div class="kpi"><div class="kpi-label">Expenses MTD</div><div class="kpi-value">$12,340</div><div class="kpi-meta"><span class="kpi-delta down">↑ 8%</span> vs LM</div></div>
+            <div class="kpi"><div class="kpi-label">Net profit</div><div class="kpi-value">$6,120</div><div class="kpi-meta"><span class="kpi-delta up">↑ 19%</span> · 33% margin</div></div>
+            <div class="kpi feature"><div class="kpi-label">Cash on hand</div><div class="kpi-value">$39,830</div><div class="kpi-meta">Mercury Checking + Savings</div></div>
+          </div>
+
+          <div class="grid-main-wide">
+            <div>
+              <div class="chart-card" style="margin-bottom:18px">
+                <div class="card-header">
+                  <div>
+                    <h3>P&amp;L trend · 6 months</h3>
+                    <p style="font-size:11px;color:var(--ink-500);margin-top:2px">Net income (teal) overlaid on revenue (coral)</p>
+                  </div>
+                  <button class="btn btn-secondary">Custom range</button>
+                </div>
+
+                <svg viewBox="0 0 600 200" style="width:100%;height:200px;display:block;margin-top:14px">
+                  <defs>
+                    <linearGradient id="grad-rev" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8734A" stop-opacity="0.25"/><stop offset="100%" stop-color="#E8734A" stop-opacity="0"/></linearGradient>
+                    <linearGradient id="grad-net" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0A3D3D" stop-opacity="0.20"/><stop offset="100%" stop-color="#0A3D3D" stop-opacity="0"/></linearGradient>
+                  </defs>
+                  <path d="M 0 140 L 100 110 L 200 90 L 300 75 L 400 55 L 500 40 L 600 30 L 600 200 L 0 200 Z" fill="url(#grad-rev)"/>
+                  <path d="M 0 140 L 100 110 L 200 90 L 300 75 L 400 55 L 500 40 L 600 30" fill="none" stroke="#E8734A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M 0 175 L 100 165 L 200 155 L 300 145 L 400 130 L 500 115 L 600 100 L 600 200 L 0 200 Z" fill="url(#grad-net)"/>
+                  <path d="M 0 175 L 100 165 L 200 155 L 300 145 L 400 130 L 500 115 L 600 100" fill="none" stroke="#0A3D3D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g fill="#0A3D3D"><circle cx="600" cy="100" r="4"/></g>
+                  <g fill="#E8734A"><circle cx="600" cy="30" r="4"/></g>
+                </svg>
+                <div class="chart-x" style="margin-top:6px"><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span></div>
+                <div class="chart-legend"><div class="lg"><div class="sw" style="background:var(--coral)"></div>Revenue</div><div class="lg"><div class="sw" style="background:var(--teal)"></div>Net income</div></div>
+              </div>
+
+              <div class="grid-2">
+                <div class="card">
+                  <div class="card-header"><h3>Expense mix</h3><span class="meta">MTD</span></div>
+                  <div class="donut-wrap">
+                    <svg class="donut" viewBox="0 0 36 36">
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F2F4F6" stroke-width="3.5"/>
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke="#6B5CE8" stroke-width="3.5" stroke-dasharray="24 76" stroke-dashoffset="0" transform="rotate(-90 18 18)"/>
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E8734A" stroke-width="3.5" stroke-dasharray="22 78" stroke-dashoffset="-24" transform="rotate(-90 18 18)"/>
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3B6AE8" stroke-width="3.5" stroke-dasharray="18 82" stroke-dashoffset="-46" transform="rotate(-90 18 18)"/>
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1A6B6B" stroke-width="3.5" stroke-dasharray="11 89" stroke-dashoffset="-64" transform="rotate(-90 18 18)"/>
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke="#D9881F" stroke-width="3.5" stroke-dasharray="7 93" stroke-dashoffset="-75" transform="rotate(-90 18 18)"/>
+                      <text x="18" y="20" text-anchor="middle" font-size="5" fill="#0E1015" font-weight="600">100%</text>
+                    </svg>
+                    <div class="donut-list">
+                      <div class="donut-row"><div class="sw" style="background:#6B5CE8"></div><div class="lbl">Salaries</div><div class="val">$3,000</div></div>
+                      <div class="donut-row"><div class="sw" style="background:#E8734A"></div><div class="lbl">COGS</div><div class="val">$2,840</div></div>
+                      <div class="donut-row"><div class="sw" style="background:#3B6AE8"></div><div class="lbl">Rent</div><div class="val">$2,200</div></div>
+                      <div class="donut-row"><div class="sw" style="background:#1A6B6B"></div><div class="lbl">Insurance</div><div class="val">$890</div></div>
+                      <div class="donut-row"><div class="sw" style="background:#D9881F"></div><div class="lbl">Marketing</div><div class="val">$650</div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header"><h3>Cash flow</h3><span class="meta">30d</span></div>
+                  <div style="text-align:center;padding:8px 0">
+                    <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:600;color:var(--green)">+$6,120</div>
+                    <div style="font-size:11px;color:var(--ink-500);margin-top:2px">Net change last 30 days</div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+                    <div style="text-align:center;padding:10px;background:var(--green-50);border-radius:var(--r-md)"><div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--green)">+$18.4K</div><div style="font-size:10px;color:var(--ink-600);margin-top:2px">Inflows</div></div>
+                    <div style="text-align:center;padding:10px;background:var(--ink-100);border-radius:var(--r-md)"><div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink-800)">−$12.3K</div><div style="font-size:10px;color:var(--ink-600);margin-top:2px">Outflows</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside>
+              <div class="action-stack">
+                <div class="action-card warning">
+                  <div class="ac-icon">⌖</div>
+                  <h4>2 uncategorized transactions</h4>
+                  <p>Mercury wire $420 · Apr 2 needs a category.</p>
+                  <button class="ac-btn" onclick="switchSub(document.querySelectorAll('#t-money .subnav-tab')[3],'money-out')">Categorize →</button>
+                </div>
+                <div class="action-card success">
+                  <div class="ac-icon">✓</div>
+                  <h4>April books closed</h4>
+                  <p>Closed by your bookkeeper on May 3. P&amp;L is signed.</p>
+                  <button class="ac-btn" onclick="switchSub(document.querySelectorAll('#t-money .subnav-tab')[1],'money-reports')">View report →</button>
+                </div>
+                <div class="action-card">
+                  <div class="ac-icon">◇</div>
+                  <h4>Add a service</h4>
+                  <p>Bookkeeping, fractional CFO, or tax filing — all member pricing.</p>
+                  <button class="ac-btn" onclick="navTo('marketplace',document.querySelectorAll('.nav-item')[4])">Browse →</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- Money: Reports -->
+        <div class="subnav-content" id="money-reports">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:14px">
+                <div class="card-header"><h3>Financial statements</h3><span class="meta">As of May 4, 2026</span></div>
+                <table class="tbl">
+                  <thead><tr><th>Report</th><th>Period</th><th>Updated</th><th></th></tr></thead>
+                  <tbody>
+                    <tr class="row-link" onclick="toast('Opening Cash Flow Statement','success')"><td><strong>Cash Flow Statement</strong><div style="font-size:11px;color:var(--ink-500)">Operating · Investing · Financing</div></td><td>April 2026</td><td>May 3</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening P&L','success')"><td><strong>Profit &amp; Loss</strong><div style="font-size:11px;color:var(--ink-500)">Revenue, COGS, OpEx, Net Income</div></td><td>April 2026</td><td>May 3</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening Balance Sheet','success')"><td><strong>Balance Sheet</strong><div style="font-size:11px;color:var(--ink-500)">Assets, Liabilities, Equity</div></td><td>April 2026</td><td>May 3</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening AR Aging','success')"><td><strong>AR Aging</strong><div style="font-size:11px;color:var(--ink-500)">Outstanding invoices by age</div></td><td>Live</td><td>5 min ago</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                    <tr class="row-link" onclick="toast('Opening Owner Distributions','success')"><td><strong>Owner distributions</strong><div style="font-size:11px;color:var(--ink-500)">YTD distributions to members</div></td><td>YTD 2026</td><td>May 1</td><td style="text-align:right"><button class="btn btn-secondary">View</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card">
+                <div class="card-header"><h3>Custom report</h3></div>
+                <p style="font-size:13px;color:var(--ink-600);line-height:1.55;margin-bottom:14px">Need a P&amp;L by location, royalty waterfall, or a custom KPI dashboard? Your bookkeeper builds it within 2 business days.</p>
+                <button class="btn btn-primary" onclick="toast('Custom report request submitted','success')">Request report →</button>
+              </div>
+            </div>
+
+            <aside>
+              <div class="folder-stack">
+                <div style="font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;padding:0 4px;margin-bottom:2px">Folders</div>
+                <div class="folder-card" onclick="toast('Opening Tax Documents','success')">
+                  <div class="fc-icon" style="background:var(--coral-50)">▤</div>
+                  <div class="fc-info"><h4>Tax documents</h4><p>34 files · Updated May 1</p></div>
+                  <span class="fc-arrow">›</span>
+                </div>
+                <div class="folder-card" onclick="toast('Opening Financial Reports','success')">
+                  <div class="fc-icon" style="background:var(--blue-50)">◧</div>
+                  <div class="fc-info"><h4>Financial reports</h4><p>87 files · Closed Apr</p></div>
+                  <span class="fc-arrow">›</span>
+                </div>
+                <div class="folder-card" onclick="toast('Opening Bank Statements','success')">
+                  <div class="fc-icon" style="background:var(--green-50)">◐</div>
+                  <div class="fc-info"><h4>Bank statements</h4><p>16 files · Auto-pulled</p></div>
+                  <span class="fc-arrow">›</span>
+                </div>
+                <div class="folder-card" onclick="toast('Opening Receipts','success')">
+                  <div class="fc-icon" style="background:var(--violet-50)">▦</div>
+                  <div class="fc-info"><h4>Receipts</h4><p>248 files · Ramp + manual</p></div>
+                  <span class="fc-arrow">›</span>
+                </div>
+                <div class="folder-card" onclick="toast('Opening Vendor 1099s','success')">
+                  <div class="fc-icon" style="background:var(--amber-50)">◆</div>
+                  <div class="fc-info"><h4>Vendor 1099s</h4><p>2 contractors · Generated Jan</p></div>
+                  <span class="fc-arrow">›</span>
+                </div>
+                <div class="folder-card" onclick="toast('Opening Compliance','success')">
+                  <div class="fc-icon" style="background:var(--ink-100)">▢</div>
+                  <div class="fc-info"><h4>Compliance &amp; FDD</h4><p>9 files · DonutNV system</p></div>
+                  <span class="fc-arrow">›</span>
+                </div>
+
+                <div style="font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.06em;padding:0 4px;margin:14px 0 2px">Quick access</div>
+                <div class="action-card info">
+                  <div class="ac-icon">◔</div>
+                  <h4>Year-end packet</h4>
+                  <p>Bundles W-2s, 1099s, K-1, and the closed P&amp;L for your CPA.</p>
+                  <button class="ac-btn" onclick="toast('Generating year-end packet','success')">Generate →</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- Money: Money in -->
+        <div class="subnav-content" id="money-in">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-label">Payments received MTD</div><div class="kpi-value">$18,460</div><div class="kpi-meta"><span class="kpi-delta up">↑ 11%</span></div></div>
+            <div class="kpi"><div class="kpi-label">Pending payouts</div><div class="kpi-value">$2,103</div><div class="kpi-meta">Stripe · settles May 7</div></div>
+            <div class="kpi"><div class="kpi-label">Avg ticket</div><div class="kpi-value">$21.17</div><div class="kpi-meta"><span class="kpi-delta up">↑ $1.40</span></div></div>
+            <div class="kpi"><div class="kpi-label">Refunds MTD</div><div class="kpi-value">$84.50</div><div class="kpi-meta">3 tickets · 0.46%</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Recent payments</h3><div class="filter-row" style="margin-bottom:0"><button class="filter-pill active">All</button><button class="filter-pill">Card</button><button class="filter-pill">Cash</button><button class="filter-pill">DoorDash</button></div></div>
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Customer</th><th>Method</th><th style="text-align:right">Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>2:47p</td><td>Walk-in #1842</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$47.50</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>2:31p</td><td>Walk-in #1841</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$32.00</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>1:58p</td><td>DoorDash · #DD-7104</td><td><span class="pill amber">Marketplace</span></td><td style="text-align:right" class="amt-amt amt-pos">+$28.75</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>11:42a</td><td>Catering · Smith Corp</td><td><span class="pill violet">Stripe</span></td><td style="text-align:right" class="amt-amt amt-pos">+$425.00</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>Yesterday</td><td>Cash drawer settlement</td><td><span class="pill gray">Cash</span></td><td style="text-align:right" class="amt-amt amt-pos">+$314.00</td><td><span class="pill green">Deposited</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Money: Money out -->
+        <div class="subnav-content" id="money-out">
+          <div class="action-banner">
+            <span class="ab-tag">●  Review</span>
+            <div class="ab-text"><strong>2 transactions need a category.</strong> Save your bookkeeper time at month-end.</div>
+            <button class="ab-btn" onclick="toast('Auto-suggested categories','success')">Auto-categorize</button>
+          </div>
+          <div class="card">
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Description</th><th>Vendor</th><th>Source</th><th style="text-align:right">Amount</th><th>Category</th></tr></thead>
+              <tbody>
+                <tr class="row-link"><td>Apr 8</td><td>Sysco order #18421</td><td>Sysco Foods</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt amt-neg">−$1,245</td><td><span class="pill amber">COGS</span></td></tr>
+                <tr class="row-link"><td>Apr 5</td><td>Rent payment</td><td>Springfield Center LLC</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt amt-neg">−$2,200</td><td><span class="pill blue">Rent</span></td></tr>
+                <tr class="row-link"><td>Apr 4</td><td>ADP Payroll</td><td>Gusto</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt amt-neg">−$3,000</td><td><span class="pill violet">Payroll</span></td></tr>
+                <tr class="row-link"><td>Apr 3</td><td>Meta Ads</td><td>Meta Platforms</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt amt-neg">−$450</td><td><span class="pill blue">Marketing</span></td></tr>
+                <tr class="row-link"><td>Apr 2</td><td>Unknown wire</td><td>—</td><td><span class="pill green">Mercury</span></td><td style="text-align:right" class="amt-amt amt-neg">−$420</td><td><span class="pill red">Uncategorized</span></td></tr>
+                <tr class="row-link"><td>Apr 1</td><td>State Farm</td><td>State Farm Insurance</td><td><span class="pill coral">Ramp</span></td><td style="text-align:right" class="amt-amt amt-neg">−$890</td><td><span class="pill green">Insurance</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Money: Accounts -->
+        <div class="subnav-content" id="money-accounts">
+          <div class="grid-2">
+            <div>
+              <div class="card" style="margin-bottom:14px">
+                <div class="card-header"><h3>Banking</h3></div>
+                <div class="conn-chip"><div class="cc-mark" style="background:var(--green-50)">◐</div><div class="cc-info"><h5>Mercury Checking ••••4821</h5><p>Synced via Mercury API</p></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">$24,830</span></div>
+                <div class="conn-chip"><div class="cc-mark" style="background:var(--blue-50)">◑</div><div class="cc-info"><h5>Mercury Savings ••••4822</h5><p>Treasury · 4.00% APY</p></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">$15,000</span></div>
+                <button class="btn btn-secondary" style="width:100%;margin-top:8px" onclick="openConn('plaid')">+ Connect another bank</button>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Credit &amp; spend</h3></div>
+                <div class="conn-chip"><div class="cc-mark" style="background:var(--coral-50)">▥</div><div class="cc-info"><h5>Ramp Corporate Card ••••7392</h5><p>$3,412 used of $20,000</p></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">$16,588</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="card" style="margin-bottom:14px">
+                <div class="card-header"><h3>Loans &amp; debt</h3></div>
+                <div class="conn-chip"><div class="cc-mark" style="background:var(--amber-50)">◮</div><div class="cc-info"><h5>SBA Loan · Live Oak</h5><p>$1,842/mo · 7.5% · 10yr</p></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--red)">−$142,000</span></div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Payment processing</h3></div>
+                <div class="conn-chip"><div class="cc-mark" style="background:var(--violet-50)">◈</div><div class="cc-info"><h5>Stripe Connect</h5><p>Accepting cards · T+2 payout</p></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">$2,103</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Money: Tax center -->
+        <div class="subnav-content" id="money-tax">
+          <div class="action-banner success">
+            <span class="ab-tag">✓  Filed</span>
+            <div class="ab-text"><strong>Q1 federal &amp; state taxes filed on time.</strong> Next deadline: Q2 941 due Jul 31 — auto-filed via Gusto.</div>
+            <button class="ab-btn" onclick="toast('Opened tax calendar','success')">View calendar</button>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Federal</h3><span class="pill gray">EIN 84-XXXXXXX</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>Form 941 · Q1</span><span class="pill green">✓ Filed Apr 30</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>FUTA · Q1</span><span class="pill green">✓ Filed</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0"><span>Form 941 · Q2</span><span class="pill amber">Auto · Jul 31</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>State — Nevada</h3><span class="pill gray">NV-XXXXXX</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>NV MBT · Q1</span><span class="pill green">✓ Filed</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:var(--border)"><span>NV SUI · Q1</span><span class="pill green">✓ Filed</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0"><span>NV MBT · Q2</span><span class="pill amber">Auto · Jul 31</span></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <div class="card-header"><h3>Documents · Tax year 2025</h3></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div class="folder-card"><div class="fc-icon" style="background:var(--blue-50)">▤</div><div class="fc-info"><h4>1120-S</h4><p>Filed Mar 14</p></div></div>
+              <div class="folder-card"><div class="fc-icon" style="background:var(--green-50)">▤</div><div class="fc-info"><h4>K-1 (Owner)</h4><p>Issued Mar 14</p></div></div>
+              <div class="folder-card"><div class="fc-icon" style="background:var(--amber-50)">▤</div><div class="fc-info"><h4>W-2 batch</h4><p>4 employees</p></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TEAM ===== -->
+      <section class="tab-content" id="t-team">
+        <div class="page-hdr">
+          <div><h1>Team</h1><div class="subtitle">Payroll, schedules, benefits, and compliance.</div></div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary" onclick="openConn('quickbooks')">Sync to QuickBooks</button>
+            <button class="btn btn-coral-sm" onclick="openConn('gusto')">Run Payroll</button>
+          </div>
+        </div>
+
+        <div class="action-banner" id="team-banner">
+          <span class="ab-tag">●  Setup</span>
+          <div class="ab-text"><strong>Connect Gusto to start running payroll.</strong> Full-service payroll, automated taxes in all 50 states. <strong>3 months free</strong> as a CoverPanda member.</div>
+          <button class="ab-btn" onclick="openConn('gusto')">Connect →</button>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Next pay date</div><div class="kpi-value" id="team-kpi-next">—</div><div class="kpi-meta" id="team-kpi-next-sub">Connect Gusto</div></div>
+          <div class="kpi"><div class="kpi-label">Active employees</div><div class="kpi-value" id="team-kpi-emp">0</div><div class="kpi-meta" id="team-kpi-emp-sub">Add team in Gusto</div></div>
+          <div class="kpi"><div class="kpi-label">YTD wages</div><div class="kpi-value" id="team-kpi-ytd">$0</div><div class="kpi-meta">Year-to-date</div></div>
+          <div class="kpi feature"><div class="kpi-label">Q1 taxes</div><div class="kpi-value" id="team-kpi-tax">—</div><div class="kpi-meta">Federal + state</div></div>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'team-overview')">Overview</button>
+          <button class="subnav-tab" onclick="switchSub(this,'team-roster')">Roster</button>
+          <button class="subnav-tab" onclick="switchSub(this,'team-runs')">Pay runs</button>
+          <button class="subnav-tab" onclick="switchSub(this,'team-benefits')">Benefits &amp; HR</button>
+        </div>
+
+        <div class="subnav-content active" id="team-overview">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><h3>Recent pay runs</h3><span class="meta">Bi-weekly · Friday</span></div>
+                <div id="team-empty" style="text-align:center;padding:48px 20px">
+                  <div style="font-size:36px;margin-bottom:10px">◇</div>
+                  <h3 style="font-family:'Fraunces',serif;font-size:18px;color:var(--ink-900);margin-bottom:6px">No pay runs yet</h3>
+                  <p style="font-size:13px;color:var(--ink-500);margin-bottom:14px">Connect Gusto and add employees to run your first payroll.</p>
+                  <button class="btn btn-coral-sm" onclick="openConn('gusto')">Get started →</button>
+                </div>
+                <table class="tbl" id="team-runs-tbl" style="display:none">
+                  <thead><tr><th>Pay date</th><th>Period</th><th>Employees</th><th style="text-align:right">Gross</th><th style="text-align:right">Net</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>May 8</td><td>Apr 26 – May 7</td><td>4</td><td style="text-align:right" class="amt-amt">$8,640</td><td style="text-align:right" class="amt-amt">$6,330</td><td><span class="pill amber">Pending approval</span></td></tr>
+                    <tr><td>Apr 25</td><td>Apr 12 – 25</td><td>4</td><td style="text-align:right" class="amt-amt">$8,420</td><td style="text-align:right" class="amt-amt">$6,140</td><td><span class="pill green">Paid</span></td></tr>
+                    <tr><td>Apr 11</td><td>Mar 29 – Apr 11</td><td>4</td><td style="text-align:right" class="amt-amt">$7,890</td><td style="text-align:right" class="amt-amt">$5,810</td><td><span class="pill green">Paid</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <aside>
+              <div class="action-stack">
+                <div class="action-card">
+                  <div class="ac-icon">●</div>
+                  <h4>Required connections</h4>
+                  <p style="margin-bottom:8px">For full team functionality:</p>
+                  <div class="conn-chip" id="conn-gusto" onclick="openConn('gusto')"><div class="cc-mark" style="background:var(--coral-50)">◇</div><div class="cc-info"><h5>Gusto Payroll</h5><p>Run payroll, file taxes</p></div><span class="pill gray" id="conn-gusto-pill">Setup</span></div>
+                  <div class="conn-chip"><div class="cc-mark" style="background:var(--green-50)">◐</div><div class="cc-info"><h5>Mercury (funding)</h5><p>Wages debit from</p></div><span class="pill green">Active</span></div>
+                  <div class="conn-chip" id="conn-pos-team" onclick="openConn('pos')"><div class="cc-mark" style="background:var(--ink-100)">⊞</div><div class="cc-info"><h5>POS (time clock)</h5><p>Auto-import hours</p></div><span class="pill gray">Setup</span></div>
+                </div>
+                <div class="action-card info">
+                  <div class="ac-icon">▤</div>
+                  <h4>Compliance calendar</h4>
+                  <p>Q2 941 due Jul 31 · NV MBT due Jul 31 · W-2/1099 distribution Jan 31. All auto-filed by Gusto.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="team-roster">
+          <div class="card">
+            <div class="card-header"><h3>Roster</h3><button class="btn btn-coral-sm" onclick="openConn('add-employee')">+ Add employee</button></div>
+            <div id="emp-empty" style="text-align:center;padding:40px 20px">
+              <div style="font-size:36px;margin-bottom:8px">◇</div>
+              <p style="font-size:13px;color:var(--ink-500);margin-bottom:14px">No employees yet — connect Gusto first.</p>
+              <button class="btn btn-coral-sm" onclick="openConn('gusto')">Connect Gusto →</button>
+            </div>
+            <table class="tbl" id="emp-list" style="display:none">
+              <thead><tr><th>Employee</th><th>Role</th><th>Comp</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6B5CE8,#5040C5);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">MR</div><div><strong>Maria Rodriguez</strong><div style="font-size:11px;color:var(--ink-500)">maria@donutnv.com</div></div></div></td><td>Shift Lead</td><td class="amt-amt">$22.00/hr</td><td><span class="pill green">Active</span></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B6AE8,#1E4FB8);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">DK</div><div><strong>Devon King</strong><div style="font-size:11px;color:var(--ink-500)">devon@donutnv.com</div></div></div></td><td>Crew</td><td class="amt-amt">$18.00/hr</td><td><span class="pill green">Active</span></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#E8734A,#C45A36);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">SL</div><div><strong>Sarah Liu</strong><div style="font-size:11px;color:var(--ink-500)">sarah@donutnv.com</div></div></div></td><td>Crew</td><td class="amt-amt">$18.00/hr</td><td><span class="pill green">Active</span></td></tr>
+                <tr><td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1A6B6B,#0A3D3D);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">JS</div><div><strong>Jordan Smith</strong><div style="font-size:11px;color:var(--ink-500)">Owner officer (S-Corp salary)</div></div></div></td><td>Owner</td><td class="amt-amt">$5,000/mo</td><td><span class="pill green">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="team-runs">
+          <div class="card">
+            <table class="tbl">
+              <thead><tr><th>Pay date</th><th>Period</th><th>Type</th><th>EE</th><th style="text-align:right">Gross</th><th style="text-align:right">Taxes</th><th style="text-align:right">Net</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>May 8</td><td>Apr 26 – May 7</td><td>Bi-weekly</td><td>4</td><td style="text-align:right" class="amt-amt">$8,640</td><td style="text-align:right" class="amt-amt">$2,310</td><td style="text-align:right" class="amt-amt">$6,330</td><td><span class="pill amber">Pending</span></td></tr>
+                <tr><td>Apr 25</td><td>Apr 12 – 25</td><td>Bi-weekly</td><td>4</td><td style="text-align:right" class="amt-amt">$8,420</td><td style="text-align:right" class="amt-amt">$2,280</td><td style="text-align:right" class="amt-amt">$6,140</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>Apr 11</td><td>Mar 29 – Apr 11</td><td>Bi-weekly</td><td>4</td><td style="text-align:right" class="amt-amt">$7,890</td><td style="text-align:right" class="amt-amt">$2,080</td><td style="text-align:right" class="amt-amt">$5,810</td><td><span class="pill green">Paid</span></td></tr>
+                <tr><td>Mar 28</td><td>Mar 15 – 28</td><td>Bi-weekly</td><td>3</td><td style="text-align:right" class="amt-amt">$6,200</td><td style="text-align:right" class="amt-amt">$1,620</td><td style="text-align:right" class="amt-amt">$4,580</td><td><span class="pill green">Paid</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="team-benefits">
+          <div class="grid-3">
+            <div class="mkt-card"><div class="mk-icon" style="background:var(--blue-50)">⊕</div><h3>Health benefits</h3><p>Group medical, dental, vision via Gusto + SimplyInsured.</p><div class="mk-price">$8<small>/employee/mo</small></div><button class="mk-cta" onclick="openCheckout('payroll-benefits')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-icon" style="background:var(--violet-50)">◌</div><h3>Guideline 401(k)</h3><p>401(k) plan with auto-enroll, fully integrated with Gusto.</p><div class="mk-price">$40<small>/mo + $6/participant</small></div><button class="mk-cta" onclick="openCheckout('payroll-401k')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-icon" style="background:var(--amber-50)">▢</div><h3>Workers' Comp</h3><p>NEXT Insurance pay-as-you-go, premium based on actual payroll.</p><div class="mk-price">Pay as you go</div><button class="mk-cta" onclick="openCheckout('payroll-wc')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-icon" style="background:var(--teal-100)">⌘</div><h3>HR concierge</h3><p>On-demand HR advisors, employee handbook, compliance posters.</p><div class="mk-price">$59<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('payroll-hr')">Subscribe</button></div>
+            <div class="mkt-card"><div class="mk-icon" style="background:var(--green-50)">◔</div><h3>Time tracking</h3><p>Homebase: scheduling, tip tracking, timesheets that flow to payroll.</p><div class="mk-price">Free<small> for 1st location</small></div><button class="mk-cta" onclick="openCheckout('payroll-time')">Subscribe</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== LOCATIONS ===== -->
+      <section class="tab-content" id="t-locations">
+        <div class="page-hdr">
+          <div><h1>Locations</h1><div class="subtitle">Compare unit performance across your portfolio.</div></div>
+          <div class="page-hdr-actions">
+            <button class="btn btn-secondary">Export</button>
+            <button class="btn btn-coral-sm" onclick="toast('Add new location flow','success')">+ Add location</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Active locations</div><div class="kpi-value">2</div><div class="kpi-meta">+1 opening Aug 1</div></div>
+          <div class="kpi"><div class="kpi-label">Portfolio revenue MTD</div><div class="kpi-value">$24,840</div><div class="kpi-meta"><span class="kpi-delta up">↑ 14%</span> vs LM</div></div>
+          <div class="kpi"><div class="kpi-label">Best performer</div><div class="kpi-value" style="font-size:18px;line-height:1.3">Springfield</div><div class="kpi-meta">Avg ticket $21.17</div></div>
+          <div class="kpi feature"><div class="kpi-label">Royalty due (May)</div><div class="kpi-value">$1,242</div><div class="kpi-meta">6% of net sales · auto-debits May 10</div></div>
+        </div>
+
+        <div class="loc-grid">
+          <div class="loc-card" onclick="pickLocation(event,'SP','DonutNV — Springfield','Active · Main');toast('Switched to Springfield','success')">
+            <div class="lc-hdr">
+              <div class="lc-mark" style="background:linear-gradient(135deg,#F09070,#E8734A)">SP</div>
+              <div class="lc-name"><h4>DonutNV — Springfield</h4><p>125 S Main St · Active</p></div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill green">Open</span><span class="pill blue">POS connected</span><span class="pill violet">Stripe live</span></div>
+            <div class="lc-stats">
+              <div class="lc-stat">Revenue MTD <strong>$18,460</strong></div>
+              <div class="lc-stat">Net margin <strong>33%</strong></div>
+              <div class="lc-stat">Tickets MTD <strong>872</strong></div>
+              <div class="lc-stat">Labor % <strong>18.9%</strong></div>
+            </div>
+          </div>
+
+          <div class="loc-card" onclick="pickLocation(event,'HD','DonutNV — Henderson','Opening Aug 1');toast('Switched to Henderson','success')">
+            <div class="lc-hdr">
+              <div class="lc-mark" style="background:linear-gradient(135deg,#3B6AE8,#1E4FB8)">HD</div>
+              <div class="lc-name"><h4>DonutNV — Henderson</h4><p>Opening Aug 1 · Pre-launch</p></div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill amber">Pre-launch</span><span class="pill gray">POS not connected</span></div>
+            <div class="lc-stats">
+              <div class="lc-stat">Lease started <strong>Apr 1</strong></div>
+              <div class="lc-stat">Build-out <strong>62%</strong></div>
+              <div class="lc-stat">Hire plan <strong>0/4</strong></div>
+              <div class="lc-stat">Open in <strong>87 days</strong></div>
+            </div>
+          </div>
+
+          <div class="loc-card" style="border-style:dashed;cursor:pointer;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink-500);min-height:220px" onclick="toast('Add new location flow','success')">
+            <div style="font-size:32px;margin-bottom:8px">+</div>
+            <h4 style="font-size:14px;font-weight:600;color:var(--ink-700);margin-bottom:4px">Add a location</h4>
+            <p style="font-size:11px">Form a new entity, sign a lease, or migrate an existing unit.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-header"><h3>Per-location performance · 30 days</h3><span class="meta">Comparable metrics</span></div>
+          <table class="tbl">
+            <thead><tr><th>Location</th><th style="text-align:right">Revenue</th><th style="text-align:right">Tickets</th><th style="text-align:right">Avg ticket</th><th style="text-align:right">Labor %</th><th style="text-align:right">Net margin</th><th style="text-align:right">Royalty due</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Springfield</strong> · Main</td><td style="text-align:right" class="amt-amt">$18,460</td><td style="text-align:right">872</td><td style="text-align:right" class="amt-amt">$21.17</td><td style="text-align:right">18.9%</td><td style="text-align:right" class="amt-amt amt-pos">33%</td><td style="text-align:right" class="amt-amt">$1,108</td></tr>
+              <tr><td><strong>Henderson</strong> · Pre-launch</td><td style="text-align:right" class="amt-amt">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+              <tr style="font-weight:600;background:var(--ink-50)"><td>Portfolio total</td><td style="text-align:right" class="amt-amt">$18,460</td><td style="text-align:right">872</td><td style="text-align:right" class="amt-amt">$21.17</td><td style="text-align:right">18.9%</td><td style="text-align:right" class="amt-amt">33%</td><td style="text-align:right" class="amt-amt">$1,108</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== MARKETPLACE ===== -->
+      <section class="tab-content" id="t-marketplace">
+        <div class="page-hdr">
+          <div><h1>Marketplace</h1><div class="subtitle">Member pricing across accounting, payroll, insurance, marketing, and more.</div></div>
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-pill active" onclick="filterMkt(this,'all')">All</button>
+          <button class="filter-pill" onclick="filterMkt(this,'accounting')">Accounting</button>
+          <button class="filter-pill" onclick="filterMkt(this,'payroll')">Payroll &amp; HR</button>
+          <button class="filter-pill" onclick="filterMkt(this,'insurance')">Insurance</button>
+          <button class="filter-pill" onclick="filterMkt(this,'marketing')">Marketing</button>
+          <button class="filter-pill" onclick="filterMkt(this,'legal')">Legal</button>
+        </div>
+
+        <div class="mkt-grid">
+          <div class="mkt-card" data-cat="accounting"><span class="mk-tag">Popular</span><div class="mk-icon" style="background:var(--teal-100)">▤</div><h3>Monthly bookkeeping</h3><p>Dedicated bookkeeper, monthly closes, tax-ready financials.</p><div class="mk-price">$250<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('bookkeeping')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-icon" style="background:var(--coral-50)">◧</div><h3>Tax preparation</h3><p>Annual federal + state returns by a franchise CPA.</p><div class="mk-price">$1,500<small>/yr</small></div><button class="mk-cta" onclick="openCheckout('tax-prep')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-icon" style="background:var(--blue-50)">◑</div><h3>CPA consultation</h3><p>30 minutes 1:1 with a franchise-savvy CPA.</p><div class="mk-price">$150<small>/hr</small></div><button class="mk-cta" onclick="openCheckout('cpa-consult')">Book now</button></div>
+          <div class="mkt-card" data-cat="payroll"><div class="mk-icon" style="background:var(--green-50)">◇</div><h3>Gusto payroll</h3><p>Full-service payroll. 3 months free.</p><div class="mk-price">$49<small>/mo + $6/employee</small></div><button class="mk-cta" onclick="openCheckout('payroll-gusto')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><div class="mk-icon" style="background:var(--violet-50)">◭</div><h3>Sales tax filing</h3><p>Quarterly returns in every state you operate.</p><div class="mk-price">$99<small>/qtr</small></div><button class="mk-cta" onclick="openCheckout('sales-tax')">Get started</button></div>
+          <div class="mkt-card" data-cat="accounting"><span class="mk-tag">Premium</span><div class="mk-icon" style="background:var(--amber-50)">◮</div><h3>Fractional CFO</h3><p>Monthly strategic financial planning + forecasting.</p><div class="mk-price">$1,500<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('cfo')">Get started</button></div>
+          <div class="mkt-card" data-cat="insurance"><div class="mk-icon" style="background:var(--green-50)">▢</div><h3>NEXT Insurance</h3><p>GL, workers comp, professional liability — franchise discount.</p><div class="mk-price">10% off<small> · quote in 60s</small></div><button class="mk-cta" onclick="openCheckout('insurance-next')">Get quote</button></div>
+          <div class="mkt-card" data-cat="marketing"><div class="mk-icon" style="background:var(--coral-50)">◐</div><h3>Local marketing pack</h3><p>Geo-targeted ads, Google Business setup, review automation.</p><div class="mk-price">$199<small>/mo</small></div><button class="mk-cta" onclick="openCheckout('marketing-local')">Get started</button></div>
+          <div class="mkt-card" data-cat="legal"><div class="mk-icon" style="background:var(--blue-50)">⚖</div><h3>Legal review</h3><p>Lease review, employment agreements, FDD interpretation.</p><div class="mk-price">$200<small>/hr</small></div><button class="mk-cta" onclick="openCheckout('legal-review')">Book attorney</button></div>
+        </div>
+      </section>
+
+      <!-- ===== COMMUNITY (Doola-style) ===== -->
+      <section class="tab-content" id="t-community">
+        <div class="community-top">
+          <div class="ct-tabs">
+            <button class="ct-tab active">Home</button>
+            <button class="ct-tab">Courses</button>
+            <button class="ct-tab">Events</button>
+            <button class="ct-tab">Members</button>
+          </div>
+          <input class="ct-search" placeholder="Search community…">
+        </div>
+
+        <div class="page-hdr"><div><h1>Community</h1><div class="subtitle">Founders, operators, and experts. Built for franchise owners.</div></div></div>
+
+        <div class="community-layout">
+          <aside class="com-side">
+            <div class="com-side-section">
+              <div class="com-side-title">Browse</div>
+              <div class="com-side-item active"><span class="em">▦</span> Feed</div>
+              <div class="com-side-item"><span class="em">●</span> Latest</div>
+              <div class="com-side-item"><span class="em">★</span> Top this week</div>
+            </div>
+            <div class="com-side-section">
+              <div class="com-side-title">Getting started</div>
+              <div class="com-side-item"><span class="em">◌</span> Start here</div>
+              <div class="com-side-item"><span class="em">▤</span> What is an FDD?</div>
+              <div class="com-side-item"><span class="em">◧</span> LLC vs S-Corp</div>
+              <div class="com-side-item"><span class="em">◐</span> Reading your P&amp;L</div>
+            </div>
+            <div class="com-side-section">
+              <div class="com-side-title">CoverPanda community</div>
+              <div class="com-side-item"><span class="em">◔</span> Member intros</div>
+              <div class="com-side-item"><span class="em">◇</span> Weekly events</div>
+              <div class="com-side-item"><span class="em">◑</span> Member chat</div>
+              <div class="com-side-item"><span class="em">⌖</span> By concept</div>
+            </div>
+            <div class="com-side-section">
+              <div class="com-side-title">Free courses</div>
+              <div class="com-side-item"><span class="em">▢</span> CoverPanda University</div>
+              <div class="com-side-item"><span class="em">▤</span> Bookkeeping basics</div>
+              <div class="com-side-item"><span class="em">◧</span> Tax prep for QSR</div>
+              <div class="com-side-item"><span class="em">◭</span> Multi-unit playbook</div>
+            </div>
+          </aside>
+
+          <main class="com-feed">
+            <div class="com-post">
+              <div class="cp-hdr">
+                <div class="cp-av" style="background:linear-gradient(135deg,#1A6B6B,#0A3D3D)">TB</div>
+                <div class="cp-meta">
+                  <h5>Taylor Byington <span class="role-tag" style="background:var(--coral-50);color:var(--coral)">Founder</span></h5>
+                  <p>Posted in Weekly Events · Aug 16</p>
+                </div>
+              </div>
+              <div class="cp-body">
+                Join us every week for <strong>Weekly Q&amp;A w/ Taylor</strong> — a live session for franchise operators. Bring your hardest questions: pricing, royalty negotiation, multi-unit ops, hiring. <br><br>This week we're going deep on <strong>opening your second location</strong>: SBA financing, hiring before opening, and how to not crater your first store's numbers while you do it.
+              </div>
+              <div class="cp-event-card">
+                <div class="cp-event-img">◐</div>
+                <div class="cp-event-body">
+                  <h4>Weekly Live Q&amp;A w/ Taylor</h4>
+                  <div class="when">Thursday, May 8 · 4:00 – 5:00 PM MT</div>
+                  <div class="meta"><span class="pill amber">Open</span><span class="pill blue">Live stream</span><span class="pill gray">42 attending</span></div>
+                </div>
+              </div>
+              <div class="cp-actions">
+                <span>♡ 28</span><span>↩ Reply (12)</span><span>↗ Share</span>
+              </div>
+            </div>
+
+            <div class="com-post">
+              <div class="cp-hdr">
+                <div class="cp-av" style="background:linear-gradient(135deg,#E8734A,#C45A36)">CF</div>
+                <div class="cp-meta">
+                  <h5>Carla Fields <span class="role-tag" style="background:var(--blue-50);color:var(--blue)">Multi-unit Crumbl</span></h5>
+                  <p>Posted in By Concept · 2 days ago</p>
+                </div>
+              </div>
+              <div class="cp-body">
+                Tampa Crumbl group here (4 units). Question for the group — how are you handling <strong>shared marketing budgets</strong> across locations? We're spending too much per ticket on Meta and I think the geo-fencing is overlapping. <br><br>Specifically curious if anyone's tried Reach Local's franchise package vs. just running it in-house.
+              </div>
+              <div class="cp-actions"><span>♡ 14</span><span>↩ Reply (8)</span><span>↗ Share</span></div>
+            </div>
+
+            <div class="com-post">
+              <div class="cp-hdr">
+                <div class="cp-av" style="background:linear-gradient(135deg,#3B6AE8,#1E4FB8)">KT</div>
+                <div class="cp-meta">
+                  <h5>Kayden Thomson <span class="role-tag" style="background:var(--violet-50);color:var(--violet)">CoverPanda</span></h5>
+                  <p>Posted in Latest · 4 days ago</p>
+                </div>
+              </div>
+              <div class="cp-body">
+                <strong>Shipped:</strong> Multi-location switcher (top of your sidebar). You can now toggle between unit-level views and a portfolio rollup. Royalty waterfall and per-location P&amp;L coming next sprint.
+              </div>
+              <div class="cp-actions"><span>♡ 36</span><span>↩ Reply (4)</span><span>↗ Share</span></div>
+            </div>
+
+            <div style="text-align:center;padding:24px"><button class="btn btn-secondary">Load more →</button></div>
+          </main>
+        </div>
+      </section>
+
+      <!-- ===== SETUP (Doola-style) ===== -->
+      <section class="tab-content" id="t-setup">
+        <div class="page-hdr">
+          <div><h1>Setup &amp; Company</h1><div class="subtitle">Entity formation, business profile, documents, and connections.</div></div>
+        </div>
+
+        <div class="action-banner">
+          <span class="ab-tag">●  Action required</span>
+          <div class="ab-text"><strong>Provide your company details</strong> to access services seamlessly. We'll handle formation, EIN, and Operating Agreement.</div>
+          <button class="ab-btn">Get started ›</button>
+        </div>
+
+        <div class="subnav">
+          <button class="subnav-tab active" onclick="switchSub(this,'setup-company')">Company</button>
+          <button class="subnav-tab" onclick="switchSub(this,'setup-formation')">Formation</button>
+          <button class="subnav-tab" onclick="switchSub(this,'setup-connections')">Connections</button>
+          <button class="subnav-tab" onclick="switchSub(this,'setup-billing')">Billing &amp; subscriptions</button>
+        </div>
+
+        <div class="subnav-content active" id="setup-company">
+          <div class="grid-main-wide">
+            <div>
+              <div class="field-block">
+                <div class="field-block-hdr"><h3>Owner</h3><p>The person legally responsible for this entity.</p></div>
+                <div class="field-block-body">
+                  <div class="field-row-d"><label>Full name</label><div class="input-wrap"><input value="Jordan Smith"></div></div>
+                  <div class="field-row-d"><label>Email</label><div class="input-wrap"><input value="jordan@donutnv.com"></div></div>
+                  <div class="field-row-d"><label>Mobile</label><div class="input-wrap"><input value="(702) 555-0119"></div></div>
+                </div>
+              </div>
+
+              <div class="field-block">
+                <div class="field-block-hdr"><h3>Company</h3><p>Your business identity. Updates here flow to all integrations.</p></div>
+                <div class="field-block-body">
+                  <div class="field-row-d"><label>Legal name</label><div class="input-wrap"><input value="Smith QSR Holdings LLC"></div></div>
+                  <div class="field-row-d"><label>DBA</label><div class="input-wrap"><input value="DonutNV — Springfield"></div></div>
+                  <div class="field-row-d"><label>Entity type</label><div class="input-wrap"><select><option>LLC</option><option>S-Corp</option><option>C-Corp</option><option>DBA</option></select></div></div>
+                  <div class="field-row-d"><label>EIN</label><div class="input-wrap"><input value="84-1234567"></div></div>
+                  <div class="field-row-d"><label>State</label><div class="input-wrap"><select><option>Nevada</option><option>Florida</option><option>Texas</option><option>Delaware</option><option>Wyoming</option></select></div></div>
+                  <div class="field-row-d"><label>Industry</label><div class="input-wrap"><select><option>Food Services &amp; QSR</option><option>Retail</option><option>Personal Services</option></select></div></div>
+                  <div class="field-row-d"><label>Description</label><div class="input-wrap"><input value="Mobile donut concept · franchisee of DonutNV"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <aside>
+              <div class="action-stack">
+                <div class="action-card">
+                  <div class="ac-icon">▤</div>
+                  <h4>Company documents</h4>
+                  <p>3 of 3 uploaded · Last updated May 4</p>
+                  <button class="ac-btn" onclick="toast('Opening documents','success')">My documents ›</button>
+                </div>
+                <div class="action-card info">
+                  <div class="ac-icon">◑</div>
+                  <h4>Free consultation</h4>
+                  <p>Have a question? Ask our experts about business matters, your account, our products, and more.</p>
+                  <button class="ac-btn" onclick="toast('Booking consultation','success')">Book now ›</button>
+                </div>
+                <div class="action-card success">
+                  <div class="ac-icon">✓</div>
+                  <h4>Compliance up to date</h4>
+                  <p>Annual report filed. Registered agent active through 2027.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="setup-formation">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><h3>Current formation status</h3><span class="pill green">Active</span></div>
+                <div style="display:flex;align-items:center;gap:0;margin:12px 0 6px">
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">Filed</div></div>
+                  <div style="flex:1;height:2px;background:var(--green)"></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">Approved</div></div>
+                  <div style="flex:1;height:2px;background:var(--green)"></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">EIN issued</div></div>
+                  <div style="flex:1;height:2px;background:var(--green)"></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:700">✓</div><div style="font-size:10px;color:var(--ink-600);margin-top:6px">OA signed</div></div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header"><h3>Add a new entity</h3></div>
+                <p style="font-size:13px;color:var(--ink-600);margin-bottom:14px">Form a sister entity for a new location, brand, or vehicle. We handle the filing, EIN, registered agent, and OA.</p>
+                <div class="grid-3">
+                  <div class="mkt-card"><div class="mk-icon" style="background:var(--teal-100)">▢</div><h3>LLC</h3><p>Liability protection + pass-through tax.</p><div class="mk-price">$297<small> + state fees</small></div><button class="mk-cta" onclick="toast('Starting LLC formation','success')">Form LLC</button></div>
+                  <div class="mkt-card"><div class="mk-icon" style="background:var(--coral-50)">◧</div><h3>S-Corp</h3><p>Tax savings on self-employment income.</p><div class="mk-price">$497<small> + state fees</small></div><button class="mk-cta" onclick="toast('Starting S-Corp formation','success')">Form S-Corp</button></div>
+                  <div class="mkt-card"><div class="mk-icon" style="background:var(--violet-50)">◭</div><h3>C-Corp</h3><p>Best for raising capital.</p><div class="mk-price">$597<small> + state fees</small></div><button class="mk-cta" onclick="toast('Starting C-Corp formation','success')">Form C-Corp</button></div>
+                </div>
+              </div>
+            </div>
+
+            <aside>
+              <div class="action-stack">
+                <div class="action-card">
+                  <div class="ac-icon">▤</div>
+                  <h4>Formation documents</h4>
+                  <p style="margin-bottom:10px">Articles of Organization, Operating Agreement, EIN Letter, Annual Report.</p>
+                  <button class="ac-btn">View all ›</button>
+                </div>
+                <div class="action-card info">
+                  <div class="ac-icon">◐</div>
+                  <h4>Registered Agent</h4>
+                  <p>CoverPanda is your RA in NV. Renews automatically Jan 1, 2027.</p>
+                </div>
+                <div class="action-card warning">
+                  <div class="ac-icon">▲</div>
+                  <h4>Annual report due Jan 31</h4>
+                  <p>$149 NV filing fee + franchise tax. Auto-filed unless you opt out.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="setup-connections">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Banking &amp; cash</h3></div>
+              <div class="conn-chip"><div class="cc-mark" style="background:var(--green-50)">◐</div><div class="cc-info"><h5>Mercury</h5><p>Checking + savings</p></div><span class="pill green">Active</span></div>
+              <div class="conn-chip" onclick="openConn('plaid')"><div class="cc-mark" style="background:var(--ink-100)">◑</div><div class="cc-info"><h5>Other bank (via Plaid)</h5><p>Chase, BofA, Wells</p></div><span class="pill gray">Connect</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Credit &amp; spend</h3></div>
+              <div class="conn-chip"><div class="cc-mark" style="background:var(--coral-50)">▥</div><div class="cc-info"><h5>Ramp</h5><p>Corporate cards</p></div><span class="pill green">Active</span></div>
+              <div class="conn-chip"><div class="cc-mark" style="background:var(--ink-100)">▦</div><div class="cc-info"><h5>Brex</h5><p>Alternative card</p></div><span class="pill gray">Connect</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Books &amp; payroll</h3></div>
+              <div class="conn-chip" onclick="openConn('quickbooks')"><div class="cc-mark" style="background:var(--ink-100)">▤</div><div class="cc-info"><h5>QuickBooks Online</h5><p>Sync accounting</p></div><span class="pill gray">Connect</span></div>
+              <div class="conn-chip" onclick="openConn('gusto')"><div class="cc-mark" style="background:var(--ink-100)">◇</div><div class="cc-info"><h5>Gusto</h5><p>Payroll + tax filings</p></div><span class="pill gray">Connect</span></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>POS &amp; payments</h3></div>
+              <div class="conn-chip"><div class="cc-mark" style="background:var(--violet-50)">◈</div><div class="cc-info"><h5>Stripe</h5><p>Payment processing</p></div><span class="pill green">Active</span></div>
+              <div class="conn-chip" onclick="openConn('pos')"><div class="cc-mark" style="background:var(--ink-100)">⊞</div><div class="cc-info"><h5>POS</h5><p>Toast, Square, Clover</p></div><span class="pill gray">Connect</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subnav-content" id="setup-billing">
+          <div class="grid-main-wide">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div class="card-header"><h3>Active subscriptions</h3><span id="sub-mrr" class="meta">$149/mo MRR</span></div>
+                <div id="sub-list"></div>
+                <div id="sub-empty" style="padding:24px;text-align:center;color:var(--ink-500);font-size:12px;display:none">No subscriptions yet</div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Invoices</h3></div>
+                <table class="tbl">
+                  <thead><tr><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+                  <tbody>
+                    <tr><td>May 1, 2026</td><td class="amt-amt">$149.00</td><td><span class="pill green">Paid</span></td><td style="text-align:right"><button class="btn btn-secondary">Receipt</button></td></tr>
+                    <tr><td>Apr 1, 2026</td><td class="amt-amt">$149.00</td><td><span class="pill green">Paid</span></td><td style="text-align:right"><button class="btn btn-secondary">Receipt</button></td></tr>
+                    <tr><td>Mar 1, 2026</td><td class="amt-amt">$149.00</td><td><span class="pill green">Paid</span></td><td style="text-align:right"><button class="btn btn-secondary">Receipt</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <aside>
+              <div class="action-card">
+                <div class="ac-icon">▥</div>
+                <h4>Payment method</h4>
+                <p style="margin-bottom:8px">Visa •••• 4242 · Default</p>
+                <p style="font-size:11px;color:var(--ink-500);margin-bottom:12px">Expires 12/28 · billing@smithqsr.com</p>
+                <button class="ac-btn">Update card</button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== UNIVERSAL CHECKOUT MODAL ===== -->
+<div class="modal-bg" id="checkout-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('checkout-modal')">×</button>
+    <div class="m-progress"><div class="active" id="ck-mp-1"></div><div id="ck-mp-2"></div><div id="ck-mp-3"></div></div>
+
+    <div class="modal-step active" id="ck-1">
+      <h2 id="ck-title">Subscribe</h2>
+      <p class="m-sub" id="ck-sub">Review and confirm.</p>
+      <div class="partner-strip">
+        <div class="ps-mark" id="ck-icon" style="background:var(--coral-50)">◇</div>
+        <div style="flex:1"><h4 id="ck-name">Service</h4><p id="ck-desc">—</p></div>
+      </div>
+      <div class="summary-box">
+        <div class="sb-row"><span id="ck-line-name">—</span><span id="ck-line-price">—</span></div>
+        <div class="sb-row" style="font-size:11px;color:var(--ink-500)"><span>Member discount</span><span style="color:var(--green)">−15%</span></div>
+        <div class="sb-row total"><span id="ck-total-label">Today's charge</span><span id="ck-total">$0.00</span></div>
+      </div>
+      <div id="ck-billing-existing">
+        <div style="font-size:11px;font-weight:600;color:var(--ink-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Bills to existing method</div>
+        <div class="payment-method"><div class="pm-icon">▥</div><div class="pm-info"><h5>Visa •••• 4242</h5><p>Default · Added to your CoverPanda subscription</p></div></div>
+      </div>
+      <button class="btn-modal" onclick="ckNext(2)" id="ck-confirm-btn">Add to Subscription →</button>
+      <button class="btn-modal-2" onclick="closeModal('checkout-modal')">Cancel</button>
+    </div>
+
+    <div class="modal-step" id="ck-2">
+      <h2>Processing</h2>
+      <p class="m-sub">Charging your card and provisioning the service.</p>
+      <div class="connection-progress" id="ck-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Validating payment method</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Charging via Stripe</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Adding to subscription</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Provisioning service</div>
+      </div>
+    </div>
+
+    <div class="modal-step" id="ck-3">
+      <div class="success-box">
+        <div class="sb-circle">✓</div>
+        <h3>You're subscribed</h3>
+        <p id="ck-success-msg">Your subscription is active.</p>
+      </div>
+      <div class="summary-box" style="margin-top:18px">
+        <div class="sb-row"><span>Receipt #</span><span id="ck-receipt">CP-78421</span></div>
+        <div class="sb-row"><span>Charged to</span><span>Visa •••• 4242</span></div>
+        <div class="sb-row total"><span>Amount</span><span id="ck-success-amt">$0.00</span></div>
+      </div>
+      <button class="btn-modal" onclick="ckDone()" id="ck-done-btn">Done</button>
+      <button class="btn-modal-2" onclick="ckDone(true)" id="ck-connect-btn" style="display:none">Connect Now →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUICKBOOKS ===== -->
+<div class="modal-bg" id="quickbooks-modal">
+  <div class="modal wide">
+    <button class="m-close" onclick="closeModal('quickbooks-modal')">×</button>
+    <div class="m-progress"><div class="active"></div><div></div><div></div><div></div></div>
+    <div class="modal-step active" id="qb-1">
+      <h2>Connect QuickBooks Online</h2>
+      <p class="m-sub">Sync your books and automate journal entries from Stripe, Gusto, Mercury, and Ramp.</p>
+      <div class="partner-strip"><div class="ps-mark" style="background:var(--green-50)">▤</div><div style="flex:1"><h4>Intuit QuickBooks Online</h4><p>You'll be sent to Intuit to authorize.</p></div></div>
+      <div class="scope-list"><h5>What CoverPanda can do</h5><div class="scope-item">Read &amp; write your chart of accounts</div><div class="scope-item">Post journal entries from connected sources</div><div class="scope-item">Read invoices, expenses, customer records</div><div class="scope-item">Reconcile bank-feed transactions</div></div>
+      <button class="btn-modal" onclick="qbStep(2)">Connect with Intuit →</button>
+      <button class="btn-modal-2" onclick="closeModal('quickbooks-modal')">Not now</button>
+    </div>
+    <div class="modal-step" id="qb-2">
+      <h2>Authorize CoverPanda</h2>
+      <p class="m-sub">Sign in to your Intuit account.</p>
+      <div class="oauth-frame"><div class="of-logo">▤</div><h4>Intuit OAuth · Sign in</h4><p>intuit.com/connect/oauth2</p></div>
+      <div class="field"><label>Intuit email</label><input value="jordan@donutnv.com"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-modal" onclick="qbStep(3)">Sign in &amp; Continue →</button>
+      <button class="btn-modal-2" onclick="qbStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="qb-3">
+      <h2>Choose your company file</h2>
+      <p class="m-sub">Found 1 active company under this Intuit account.</p>
+      <div class="acc-pick selected"><div style="font-size:22px">◧</div><div class="ap-info"><h5>Smith QSR Holdings LLC</h5><p>QBO Plus · 1 user · Created today</p></div><span class="pill green">Recommended</span></div>
+      <div class="acc-pick"><div style="font-size:22px">+</div><div class="ap-info"><h5>Create a new QBO company</h5><p>We'll provision a fresh file</p></div></div>
+      <button class="btn-modal" onclick="qbStep(4)">Authorize &amp; Sync →</button>
+    </div>
+    <div class="modal-step" id="qb-4">
+      <h2>Setting up your books</h2>
+      <p class="m-sub">Importing chart of accounts and mapping connected sources.</p>
+      <div class="connection-progress" id="qb-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Authorizing OAuth</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Importing chart of accounts</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Mapping Stripe → 4000 Sales</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Mapping Gusto → 6010 Payroll</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">5</div>Backfilling 90 days</div>
+      </div>
+    </div>
+    <div class="modal-step" id="qb-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>QuickBooks connected</h3><p>Future activity will auto-post nightly.</p></div>
+      <button class="btn-modal" onclick="finishConn('quickbooks')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GUSTO ===== -->
+<div class="modal-bg" id="gusto-modal">
+  <div class="modal wide">
+    <button class="m-close" onclick="closeModal('gusto-modal')">×</button>
+    <div class="m-progress"><div class="active"></div><div></div><div></div><div></div><div></div></div>
+    <div class="modal-step active" id="gs-1">
+      <h2>Set up Gusto Payroll</h2>
+      <p class="m-sub">Full-service payroll, automated taxes in all 50 states. <strong>3 months free</strong> as a CoverPanda member.</p>
+      <div class="partner-strip"><div class="ps-mark" style="background:var(--coral-50)">◇</div><div style="flex:1"><h4>Gusto · Embedded Payroll</h4><p>$49/mo + $6/employee · Cancel anytime</p></div></div>
+      <div class="scope-list"><h5>What we'll do</h5><div class="scope-item">Provision Gusto company linked to your EIN</div><div class="scope-item">File state tax registrations (NV SUI / MBT)</div><div class="scope-item">Set up direct deposit from Mercury</div><div class="scope-item">Map wages to QuickBooks (if connected)</div></div>
+      <button class="btn-modal" onclick="gsStep(2)">Continue →</button>
+      <button class="btn-modal-2" onclick="closeModal('gusto-modal')">Not now</button>
+    </div>
+    <div class="modal-step" id="gs-2">
+      <h2>Confirm your company</h2>
+      <p class="m-sub">We'll create your Gusto company with these details.</p>
+      <div class="field-row-mod"><div class="field"><label>Legal name</label><input value="Smith QSR Holdings LLC"></div><div class="field"><label>EIN</label><input value="84-1234567"></div></div>
+      <div class="field-row-mod"><div class="field"><label>Address</label><input value="125 S Main St, Springfield NV"></div><div class="field"><label>Industry</label><select><option>Food Services &amp; QSR</option></select></div></div>
+      <div class="field-row-mod"><div class="field"><label>Pay schedule</label><select><option>Bi-weekly (recommended)</option><option>Weekly</option><option>Semi-monthly</option></select></div><div class="field"><label>First pay date</label><input value="May 8, 2026"></div></div>
+      <button class="btn-modal" onclick="gsStep(3)">Continue →</button>
+      <button class="btn-modal-2" onclick="gsStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="gs-3">
+      <h2>Funding bank account</h2>
+      <p class="m-sub">Where wages and tax payments will debit from.</p>
+      <div class="acc-pick selected"><div style="font-size:22px">◐</div><div class="ap-info"><h5>Mercury Checking ••••4821</h5><p>Connected · Default funding source</p></div><div class="ap-bal">$24,830</div></div>
+      <div class="acc-pick" onclick="closeModal('gusto-modal');openConn('plaid')"><div style="font-size:22px">+</div><div class="ap-info"><h5>Connect a different bank</h5><p>Use Plaid to add Chase, BofA, Wells Fargo, etc.</p></div></div>
+      <button class="btn-modal" onclick="gsStep(4)">Use Mercury Checking →</button>
+      <button class="btn-modal-2" onclick="gsStep(2)">← Back</button>
+    </div>
+    <div class="modal-step" id="gs-4">
+      <h2>Setting up Gusto</h2>
+      <p class="m-sub">Provisioning your Gusto company and registering with state agencies.</p>
+      <div class="connection-progress" id="gs-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Creating Gusto company</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Verifying EIN with IRS</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Registering NV state SUI</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Linking Mercury for ACH debit</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">5</div>Mapping payroll → QuickBooks</div>
+      </div>
+    </div>
+    <div class="modal-step" id="gs-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>Gusto is live</h3><p>Add employees and run your first pay run from Team.</p></div>
+      <div class="summary-box" style="margin-top:14px"><div class="sb-row"><span>Plan</span><span>Gusto Core · 3 mo free</span></div><div class="sb-row"><span>Funding</span><span>Mercury ••••4821</span></div><div class="sb-row"><span>First pay date</span><span>May 8, 2026</span></div></div>
+      <button class="btn-modal" onclick="finishConn('gusto')">Go to Team</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PLAID ===== -->
+<div class="modal-bg" id="plaid-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('plaid-modal')">×</button>
+    <div class="plaid-header"><div class="ph-mark">P</div><h4>Plaid · Securely connect your bank</h4><span class="ph-tag">256-bit encryption</span></div>
+    <div class="modal-step active" id="pl-1">
+      <h2>Choose your bank</h2>
+      <p class="m-sub">Plaid links your bank read-only — we never see your credentials.</p>
+      <div class="bank-grid">
+        <button class="bank-pill" onclick="plStep(2,'Chase')"><div class="bp-icon">◐</div><h5>Chase</h5></button>
+        <button class="bank-pill" onclick="plStep(2,'Bank of America')"><div class="bp-icon">◐</div><h5>BofA</h5></button>
+        <button class="bank-pill" onclick="plStep(2,'Wells Fargo')"><div class="bp-icon">◐</div><h5>Wells Fargo</h5></button>
+        <button class="bank-pill" onclick="plStep(2,'Mercury')"><div class="bp-icon">◐</div><h5>Mercury</h5></button>
+        <button class="bank-pill" onclick="plStep(2,'Capital One')"><div class="bp-icon">◐</div><h5>Cap One</h5></button>
+        <button class="bank-pill" onclick="plStep(2,'Citi')"><div class="bp-icon">◐</div><h5>Citi</h5></button>
+      </div>
+      <button class="btn-modal-2" onclick="closeModal('plaid-modal')">Cancel</button>
+    </div>
+    <div class="modal-step" id="pl-2">
+      <h2>Sign in to <span id="pl-bank-name">Chase</span></h2>
+      <p class="m-sub">Credentials sent directly to your bank.</p>
+      <div class="field"><label>Username</label><input value="jordan.smith"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-modal" onclick="plStep(3)">Sign in →</button>
+      <button class="btn-modal-2" onclick="plStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="pl-3">
+      <h2>Pick accounts to link</h2>
+      <div class="acc-pick selected"><div style="font-size:22px">◐</div><div class="ap-info"><h5>Business Checking</h5><p>••••8821</p></div><div class="ap-bal">$24,830</div></div>
+      <div class="acc-pick"><div style="font-size:22px">◑</div><div class="ap-info"><h5>Business Savings</h5><p>••••8822</p></div><div class="ap-bal">$15,000</div></div>
+      <button class="btn-modal" onclick="plStep(4)">Link Accounts →</button>
+    </div>
+    <div class="modal-step" id="pl-4">
+      <h2>Linking accounts</h2>
+      <div class="connection-progress" id="pl-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Authenticating with bank</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Pulling account metadata</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Backfilling 24 months</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Syncing balances</div>
+      </div>
+    </div>
+    <div class="modal-step" id="pl-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>Bank linked</h3><p><strong id="pl-bank-done">Chase</strong> Business Checking is now linked.</p></div>
+      <button class="btn-modal" onclick="finishConn('plaid')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== POS ===== -->
+<div class="modal-bg" id="pos-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('pos-modal')">×</button>
+    <div class="m-progress"><div class="active"></div><div></div><div></div><div></div></div>
+    <div class="modal-step active" id="ps-1">
+      <h2>Connect your POS</h2>
+      <p class="m-sub">Auto-import sales, tips, and labor hours.</p>
+      <div class="bank-grid">
+        <button class="bank-pill" onclick="psStep(2,'Toast')"><div class="bp-icon">◧</div><h5>Toast</h5></button>
+        <button class="bank-pill" onclick="psStep(2,'Square')"><div class="bp-icon">▢</div><h5>Square</h5></button>
+        <button class="bank-pill" onclick="psStep(2,'Clover')"><div class="bp-icon">◍</div><h5>Clover</h5></button>
+        <button class="bank-pill" onclick="psStep(2,'Lightspeed')"><div class="bp-icon">◐</div><h5>Lightspeed</h5></button>
+        <button class="bank-pill" onclick="psStep(2,'Revel')"><div class="bp-icon">◑</div><h5>Revel</h5></button>
+        <button class="bank-pill" onclick="psStep(2,'Stripe Terminal')"><div class="bp-icon">◈</div><h5>Stripe</h5></button>
+      </div>
+      <button class="btn-modal-2" onclick="closeModal('pos-modal')">Cancel</button>
+    </div>
+    <div class="modal-step" id="ps-2">
+      <h2>Sign in to <span id="ps-system">Toast</span></h2>
+      <div class="oauth-frame"><div class="of-logo" id="ps-of-icon">◧</div><h4>OAuth Authorization</h4><p id="ps-of-url">api.toasttab.com/oauth</p></div>
+      <div class="field"><label>Email</label><input value="jordan@donutnv.com"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      <button class="btn-modal" onclick="psStep(3)">Authorize →</button>
+      <button class="btn-modal-2" onclick="psStep(1)">← Back</button>
+    </div>
+    <div class="modal-step" id="ps-3">
+      <h2>Pick your locations</h2>
+      <div class="acc-pick selected"><div style="font-size:22px">⌖</div><div class="ap-info"><h5>DonutNV — Springfield</h5><p>125 S Main St · POS GUID 8a4f-…</p></div><div class="ap-bal" style="color:var(--green)">Active</div></div>
+      <div class="acc-pick"><div style="font-size:22px">⌖</div><div class="ap-info"><h5>DonutNV — Henderson</h5><p>Not live yet</p></div><div class="ap-bal" style="color:var(--ink-400)">Pending</div></div>
+      <button class="btn-modal" onclick="psStep(4)">Sync Selected →</button>
+    </div>
+    <div class="modal-step" id="ps-4">
+      <h2>Importing POS data</h2>
+      <div class="connection-progress" id="ps-progress-list">
+        <div class="cp-step active"><div class="cp-spinner"></div><div class="cp-icon">1</div>Authenticating</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">2</div>Pulling menu &amp; catalog</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">3</div>Backfilling 90 days of sales</div>
+        <div class="cp-step"><div class="cp-spinner"></div><div class="cp-icon">4</div>Mapping revenue → QuickBooks</div>
+      </div>
+    </div>
+    <div class="modal-step" id="ps-5">
+      <div class="success-box"><div class="sb-circle">✓</div><h3>POS connected</h3><p>Sales sync hourly. Daily settlement entries post to QuickBooks.</p></div>
+      <button class="btn-modal" onclick="finishConn('pos')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD EMPLOYEE ===== -->
+<div class="modal-bg" id="add-employee-modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal('add-employee-modal')">×</button>
+    <h2>Add an employee</h2>
+    <p class="m-sub">Send a self-onboarding link or fill out details now.</p>
+    <div class="field-row-mod"><div class="field"><label>First name</label><input placeholder="Maria"></div><div class="field"><label>Last name</label><input placeholder="Rodriguez"></div></div>
+    <div class="field"><label>Work email</label><input placeholder="maria@donutnv.com"></div>
+    <div class="field-row-mod"><div class="field"><label>Role</label><select><option>Crew</option><option>Shift Lead</option><option>Manager</option></select></div><div class="field"><label>Comp type</label><select><option>Hourly</option><option>Salary</option><option>1099</option></select></div></div>
+    <div class="field-row-mod"><div class="field"><label>Rate</label><input placeholder="22.00"></div><div class="field"><label>Start date</label><input placeholder="May 12, 2026"></div></div>
+    <button class="btn-modal" onclick="closeModal('add-employee-modal');toast('Self-onboarding link sent','success')">Send onboarding link →</button>
+    <button class="btn-modal-2" onclick="closeModal('add-employee-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- ===== NOTIFICATIONS DRAWER ===== -->
+<div class="drawer-bg" id="drawer-bg" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <h3>Notifications</h3>
+    <button class="m-close" onclick="closeDrawer()" style="position:static">×</button>
+  </div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active">Inbox <span style="background:var(--coral);color:#fff;border-radius:9px;padding:1px 6px;font-size:10px;margin-left:3px">4</span></div>
+    <div class="drawer-tab">For you</div>
+    <div class="drawer-tab">All</div>
+  </div>
+  <div class="drawer-body">
+    <div class="notif unread">
+      <div class="n-icon" style="background:var(--coral-50);color:var(--coral)">●</div>
+      <div class="n-info">
+        <h5>Pay run needs your approval</h5>
+        <p>May 8 bi-weekly · 4 employees · $8,640 gross. Funds debit Mercury May 6.</p>
+        <div class="n-time">2h ago</div>
+      </div>
+    </div>
+    <div class="notif unread">
+      <div class="n-icon" style="background:var(--amber-50);color:var(--amber)">⌖</div>
+      <div class="n-info">
+        <h5>2 transactions need a category</h5>
+        <p>Mercury wire $420 (Apr 2) and Stripe refund $84.50 (Apr 8).</p>
+        <div class="n-time">Today</div>
+      </div>
+    </div>
+    <div class="notif unread">
+      <div class="n-icon" style="background:var(--green-50);color:var(--green)">✓</div>
+      <div class="n-info">
+        <h5>April books closed</h5>
+        <p>Your bookkeeper signed off the P&amp;L. Net profit $6,120 · margin 33%.</p>
+        <div class="n-time">Yesterday</div>
+      </div>
+    </div>
+    <div class="notif unread">
+      <div class="n-icon" style="background:var(--blue-50);color:var(--blue)">◇</div>
+      <div class="n-info">
+        <h5>Q1 federal &amp; state taxes filed</h5>
+        <p>941, FUTA, NV MBT, NV SUI all filed by Gusto on Apr 30.</p>
+        <div class="n-time">May 1</div>
+      </div>
+    </div>
+    <div class="notif">
+      <div class="n-icon" style="background:var(--violet-50);color:var(--violet)">◔</div>
+      <div class="n-info">
+        <h5>New community post</h5>
+        <p>Carla Fields started a thread: "Shared marketing budgets across locations"</p>
+        <div class="n-time">2 days ago</div>
+      </div>
+    </div>
+    <div class="notif">
+      <div class="n-icon" style="background:var(--ink-100);color:var(--ink-700)">▤</div>
+      <div class="n-info">
+        <h5>Annual report reminder</h5>
+        <p>NV annual report due Jan 31, 2027. Will auto-file unless you opt out.</p>
+        <div class="n-time">3 days ago</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMMAND PALETTE ===== -->
+<div class="cmd-palette-bg" id="cmd-palette-bg" onclick="closeCmd(event)">
+  <div class="cmd-palette" onclick="event.stopPropagation()">
+    <div class="cmd-palette-input">
+      <span class="cmd-i">⌕</span>
+      <input id="cmd-input" placeholder="Search or ask anything…" oninput="filterCmd(this.value)">
+    </div>
+    <div class="cmd-palette-results" id="cmd-results">
+      <div class="cmd-section">Suggested</div>
+      <div class="cmd-result" onclick="navTo('today',document.querySelectorAll('.nav-item')[0]);closeCmd()"><div class="cr-icon">◐</div><div class="cr-info"><h5>Open Today dashboard</h5><p>Sales, labor, deposits</p></div><span class="cr-kbd">G T</span></div>
+      <div class="cmd-result" onclick="openConn('gusto');closeCmd()"><div class="cr-icon">◇</div><div class="cr-info"><h5>Set up Gusto Payroll</h5><p>3 months free</p></div></div>
+      <div class="cmd-result" onclick="openConn('quickbooks');closeCmd()"><div class="cr-icon">▤</div><div class="cr-info"><h5>Connect QuickBooks</h5><p>Sync your books</p></div></div>
+      <div class="cmd-result" onclick="navTo('money',document.querySelectorAll('.nav-item')[1]);closeCmd()"><div class="cr-icon">$</div><div class="cr-info"><h5>Open Money</h5><p>Books, reports, tax center</p></div><span class="cr-kbd">G M</span></div>
+      <div class="cmd-section">Ask</div>
+      <div class="cmd-result" onclick="closeCmd();toast('Asking AI: What\'s my food cost trending at?','success')"><div class="cr-icon" style="background:var(--coral-50);color:var(--coral)">◢</div><div class="cr-info"><h5>What's my food cost trending at?</h5><p>AI · Asks across QuickBooks &amp; Toast data</p></div></div>
+      <div class="cmd-result" onclick="closeCmd();toast('Asking AI: Compare locations','success')"><div class="cr-icon" style="background:var(--coral-50);color:var(--coral)">◢</div><div class="cr-info"><h5>Compare Springfield vs Henderson by P&amp;L</h5><p>AI · Multi-location analysis</p></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ STATE ============ */
+const APP={
+  signup:{path:'new'},
+  billingOnFile:false,
+  customerEmail:'jordan@donutnv.com',
+  connections:{quickbooks:false,gusto:false,plaid:false,pos:false},
+  subscriptions:[],
+  activeCheckout:null,
+  currentLocation:'SP'
+};
+
+const SERVICES={
+  'bookkeeping':{name:'Monthly Bookkeeping',desc:'Dedicated bookkeeper, monthly closes.',price:250,interval:'mo',icon:'▤',bg:'var(--teal-100)',connect:null},
+  'tax-prep':{name:'Tax Preparation',desc:'Annual federal + state returns.',price:1500,interval:'yr',icon:'◧',bg:'var(--coral-50)',connect:null},
+  'cpa-consult':{name:'CPA Consultation (30 min)',desc:'30 min with a franchise CPA.',price:150,interval:'one-time',icon:'◑',bg:'var(--blue-50)',connect:null},
+  'payroll-gusto':{name:'Gusto Payroll',desc:'Full-service payroll, automated tax.',price:49,interval:'mo + $6/employee',icon:'◇',bg:'var(--coral-50)',connect:'gusto'},
+  'sales-tax':{name:'Sales Tax Filing',desc:'Quarterly returns in every state.',price:99,interval:'qtr',icon:'◭',bg:'var(--violet-50)',connect:null},
+  'cfo':{name:'Fractional CFO',desc:'Strategic financial planning.',price:1500,interval:'mo',icon:'◮',bg:'var(--amber-50)',connect:null},
+  'payroll-benefits':{name:'Health Benefits',desc:'Group medical, dental, vision.',price:8,interval:'employee/mo',icon:'⊕',bg:'var(--blue-50)',connect:'gusto'},
+  'payroll-401k':{name:'Guideline 401(k)',desc:'Auto-enroll 401(k) integrated with Gusto.',price:40,interval:'mo + $6/participant',icon:'◌',bg:'var(--violet-50)',connect:'gusto'},
+  'payroll-wc':{name:"Workers' Comp",desc:'NEXT pay-as-you-go workers comp.',price:75,interval:'mo est.',icon:'▢',bg:'var(--amber-50)',connect:'gusto'},
+  'payroll-hr':{name:'HR Concierge',desc:'On-demand HR advisors and handbook.',price:59,interval:'mo',icon:'⌘',bg:'var(--teal-100)',connect:null},
+  'payroll-time':{name:'Homebase Time Tracking',desc:'Scheduling and tip tracking.',price:0,interval:'free for 1 location',icon:'◔',bg:'var(--green-50)',connect:'pos'},
+  'insurance-next':{name:'NEXT Insurance',desc:'GL, workers comp, professional liability.',price:120,interval:'mo est.',icon:'▢',bg:'var(--green-50)',connect:null},
+  'marketing-local':{name:'Local Marketing Pack',desc:'Geo ads, GBP, review automation.',price:199,interval:'mo',icon:'◐',bg:'var(--coral-50)',connect:null},
+  'legal-review':{name:'Legal Review (1 hour)',desc:'Lease, employment, FDD review.',price:200,interval:'hr',icon:'⚖',bg:'var(--blue-50)',connect:null}
+};
+
+/* ============ NAV ============ */
+function navTo(name,el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('t-'+name)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  // reset sub-nav
+  const tab=document.getElementById('t-'+name);
+  if(tab){
+    const tabs=tab.querySelectorAll('.subnav-tab');
+    const conts=tab.querySelectorAll('.subnav-content');
+    if(tabs.length){
+      tabs.forEach(t=>t.classList.remove('active'));tabs[0].classList.add('active');
+      conts.forEach(c=>c.classList.remove('active'));conts[0].classList.add('active');
+    }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function switchSub(btn,id){
+  const parent=btn.closest('.tab-content');
+  parent.querySelectorAll('.subnav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  parent.querySelectorAll('.subnav-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+}
+
+/* ============ LOCATIONS ============ */
+function toggleLocations(e){
+  e.stopPropagation();
+  document.getElementById('loc-menu').classList.toggle('open');
+}
+function pickLocation(e,id,name,sub){
+  e.stopPropagation();
+  document.getElementById('ls-mark').textContent=id;
+  document.getElementById('ls-name').textContent=name;
+  document.getElementById('ls-sub').textContent=sub;
+  document.getElementById('loc-menu').classList.remove('open');
+  document.querySelectorAll('#loc-menu .lm-item').forEach(i=>i.classList.remove('active'));
+  // find item with matching mark
+  document.querySelectorAll('#loc-menu .lm-item').forEach(i=>{
+    if(i.querySelector('.lm-mark').textContent===id)i.classList.add('active');
+  });
+  APP.currentLocation=id;
+}
+document.addEventListener('click',(e)=>{
+  if(!e.target.closest('.location-switcher')){
+    document.getElementById('loc-menu')?.classList.remove('open');
+  }
+});
+
+/* ============ SIGN UP ============ */
+function signPath(el){
+  el.parentElement.querySelectorAll('.dark-path').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  APP.signup.path=el.dataset.p;
+}
+function signNext(step){
+  document.querySelectorAll('.su-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('su-'+step).classList.add('active');
+  document.querySelectorAll('.signup-card .progress div').forEach((d,i)=>{
+    d.classList.remove('done','active');
+    if(i+1<step)d.classList.add('done');
+    if(i+1===step)d.classList.add('active');
+  });
+}
+function finishSignup(){
+  APP.billingOnFile=true;
+  APP.subscriptions.push({id:'plan-growth',name:'Growth Plan',price:149,interval:'mo',icon:'P',bg:'var(--ink-900)',color:'#fff'});
+  APP.subscriptions.push({id:'entity-formation',name:'LLC Formation + EIN',price:0,interval:'one-time',icon:'▢',bg:'var(--coral-50)'});
+  refreshSubs();
+  toast('Welcome to CoverPanda — your account is live','success');
+  go('s-app');
+}
+function skipToApp(){
+  APP.billingOnFile=true;
+  APP.subscriptions.push({id:'plan-growth',name:'Growth Plan',price:149,interval:'mo',icon:'P',bg:'var(--ink-900)'});
+  refreshSubs();
+  go('s-app');
+}
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+
+/* ============ MODALS ============ */
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+
+/* ============ CHECKOUT ============ */
+function openCheckout(id){
+  const s=SERVICES[id];if(!s){toast('Service not found','error');return}
+  if(APP.subscriptions.find(x=>x.id===id)){toast('Already subscribed to '+s.name,'success');return}
+  APP.activeCheckout=id;
+  document.getElementById('ck-title').textContent='Subscribe — '+s.name;
+  document.getElementById('ck-sub').textContent=APP.billingOnFile?'Adding to your existing subscription.':'Confirm and add a payment method.';
+  document.getElementById('ck-icon').style.background=s.bg;
+  document.getElementById('ck-icon').textContent=s.icon;
+  document.getElementById('ck-name').textContent=s.name;
+  document.getElementById('ck-desc').textContent=s.desc;
+  const interval=s.interval||'mo';
+  document.getElementById('ck-line-name').textContent=s.name+' ('+interval+')';
+  const memberPrice=Math.round(s.price*0.85*100)/100;
+  document.getElementById('ck-line-price').textContent=s.price?'$'+s.price:'Free';
+  const due=s.price?(interval.includes('mo')||interval.includes('qtr')?memberPrice:s.price*0.85):0;
+  document.getElementById('ck-total').textContent='$'+due.toFixed(2);
+  document.getElementById('ck-total-label').textContent=APP.billingOnFile?'Added to next invoice':"Today's charge";
+  document.getElementById('ck-confirm-btn').textContent=APP.billingOnFile?'Add to Subscription →':'Pay $'+due.toFixed(2)+' →';
+  document.getElementById('ck-connect-btn').style.display=s.connect?'block':'none';
+  document.getElementById('ck-done-btn').style.display=s.connect?'none':'block';
+  // reset
+  ['ck-1','ck-2','ck-3'].forEach((sid,i)=>document.getElementById(sid).classList.toggle('active',i===0));
+  ['ck-mp-1','ck-mp-2','ck-mp-3'].forEach((m,i)=>{const el=document.getElementById(m);el.classList.remove('done','active');if(i===0)el.classList.add('active')});
+  openModal('checkout-modal');
+}
+function ckNext(step){
+  document.querySelectorAll('#checkout-modal .modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ck-'+step).classList.add('active');
+  ['ck-mp-1','ck-mp-2','ck-mp-3'].forEach((m,i)=>{const el=document.getElementById(m);el.classList.remove('done','active');if(i<step-1)el.classList.add('done');if(i===step-1)el.classList.add('active')});
+  if(step===2){
+    runProgress('ck-progress-list',()=>ckNext(3));
+  }
+  if(step===3){
+    const s=SERVICES[APP.activeCheckout];
+    const memberPrice=Math.round(s.price*0.85*100)/100;
+    APP.subscriptions.push({id:APP.activeCheckout,name:s.name,price:memberPrice,interval:s.interval,icon:s.icon,bg:s.bg});
+    APP.billingOnFile=true;refreshSubs();
+    document.getElementById('ck-receipt').textContent='CP-'+(70000+Math.floor(Math.random()*9999));
+    document.getElementById('ck-success-amt').textContent='$'+(s.price?memberPrice:0).toFixed(2);
+  }
+}
+function ckDone(connect){
+  const id=APP.activeCheckout;closeModal('checkout-modal');
+  if(connect){const next=SERVICES[id]?.connect;if(next)setTimeout(()=>openConn(next),250)}
+  toast(SERVICES[id].name+' is now active','success');
+}
+
+/* ============ SUBSCRIPTIONS ============ */
+function refreshSubs(){
+  const list=document.getElementById('sub-list');if(!list)return;
+  list.innerHTML='';
+  let mrr=0;
+  APP.subscriptions.forEach(s=>{
+    const ivl=(s.interval||'').includes('mo')?'/mo':(s.interval||'').includes('yr')?'/yr':(s.interval||'').includes('qtr')?'/qtr':'';
+    if(ivl==='/mo')mrr+=s.price;if(ivl==='/yr')mrr+=s.price/12;if(ivl==='/qtr')mrr+=s.price/3;
+    const row=document.createElement('div');row.className='conn-chip';
+    row.innerHTML=`<div class="cc-mark" style="background:${s.bg}">${s.icon}</div><div class="cc-info"><h5>${s.name}</h5><p>${s.interval}</p></div><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">$${s.price.toFixed(2)}<small style="font-size:10px;color:var(--ink-500);font-weight:400">${ivl||' one-time'}</small></span>`;
+    list.appendChild(row);
+  });
+  const mrrEl=document.getElementById('sub-mrr');if(mrrEl)mrrEl.textContent='$'+mrr.toFixed(0)+'/mo MRR';
+  const empty=document.getElementById('sub-empty');if(empty)empty.style.display=APP.subscriptions.length?'none':'block';
+}
+
+/* ============ CONNECTION WIZARDS ============ */
+function openConn(kind){
+  const map={quickbooks:'quickbooks-modal',gusto:'gusto-modal',plaid:'plaid-modal',pos:'pos-modal','add-employee':'add-employee-modal'};
+  const id=map[kind];if(!id)return;
+  // reset to step 1
+  if(kind==='quickbooks'){resetSteps('qb',5)}
+  if(kind==='gusto'){resetSteps('gs',5)}
+  if(kind==='plaid'){resetSteps('pl',5)}
+  if(kind==='pos'){resetSteps('ps',5)}
+  openModal(id);
+}
+function resetSteps(prefix,n){
+  for(let i=1;i<=n;i++){const el=document.getElementById(prefix+'-'+i);if(el)el.classList.toggle('active',i===1)}
+  const modalIds={qb:'quickbooks-modal',gs:'gusto-modal',pl:'plaid-modal',ps:'pos-modal'};
+  const dots=document.querySelectorAll('#'+modalIds[prefix]+' .m-progress div');
+  dots.forEach((d,i)=>{d.classList.remove('done','active');if(i===0)d.classList.add('active')});
+}
+function showStep(prefix,step){
+  const modalIds={qb:'quickbooks-modal',gs:'gusto-modal',pl:'plaid-modal',ps:'pos-modal'};
+  document.querySelectorAll('#'+modalIds[prefix]+' .modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(prefix+'-'+step).classList.add('active');
+  const dots=document.querySelectorAll('#'+modalIds[prefix]+' .m-progress div');
+  const visible=Math.min(step,dots.length);
+  dots.forEach((d,i)=>{d.classList.remove('done','active');if(i<visible-1)d.classList.add('done');if(i===visible-1)d.classList.add('active')});
+}
+function runProgress(listId,onDone){
+  const items=document.querySelectorAll('#'+listId+' .cp-step');
+  items.forEach(it=>it.classList.remove('active','done'));
+  items[0].classList.add('active');
+  let i=0;
+  const t=setInterval(()=>{
+    items[i].classList.remove('active');items[i].classList.add('done');
+    i++;
+    if(i<items.length)items[i].classList.add('active');
+    else{clearInterval(t);setTimeout(onDone,400)}
+  },500);
+}
+function qbStep(s){showStep('qb',s);if(s===4)runProgress('qb-progress-list',()=>qbStep(5))}
+function gsStep(s){showStep('gs',s);if(s===4)runProgress('gs-progress-list',()=>gsStep(5))}
+function plStep(s,bank){if(bank){document.getElementById('pl-bank-name').textContent=bank;document.getElementById('pl-bank-done').textContent=bank;APP.plaidBank=bank}showStep('pl',s);if(s===4)runProgress('pl-progress-list',()=>plStep(5))}
+function psStep(s,sys){
+  if(sys){
+    document.getElementById('ps-system').textContent=sys;
+    APP.posSystem=sys;
+    const icons={Toast:'◧',Square:'▢',Clover:'◍',Lightspeed:'◐',Revel:'◑','Stripe Terminal':'◈'};
+    const urls={Toast:'api.toasttab.com/oauth',Square:'connect.squareup.com/oauth',Clover:'sandbox.dev.clover.com/oauth',Lightspeed:'cloud.lightspeedapp.com/oauth',Revel:'oauth.revelup.com','Stripe Terminal':'connect.stripe.com/oauth'};
+    document.getElementById('ps-of-icon').textContent=icons[sys]||'⊞';
+    document.getElementById('ps-of-url').textContent=urls[sys]||'oauth';
+  }
+  showStep('ps',s);if(s===4)runProgress('ps-progress-list',()=>psStep(5));
+}
+
+function finishConn(kind){
+  APP.connections[kind]=true;
+  const map={quickbooks:'quickbooks-modal',gusto:'gusto-modal',plaid:'plaid-modal',pos:'pos-modal'};
+  closeModal(map[kind]);
+  if(kind==='gusto'){
+    document.getElementById('team-banner').style.display='none';
+    document.getElementById('team-empty').style.display='none';
+    document.getElementById('team-runs-tbl').style.display='table';
+    document.getElementById('emp-empty').style.display='none';
+    document.getElementById('emp-list').style.display='table';
+    document.getElementById('team-kpi-next').textContent='May 8';
+    document.getElementById('team-kpi-next-sub').textContent='Bi-weekly · 4 EE';
+    document.getElementById('team-kpi-emp').textContent='4';
+    document.getElementById('team-kpi-emp-sub').textContent='2 hourly · 1 salary · 1 owner';
+    document.getElementById('team-kpi-ytd').textContent='$48,200';
+    document.getElementById('team-kpi-tax').textContent='✓ Filed';
+    const pill=document.getElementById('conn-gusto-pill');if(pill){pill.className='pill green';pill.textContent='Active'}
+    if(!APP.subscriptions.find(s=>s.id==='payroll-gusto')){
+      APP.subscriptions.push({id:'payroll-gusto',name:'Gusto Payroll Core (3 mo free)',price:0,interval:'mo (free trial)',icon:'◇',bg:'var(--coral-50)'});
+      refreshSubs();
+    }
+  }
+  toast({quickbooks:'QuickBooks connected — backfilling 90 days',gusto:'Gusto live — first pay run May 8',plaid:(APP.plaidBank||'Bank')+' linked',pos:(APP.posSystem||'POS')+' connected'}[kind],'success');
+}
+
+/* ============ FILTERS ============ */
+function filterMkt(btn,cat){
+  btn.parentElement.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('#t-marketplace .mkt-card').forEach(c=>{c.style.display=cat==='all'||c.dataset.cat===cat?'flex':'none'});
+}
+
+/* ============ DRAWER ============ */
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawer-bg').classList.add('open');document.getElementById('notif-dot').style.display='none'}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-bg').classList.remove('open')}
+
+/* ============ COMMAND PALETTE ============ */
+function openCmd(){document.getElementById('cmd-palette-bg').classList.add('open');setTimeout(()=>document.getElementById('cmd-input').focus(),50)}
+function closeCmd(e){if(e&&e.target!==document.getElementById('cmd-palette-bg'))return;document.getElementById('cmd-palette-bg').classList.remove('open')}
+function filterCmd(q){const all=document.querySelectorAll('#cmd-results .cmd-result');all.forEach(r=>{r.style.display=q===''||r.textContent.toLowerCase().includes(q.toLowerCase())?'flex':'none'})}
+document.addEventListener('keydown',(e)=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd()}
+  if(e.key==='Escape'){closeCmd({target:document.getElementById('cmd-palette-bg')});closeDrawer();document.querySelectorAll('.modal-bg.open').forEach(m=>closeModal(m.id))}
+});
+
+/* ============ TOAST ============ */
+function toast(msg,kind){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div');t.className='toast '+(kind||'');t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2400);
+}
+
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded',()=>{
+  refreshSubs();
+  // animate today's bars on load
+  const bars=document.querySelectorAll('#rev-bars .chart-bar');
+  bars.forEach((b,i)=>{const h=b.style.height;b.style.height='0';setTimeout(()=>{b.style.transition='height .5s cubic-bezier(.2,.8,.2,1)';b.style.height=h},80+i*40)});
+});
+</script>
+
+</body>
+</html>

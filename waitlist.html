@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fran — The Franchise Wallet · Join the Waitlist</title>
+<meta name="description" content="Your whole franchise, in one Wallet. Entity, banking, books, insurance, payroll and compliance — start, run, and renew in one place. Join the waitlist for early access. Free to start.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fran — The Franchise Wallet">
+<meta property="og:title" content="Your whole franchise. One Wallet.">
+<meta property="og:description" content="Start, run, and renew your franchise — entity, banking, books, insurance, payroll & compliance, all in one Wallet. Join the waitlist. Free to start.">
+<meta property="og:url" content="https://franwallet.com/waitlist.html">
+<meta property="og:image" content="https://franwallet.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fran — The Franchise Wallet">
+<meta name="twitter:description" content="Your whole franchise, in one Wallet. Join the waitlist — free to start.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#062828; --canvas-2:#0A0A14; --teal:#0A3D3D; --teal-mid:#1A6B6B;
+    --card:#12121E; --card-2:#1A1A2E; --tint:#E8F4F4;
+    --coral:#E8734A; --coral-light:#F09070; --peach:#FFD7B5;
+    --green:#2EAE6D; --green-bright:#4ADE80; --gold:#F59E0B;
+    --cream:#FBF7F0; --muted:#9DB3B3;
+    --serif:'Fraunces',Georgia,serif; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans); color:var(--cream); line-height:1.55;
+    background:
+      radial-gradient(1100px 720px at 82% -6%, rgba(232,115,74,.20), transparent 60%),
+      radial-gradient(900px 600px at 4% 10%, rgba(26,107,107,.22), transparent 55%),
+      linear-gradient(180deg,#0A0A14 0%, #062828 40%, #062828 100%);
+    background-attachment:fixed; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+  a{color:inherit;text-decoration:none}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0}
+  .brand{display:flex;align-items:center;font-family:var(--serif);font-weight:700;font-size:30px;letter-spacing:-.02em;position:relative}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--peach);margin-left:3px;margin-top:14px}
+  .nav-pill{font-size:13.5px;color:var(--peach);border:1px solid rgba(255,215,181,.28);padding:7px 15px;border-radius:999px;background:rgba(255,215,181,.05)}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;padding:40px 0 70px}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--peach);
+    border:1px solid rgba(255,215,181,.26);padding:8px 16px;border-radius:999px;margin-bottom:26px;background:rgba(255,215,181,.04)}
+  .eyebrow .live{width:8px;height:8px;border-radius:50%;background:var(--green-bright);box-shadow:0 0 0 4px rgba(74,222,128,.22);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(42px,5.4vw,72px);line-height:1.02;letter-spacing:-.025em;margin-bottom:20px}
+  h1 .grad{background:linear-gradient(94deg,var(--coral-light),var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:19px;color:var(--tint);max-width:46ch;margin-bottom:14px;font-weight:400}
+  .startrun{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--peach);margin-bottom:28px}
+
+  /* waitlist form */
+  .signup{display:flex;gap:10px;max-width:480px;flex-wrap:wrap}
+  .signup input{flex:1;min-width:220px;font-family:var(--sans);font-size:16px;color:var(--cream);background:var(--card);
+    border:1px solid rgba(232,244,244,.18);border-radius:13px;padding:16px 17px;transition:border-color .15s ease}
+  .signup input::placeholder{color:#5d7373}
+  .signup input:focus{outline:none;border-color:var(--coral)}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:600;font-size:16.5px;border-radius:13px;
+    padding:16px 26px;border:0;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;white-space:nowrap}
+  .btn-primary{background:var(--coral);color:var(--cream);box-shadow:0 14px 38px -12px rgba(232,115,74,.6)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 46px -12px rgba(232,115,74,.7)}
+  .microproof{display:flex;align-items:center;gap:16px;margin-top:16px;font-size:14px;color:var(--muted);flex-wrap:wrap}
+  .microproof b{font-family:var(--mono);color:var(--peach);font-weight:700}
+  .tick{color:var(--green-bright)}
+  .ok{display:none;margin-top:8px;background:rgba(46,174,109,.1);border:1px solid rgba(46,174,109,.4);border-radius:13px;padding:16px 18px;max-width:480px}
+  .ok.show{display:block}
+  .ok b{font-family:var(--serif);font-size:18px;display:block;margin-bottom:3px}
+  .ok span{font-size:14.5px;color:var(--muted)}
+
+  /* video hero */
+  .player{justify-self:center;position:relative;width:100%;max-width:340px}
+  .player .frame{position:relative;border-radius:30px;overflow:hidden;border:1px solid rgba(232,244,244,.16);
+    box-shadow:0 50px 110px -36px rgba(0,0,0,.8), 0 0 0 8px rgba(18,18,30,.5);background:#000;aspect-ratio:9/19.5}
+  .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  .player .tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--coral);color:var(--cream);
+    font-size:12.5px;font-weight:600;letter-spacing:.04em;padding:6px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 22px -8px rgba(232,115,74,.7);z-index:2}
+  .player .glow{position:absolute;inset:-20% -10%;background:radial-gradient(closest-side,rgba(232,115,74,.28),transparent);filter:blur(20px);z-index:-1}
+
+  /* value props */
+  section{padding:46px 0}
+  .kicker{text-align:center;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--coral-light);font-weight:600;margin-bottom:12px}
+  h2{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4vw,44px);line-height:1.07;letter-spacing:-.02em;text-align:center;margin-bottom:38px}
+  .props{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .prop{background:linear-gradient(180deg,rgba(26,26,46,.7),rgba(18,18,30,.7));border:1px solid rgba(232,244,244,.1);
+    border-radius:20px;padding:30px 28px 32px;transition:transform .2s ease,border-color .2s ease}
+  .prop:hover{transform:translateY(-4px);border-color:rgba(232,115,74,.4)}
+  .prop .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;color:var(--coral);font-weight:700;margin-bottom:14px}
+  .prop .ic{font-size:26px;margin-bottom:14px}
+  .prop h3{font-family:var(--serif);font-weight:600;font-size:24px;margin-bottom:10px;letter-spacing:-.01em}
+  .prop p{font-size:15.5px;color:var(--muted)}
+
+  /* social proof band */
+  .band{background:linear-gradient(180deg,rgba(10,61,61,.5),rgba(10,61,61,.28));border:1px solid rgba(232,244,244,.1);
+    border-radius:24px;padding:42px 38px;text-align:center}
+  .stats{display:flex;justify-content:center;gap:38px;flex-wrap:wrap;margin-bottom:30px}
+  .stat .n{font-family:var(--mono);font-weight:700;font-size:34px;color:var(--peach);line-height:1}
+  .stat .c{font-size:13.5px;color:var(--muted);margin-top:8px}
+  .quote{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,30px);color:var(--cream);max-width:20ch;margin:0 auto;line-height:1.2}
+  .quote .qm{color:var(--coral)}
+
+  /* closing cta */
+  .closing{text-align:center;padding:60px 0 30px}
+  .closing h2{margin-bottom:14px}
+  .closing p{font-size:18px;color:var(--tint);max-width:44ch;margin:0 auto 28px}
+  .closing .signup{margin:0 auto;justify-content:center}
+
+  footer{padding:46px 0 56px;border-top:1px solid rgba(232,244,244,.08);margin-top:30px;text-align:center;color:var(--muted);font-size:14px}
+  footer .brand{justify-content:center;font-size:24px;margin-bottom:12px}
+
+  @media(max-width:880px){
+    .hero{grid-template-columns:1fr;gap:44px;text-align:center}
+    .hero .copy .eyebrow{margin-left:auto;margin-right:auto}
+    .signup{margin-left:auto;margin-right:auto}
+    .microproof{justify-content:center}
+    .player{order:-1;max-width:300px}
+    .props{grid-template-columns:1fr}
+    .nav-pill{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <div class="brand">Fran<span class="dot"></span></div>
+    <div class="nav-pill">The Franchise Wallet</div>
+  </nav>
+
+  <!-- HERO: copy + waitlist on the left, the launch video on the right -->
+  <div class="hero">
+    <div class="copy">
+      <div class="eyebrow"><span class="live"></span>Coming soon · join the waitlist</div>
+      <h1>Your whole franchise.<br><span class="grad">One Wallet.</span></h1>
+      <p class="sub">The single place for first-time franchise owners to start, run, and renew — entity, banking, books, insurance, payroll, and compliance, all in one Wallet.</p>
+      <p class="startrun">Start. Run. Renew. — every dollar, one place.</p>
+
+      <form id="waitForm" class="signup" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input id="email" name="email" type="email" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit" class="btn btn-primary">Join the waitlist →</button>
+      </form>
+      <div class="ok" id="ok"><b>You're on the list 🎉</b><span>We'll email you the moment Fran opens. Free to start — your Wallet, ready in 12 minutes.</span></div>
+
+      <div class="microproof">
+        <span><span class="tick">✓</span> Free to start</span>
+        <span><span class="tick">✓</span> Ready in <b>12 min</b></span>
+        <span><span class="tick">✓</span> <b>$15,420</b> in perks, day one</span>
+      </div>
+    </div>
+
+    <div class="player">
+      <span class="tag">▶ Watch the 60-second film</span>
+      <div class="glow"></div>
+      <div class="frame">
+        <!-- The already-deployed Fran launch video, served from the same origin -->
+        <iframe src="fran-launch-video.html" title="Fran — The Franchise Wallet launch film" loading="lazy" allow="autoplay"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALUE PROPS -->
+  <section>
+    <div class="kicker">What's inside your Wallet</div>
+    <h2>Start, run, and renew — without twelve logins.</h2>
+    <div class="props">
+      <div class="prop">
+        <div class="lbl">START</div>
+        <div class="ic">🚀</div>
+        <h3>Open in 12 minutes</h3>
+        <p>Form your entity (LLC / S-Corp), open banking, and get fully set up the day you sign — not the month after.</p>
+      </div>
+      <div class="prop">
+        <div class="lbl">RUN</div>
+        <div class="ic">💳</div>
+        <h3>Every dollar, one place</h3>
+        <p>Banking, books, payroll, and insurance in a single Wallet. The whole operation, finally in one view.</p>
+      </div>
+      <div class="prop">
+        <div class="lbl">RENEW</div>
+        <div class="ic">🛡️</div>
+        <h3>Never miss a date</h3>
+        <p>Compliance tracking, franchise-loan tracking, and renewals — so the deadlines that bite first-timers never sneak up.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section>
+    <div class="band">
+      <div class="stats">
+        <div class="stat"><div class="n">$15,420</div><div class="c">in partner perks, unlocked day one</div></div>
+        <div class="stat"><div class="n">18+</div><div class="c">partner perks &amp; deals</div></div>
+        <div class="stat"><div class="n">12 min</div><div class="c">from signup to a ready Wallet</div></div>
+        <div class="stat"><div class="n">$0</div><div class="c">free to start</div></div>
+      </div>
+      <p class="quote"><span class="qm">“</span>It's like Apple Wallet for my franchise.<span class="qm">”</span></p>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA -->
+  <div class="closing">
+    <h2>Be first to get your Fran Wallet.</h2>
+    <p>We're opening access to a first group of franchise owners. Join the waitlist and we'll reach out when your spot is ready.</p>
+    <form id="waitForm2" class="signup" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input name="email" type="email" placeholder="you@email.com" required aria-label="Email address">
+      <button type="submit" class="btn btn-primary">Join the waitlist →</button>
+    </form>
+    <div class="ok" id="ok2" style="margin-left:auto;margin-right:auto"><b>You're on the list 🎉</b><span>We'll email you the moment Fran opens.</span></div>
+  </div>
+
+  <footer>
+    <div class="brand">Fran<span class="dot"></span></div>
+    <p>The Franchise Wallet — every dollar, one place. · Start. Run. Renew.</p>
+    <p style="margin-top:10px;font-size:13px">© 2026 Fran · franwallet.com · <a href="/wallet.html" style="color:inherit;text-decoration:underline">Member sign-in</a></p>
+  </footer>
+
+</div>
+
+<script>
+  // ---- PostHog: primary durable capture (same project as index.html) ----
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init('phc_sgBgHWWwCgArAVu2udMCD9LbH7RESavBuRxhpLBNsZHi',{api_host:'https://us.i.posthog.com'}); // project 531033 · standalone "Fran Wallet" org
+
+  var REF = new URLSearchParams(location.search).get('ref') || document.referrer || 'direct';
+  try{ posthog.capture('landing_viewed',{page:'waitlist', referrer:REF}); }catch(e){}
+
+  function backupLead(email){
+    try{
+      var leads = JSON.parse(localStorage.getItem('fran_leads')||'[]');
+      leads.push({email:email, referrer:REF, at:new Date().toISOString(), page:'waitlist'});
+      localStorage.setItem('fran_leads', JSON.stringify(leads));
+    }catch(e){}
+  }
+
+  // Submit: capture via PostHog (identify + event) + localStorage backup, then show success.
+  // The Formspree action is a placeholder — PostHog is the capture system of record until
+  // the database endpoint is restored (see SETUP.md).
+  function wire(formId, okId){
+    var form = document.getElementById(formId);
+    var ok = document.getElementById(okId);
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = (form.querySelector('input[type=email]')||{}).value || '';
+      if(email){
+        try{
+          posthog.identify(email);
+          posthog.capture('waitlist_submitted',{email:email, referrer:REF, page:'waitlist'});
+        }catch(err){}
+        backupLead(email);
+      }
+      var action = form.getAttribute('action') || '';
+      if(action && action.indexOf('YOUR_FORM_ID') === -1){
+        fetch(action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}}).catch(function(){});
+      }
+      form.style.display='none'; ok.classList.add('show');
+    });
+  }
+  wire('waitForm','ok'); wire('waitForm2','ok2');
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.fran-action-editor{padding:24px;border:1px solid #cbd9ce;border-radius:16px;background:#f7f9f5;margin:24px 0;color:#193d33}
+.fran-action-editor p{font-size:13px;line-height:1.6}
+.fran-action-editor label{display:block;font-size:13px;margin:12px 0}
+.fran-action-editor input:not([type=checkbox]),.fran-action-editor select,.fran-action-editor textarea{display:block;box-sizing:border-box;width:100%;padding:12px;min-height:44px;border:1px solid #b8cebe;border-radius:8px;background:white;color:#193d33;font:inherit;margin-top:6px}
+.fran-action-editor textarea{min-height:90px}.fran-action-fields{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.fran-action-editor button{min-height:44px;padding:10px 16px;border:1px solid #174f42;border-radius:8px;background:white;color:#174f42;cursor:pointer}
+.fran-action-editor [type=submit]{background:#174f42;color:white}
+.fran-action-editor :focus-visible{outline:2px solid #a94425;outline-offset:3px}
+.fran-action-editor [hidden]{display:none!important}.fran-action-check{display:flex!important;gap:10px;align-items:center;min-height:44px}
+.fran-action-history article{border-top:1px solid #cbd9ce;padding:12px 0}.fran-action-history small{display:block}
+.fran-action-editor summary{min-height:44px;padding:12px 0;cursor:pointer}
+.fran-saved-action{padding:18px 0;border-bottom:1px solid #cbd9ce}.fran-saved-action h3{margin:0 0 8px}.fran-saved-action button{min-height:44px;padding:10px 16px;background:#174f42;color:white;border:0;border-radius:8px;cursor:pointer}
+@media(max-width:600px){.fran-action-fields{grid-template-columns:1fr}.fran-action-editor{padding:16px}}

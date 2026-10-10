@@ -1,0 +1,8 @@
+.ask-saved-chats{margin:12px 0 18px;border:1px solid #cbd9ce;border-radius:14px;padding:0 16px;background:#f7faf4;color:#193d33;font-size:14px}
+.ask-saved-chats summary{cursor:pointer;min-height:44px;padding:13px 0;font-weight:600}
+.ask-saved-chats p{line-height:1.6;max-width:65ch}.ask-saved-chats label{display:block;font-weight:600;margin-bottom:8px}
+.ask-saved-chats input{box-sizing:border-box;width:100%;min-height:44px;padding:12px;border:1px solid #9bb4a3;border-radius:8px;font:inherit;background:white;color:#193d33}
+.ask-saved-chats button{min-height:44px;padding:10px 14px;border:1px solid #9bb4a3;border-radius:8px;background:white;color:#193d33;font:inherit;cursor:pointer;margin:8px 8px 8px 0}
+.ask-saved-chats button:disabled{opacity:.55;cursor:wait}.ask-saved-chats :focus-visible{outline:2px solid #a94425;outline-offset:3px}
+.ask-chat-list{max-height:320px;overflow:auto}.ask-chat-list article{padding:12px 0;border-top:1px solid #cbd9ce}.ask-chat-list strong,.ask-chat-list small{display:block;overflow-wrap:anywhere}.ask-chat-list small{margin-top:6px;color:#52695d}
+.ask-chat-confirm:empty{display:none}.ask-chat-confirm{border-top:1px solid #9bb4a3;padding-bottom:12px}.ask-saved-chats [role=status]:empty{display:none}

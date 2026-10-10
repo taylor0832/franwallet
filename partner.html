@@ -1,0 +1,152 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your invitation · Fran Wallet</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--ev:#164f43;--ink:#173b32;--mut:#566b63;--org:#a94425;--line:#dce5df;--soft:#edf3ef;--canvas:#f5f7f4;--ok:#1f6b4f}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--canvas);color:var(--ink);font:16px/1.55 'DM Sans',system-ui,sans-serif;min-height:100vh}
+a{color:var(--ev)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 24px;border-bottom:1px solid var(--line);background:#fff}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:700 18px 'Fraunces',serif}
+.mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--ev);color:#fff;font:700 16px 'Fraunces',serif;position:relative}
+.mark::after{content:'';position:absolute;right:6px;bottom:6px;width:5px;height:5px;border-radius:50%;background:#e0855f}
+.who{font-size:13px;color:var(--mut);text-align:right}.who button{border:0;background:none;color:var(--ev);font:600 13px 'DM Sans',sans-serif;cursor:pointer;padding:0;margin-left:6px;text-decoration:underline}
+main{max-width:640px;margin:0 auto;padding:40px 20px 64px}
+.eyebrow{font:600 12px 'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--org);margin:0 0 10px}
+h1{font:700 clamp(28px,4.4vw,38px)/1.15 'Fraunces',serif;margin:0 0 12px;letter-spacing:-.01em}
+h2{font:700 21px/1.3 'Fraunces',serif;margin:0 0 6px}
+.lead{font-size:17px;color:var(--mut);margin:0 0 24px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:0 0 16px;box-shadow:0 10px 30px rgba(23,59,50,.05)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 24px}
+.facts div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.facts strong{display:block;font-size:14px;margin-bottom:6px}.facts ul{margin:0;padding:0;list-style:none}.facts li{font-size:14px;color:var(--mut);padding:2px 0 2px 22px;position:relative}
+.facts .yes li::before{content:'✓';position:absolute;left:0;color:var(--ev);font-weight:700}.facts .no li::before{content:'✕';position:absolute;left:0;color:var(--org);font-weight:700}
+label{display:block;font-weight:600;font-size:14px;margin:0 0 6px}
+.field{display:flex;gap:10px;flex-wrap:wrap}
+input[type=email],input[type=text]{flex:1;min-width:0;font:inherit;padding:13px 14px;border:1px solid #c8d6ce;border-radius:11px;background:#fff;color:var(--ink)}
+input[readonly]{background:var(--soft);color:var(--ink);font-weight:600}
+input:focus-visible,button:focus-visible{outline:3px solid rgba(22,79,67,.35);outline-offset:2px}
+#code{letter-spacing:.3em;font-size:20px;font-weight:600;max-width:240px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:11px;padding:13px 20px;font:600 15px 'DM Sans',sans-serif;cursor:pointer;background:var(--ev);color:#fff;text-decoration:none}
+.btn.secondary{background:#fff;color:var(--ev);border:1px solid #b8d3c5}.btn:disabled{opacity:.55;cursor:default}
+.hint{font-size:13.5px;color:var(--mut);margin:10px 0 0}.hint button{border:0;background:none;color:var(--ev);font:600 13.5px 'DM Sans',sans-serif;cursor:pointer;padding:0;text-decoration:underline}
+.status{margin:14px 0 0;font-size:14.5px;min-height:1px}.status.err{color:var(--org)}.status.ok{color:var(--ok)}
+.banner{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;margin:0 0 16px;font-size:15px}
+.banner.ok{background:#e7f2ec;color:var(--ink)}.banner.err{background:#fbeee7;color:var(--ink)}.banner b{display:block}
+.step{display:flex;gap:14px;align-items:flex-start}.num{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--ev);font-weight:700;font-size:14px}
+.qbo{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.drop{display:block;border:2px dashed #b9cdc3;border-radius:14px;padding:26px;text-align:center;cursor:pointer;background:var(--canvas);transition:border-color .15s,background .15s}
+.drop.over{border-color:var(--ev);background:var(--soft)}.drop strong{display:block;font-size:16px}.drop span{font-size:14px;color:var(--mut)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+ul.files{list-style:none;margin:14px 0 0;padding:0}ul.files li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px}ul.files em{font-style:normal;color:var(--mut);font-size:13px}
+.ended{text-align:center}.ended p{color:var(--mut)}
+[hidden]{display:none!important}
+@media (max-width:560px){.facts{grid-template-columns:1fr}.top{padding:14px 16px}main{padding-top:28px}.who span{display:none}}
+</style></head><body>
+<header class="top"><a class="brand" href="/"><span class="mark">F.</span>Fran Wallet</a><div class="who" id="who" hidden><span>Signed in as </span><b id="who-email"></b><button type="button" id="signout">Sign out</button></div></header>
+<main>
+ <div id="loading" class="status" role="status">Opening your invitation…</div>
+
+ <section id="intro" hidden>
+  <p class="eyebrow">Invitation</p>
+  <h1 id="title"></h1>
+  <p class="lead" id="lead"></p>
+  <div class="facts"><div class="yes"><strong>You can</strong><ul id="can"></ul></div><div class="no"><strong>You can’t see</strong><ul><li>Their other locations</li><li>Bank balances or other files</li><li>Shared rooms</li></ul></div></div>
+ </section>
+
+ <section id="login" class="card" hidden aria-labelledby="login-title">
+  <div class="step"><span class="num">1</span><div style="flex:1;min-width:0">
+   <h2 id="login-title">Confirm it’s you</h2>
+   <p class="hint" style="margin:0 0 14px">We’ll email a one-time code to the address this invitation was sent to. No password or account setup.</p>
+   <label for="email">Invitation email</label>
+   <div class="field"><input id="email" type="email" readonly><button class="btn" id="send" type="button">Email me a code</button></div>
+   <p class="hint" id="notyou"></p>
+  </div></div>
+  <div class="step" id="code-step" style="margin-top:22px" hidden><span class="num">2</span><div style="flex:1;min-width:0">
+   <h2>Enter the code</h2>
+   <p class="hint" style="margin:0 0 14px" id="code-hint"></p>
+   <label for="code">Code from your email</label>
+   <div class="field"><input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10"><button class="btn" id="verify" type="button">Verify and continue</button></div>
+   <p class="hint"><button type="button" id="resend" disabled>Resend code</button></p>
+  </div></div>
+  <p class="status" id="login-status" role="status"></p>
+ </section>
+
+ <section id="mismatch" class="card" hidden>
+  <h2>This invitation is for a different email</h2>
+  <p class="hint" style="font-size:15px" id="mismatch-text"></p>
+  <button class="btn" id="switch" type="button" style="margin-top:12px">Sign out and continue</button>
+ </section>
+
+ <section id="ended" class="card ended" hidden><h2 id="ended-title">This invitation has ended</h2><p id="ended-text"></p></section>
+
+ <section id="workspace" hidden>
+  <div id="result"></div>
+  <div class="card" id="qbo-card" hidden>
+   <div class="qbo"><div style="flex:1;min-width:220px"><h2 id="qbo-title"></h2><p class="hint" style="margin:0">Choose only this location’s QuickBooks company. Access is read-only; Fran can’t create, edit or pay anything.</p></div><button class="btn" id="qbo" type="button">Connect QuickBooks</button></div>
+  </div>
+  <div class="card">
+   <h2 id="upload-title">Add records</h2>
+   <p class="hint" style="margin:0 0 14px" id="upload-hint"></p>
+   <label class="drop" id="drop"><input id="files" type="file" multiple accept=".pdf,.csv,.txt,.png,.jpg,.jpeg,.xlsx"><strong>Drop files here or choose files</strong><span>PDF, CSV, XLSX, TXT or images, up to 25 MB each</span></label>
+   <p class="status" id="upload-status" role="status"></p>
+   <h3 style="font:600 15px 'DM Sans',sans-serif;margin:18px 0 0">You’ve added</h3>
+   <ul class="files" id="submitted"></ul>
+  </div>
+  <p class="hint" id="access"></p>
+ </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const base='https://nlshvthmcnwuygaeague.supabase.co',key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sc2h2dGhtY253dXlnYWVhZ3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjM4NTksImV4cCI6MjA5NDY5OTg1OX0.fOTXhlZWtl8MOtC7kJnc8JI8TEvBm2J518mDXKkPGyA',auth=supabase.createClient(base,key),params=new URLSearchParams(location.search),grant=params.get('grant'),el=id=>document.getElementById(id);
+const ASK={accounting:'connect QuickBooks and add financial reports',payroll:'add payroll reports',insurance:'add insurance policies and certificates',entity:'add the company’s formation documents'};
+const CAN={accounting:['Connect this location’s QuickBooks','Add P&Ls and other reports'],payroll:['Add payroll reports and summaries'],insurance:['Add policies and certificates'],entity:['Add formation documents and the EIN letter']};
+const UPLOAD={accounting:'P&Ls, balance sheets and other financial reports for this location.',payroll:'Payroll registers, summaries and tax reports for this location.',insurance:'Policies, declarations pages and certificates of insurance.',entity:'Articles of organization, operating agreement and EIN letter.'};
+let invite=null;
+const show=(...ids)=>{for(const id of ['loading','intro','login','mismatch','ended','workspace'])el(id).hidden=!ids.includes(id)};
+const say=(id,text,kind='')=>{const s=el(id);s.textContent=text;s.className='status'+(kind?' '+kind:'')};
+const who=()=>invite?.invited_by||'The owner of '+(invite?.location||'this location');
+async function call(action,body={},fn='contributors'){const {data:{session}}=await auth.auth.getSession();if(!session)throw Error('Sign in with your invitation email first.');const r=await fetch(base+'/functions/v1/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:key,Authorization:'Bearer '+session.access_token},body:JSON.stringify({action,grant_id:grant,...body})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Please try again.');return d}
+async function peek(){const r=await fetch(base+'/functions/v1/contributors',{method:'POST',headers:{'Content-Type':'application/json',apikey:key,Authorization:'Bearer '+key},body:JSON.stringify({action:'peek',grant_id:grant})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'This invitation link isn’t valid.');return d}
+function intro(){el('title').textContent=who()+' invited you to help with '+invite.location+'.';el('lead').textContent='They’d like you to '+(ASK[invite.scope]||'add records')+(invite.brand?' for their '+invite.brand+' location':'')+'. It takes a few minutes.';el('can').innerHTML='';for(const c of CAN[invite.scope]||[]){const li=document.createElement('li');li.textContent=c;el('can').append(li)}}
+function ended(title,text){el('ended-title').textContent=title;el('ended-text').textContent=text;show('intro','ended')}
+let routing=null;function route(){return routing||(routing=doRoute().finally(()=>{routing=null}))}
+async function doRoute(){
+ if(!grant){el('loading').textContent='This invitation link is incomplete. Open the link from your invitation email again.';return}
+ try{invite=await peek()}catch(e){el('loading').textContent=e.message+' Ask the person who invited you for a new link.';return}
+ intro();
+ if(invite.status!=='active')return ended(invite.status==='expired'?'This invitation has expired':'This invitation was withdrawn','Ask '+who()+' to send you a new one.');
+ const {data:{session}}=await auth.auth.getSession(),me=session?.user?.email?.toLowerCase()||'';
+ el('who').hidden=!me;el('who-email').textContent=me;
+ if(me&&me===invite.email)return workspace();
+ if(me){el('mismatch-text').textContent='You’re signed in as '+me+', but this invitation was sent to '+invite.email+'. Sign out, then confirm with the invitation email.';show('intro','mismatch');return}
+ el('email').value=invite.email;el('notyou').textContent='Not your address? Ask '+who()+' to send the invitation to the email you use.';show('intro','login');
+}
+let resendTimer=null;
+function startResend(){const b=el('resend');let n=30;b.disabled=true;clearInterval(resendTimer);b.textContent='Resend code in '+n+'s';resendTimer=setInterval(()=>{n--;if(n<=0){clearInterval(resendTimer);b.disabled=false;b.textContent='Resend code'}else b.textContent='Resend code in '+n+'s'},1000)}
+async function sendCode(button){button.disabled=true;say('login-status','Sending…');try{const {error}=await auth.auth.signInWithOtp({email:invite.email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname+'?grant='+encodeURIComponent(grant)}});if(error)throw error;el('code-step').hidden=false;el('code-hint').textContent='We sent an email titled “Your FranWallet sign-in link” to '+invite.email+'. Enter the code from it, or tap its button to come straight back here.';say('login-status','');startResend();el('code').focus()}catch(e){say('login-status',e.message||'The code couldn’t be sent. Try again in a minute.','err')}finally{button.disabled=false}}
+el('send').onclick=e=>sendCode(e.target);el('resend').onclick=e=>sendCode(e.target);
+el('verify').onclick=async e=>{const b=e.target,code=el('code').value.replace(/\s/g,'');if(!code){el('code').focus();return}b.disabled=true;say('login-status','Checking…');try{const {error}=await auth.auth.verifyOtp({email:invite.email,token:code,type:'email'});if(error)throw error;say('login-status','');await route()}catch(_){say('login-status','That code didn’t work. Use the newest email, or resend a code.','err')}finally{b.disabled=false}};
+el('code').addEventListener('keydown',e=>{if(e.key==='Enter')el('verify').click()});
+async function signout(){await auth.auth.signOut();el('who').hidden=true;await route()}
+el('signout').onclick=signout;el('switch').onclick=signout;
+function banner(kind,title,text){el('result').innerHTML='';const d=document.createElement('div');d.className='banner '+kind;d.setAttribute('role','status');const b=document.createElement('b');b.textContent=title;const s=document.createElement('span');s.textContent=text;const w=document.createElement('div');w.append(b,s);d.append(w);el('result').append(d)}
+async function workspace(){
+ let d;try{d=await call('open')}catch(e){el('mismatch-text').textContent=e.message;show('intro','mismatch');return}
+ show('intro','workspace');
+ el('qbo-card').hidden=d.scope!=='accounting';el('qbo-title').textContent='Connect '+d.location+'’s QuickBooks';
+ el('upload-title').textContent=d.scope==='accounting'?'Or add reports':'Add records';el('upload-hint').textContent=UPLOAD[d.scope]||'Records for this location.';
+ el('access').textContent='Your access covers '+d.location+' only and lasts until '+new Date(d.expires_at).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+'. '+who()+' reviews what you add.';
+ files(d.uploads);
+ const q=params.get('qbo');if(q){history.replaceState(null,'',location.pathname+'?grant='+encodeURIComponent(grant));
+  if(q==='connected'){banner('ok','QuickBooks is connected.',who()+' will see '+d.location+'’s reports in their Wallet. You can close this page.');el('qbo').textContent='Reconnect QuickBooks';el('qbo').className='btn secondary'}
+  else if(q==='inuse')banner('err','That QuickBooks company is already connected elsewhere.','It’s attached to a different Fran Wallet login, so nothing changed. Choose a different company, or let '+who()+' know.');
+  else banner('err','QuickBooks didn’t finish connecting.','Nothing changed. Try again.')}
+}
+function files(list){const ul=el('submitted');ul.innerHTML='';if(!list?.length){const li=document.createElement('li');li.innerHTML='<em>Nothing yet.</em>';ul.append(li);return}for(const f of list){const li=document.createElement('li'),n=document.createElement('span'),t=document.createElement('em');n.textContent=f.name;t.textContent=new Date(f.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});li.append(n,t);ul.append(li)}}
+el('qbo').onclick=async e=>{const b=e.target;b.disabled=true;try{const d=await call('start',{contributor_id:grant},'qbo');location.href=d.authorize_url}catch(err){banner('err','QuickBooks isn’t available right now.',err.message);b.disabled=false}};
+async function upload(list){const all=[...list];if(!all.length)return;let done=0;try{for(const file of all){say('upload-status','Adding '+file.name+' ('+(done+1)+' of '+all.length+')…');const t=await call('upload',{name:file.name,size:file.size});const {error}=await auth.storage.from('location-docs').uploadToSignedUrl(t.path,t.token,file);if(error)throw error;await call('finish',{id:t.id});done++}say('upload-status','✓ '+done+' file'+(done===1?'':'s')+' added to '+invite.location+'.','ok')}catch(e){say('upload-status',(done?done+' added. ':'')+(e.message||'Upload failed.')+' Try that file again.','err')}el('files').value='';try{files((await call('open')).uploads)}catch(_){}}
+el('files').onchange=e=>upload(e.target.files);
+const drop=el('drop');['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over')}));['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over')}));drop.addEventListener('drop',e=>upload(e.dataTransfer.files));
+auth.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_IN'&&invite&&el('workspace').hidden)route()});
+route();
+</script></body></html>

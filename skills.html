@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fran — Free operator skills & templates</title>
+<meta name="description" content="Free Claude skills and back-office templates for franchise owners: daily labor budget, royalty reconciliation, cash position, and the opening checklist nobody gives you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#062828; --card:#12121E; --card-2:#1A1A2E;
+    --coral:#E8734A; --coral-light:#F09070; --green:#2EAE6D; --green-bright:#4ADE80;
+    --gold:#F59E0B; --cream:#FBF7F0; --muted:#9DB3B3;
+    --serif:'Fraunces',Georgia,serif; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:var(--sans); color:var(--cream); line-height:1.55; min-height:100vh;
+    background:
+      radial-gradient(1100px 720px at 82% -6%, rgba(232,115,74,.20), transparent 60%),
+      radial-gradient(900px 600px at 4% 10%, rgba(26,107,107,.22), transparent 55%),
+      linear-gradient(180deg,#0A0A14 0%, #062828 40%, #062828 100%);
+    background-attachment:fixed; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:28px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 28px}
+  .brand{font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:-.5px;color:var(--cream);text-decoration:none}
+  .brand .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--coral);margin-left:3px}
+  .nav a{color:var(--muted);font-size:14.5px;text-decoration:none;margin-left:18px}
+  .nav a:hover{color:var(--cream)}
+  h1{font-family:var(--serif);font-size:38px;font-weight:600;letter-spacing:-.5px;margin:18px 0 10px;line-height:1.15}
+  .sub{color:var(--muted);font-size:16.5px;max-width:620px}
+  .kicker{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--coral-light)}
+  .card{background:rgba(18,18,30,.85);border:1px solid rgba(157,179,179,.16);border-radius:16px;padding:26px;margin-top:18px}
+  .card h2{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:6px}
+  .card p{color:var(--muted);font-size:14.5px}
+  .tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-bottom:10px}
+  .tag.skill{background:rgba(232,115,74,.14);color:var(--coral-light);border:1px solid rgba(232,115,74,.4)}
+  .tag.template{background:rgba(46,174,109,.13);color:var(--green-bright);border:1px solid rgba(46,174,109,.4)}
+  .btn{font-family:var(--sans);font-weight:600;font-size:15px;border:0;border-radius:10px;padding:12px 20px;cursor:pointer;transition:transform .12s ease, opacity .12s ease;text-decoration:none;display:inline-block}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--coral);color:#160D08}
+  .btn-primary:hover{opacity:.92}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(157,179,179,.35)}
+  .gate{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .gate input{flex:1;min-width:220px;background:var(--card-2);border:1px solid rgba(157,179,179,.3);border-radius:10px;padding:12px 14px;font-family:var(--sans);font-size:15px;color:var(--cream)}
+  .gate input:focus{outline:none;border-color:var(--coral)}
+  .notice{display:none;margin-top:14px;padding:13px 15px;border-radius:10px;font-size:14px}
+  .notice.ok{background:rgba(46,174,109,.14);border:1px solid rgba(46,174,109,.4)}
+  .notice.err{background:rgba(232,115,74,.12);border:1px solid rgba(232,115,74,.4)}
+  .notice.show{display:block}
+  .dl{margin-top:14px}
+  .locked .dl{display:none}
+  .locked-hint{display:none;font-size:13.5px;color:var(--muted);margin-top:14px}
+  .locked .locked-hint{display:block}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+  footer{padding:30px 0;color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--muted)}
+  @media (max-width:700px){ .wrap{padding:18px} h1{font-size:29px} .grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="https://franwallet.com">Fran<span class="dot"></span></a>
+    <nav class="nav"><a href="https://franwallet.com">Home</a><a href="wallet.html">Member sign-in</a></nav>
+  </header>
+
+  <span class="kicker">Free. Built by an operator, not a marketing team</span>
+  <h1>Claude skills &amp; templates for franchise owners</h1>
+  <p class="sub">The exact prompts and checklists we use running 12 franchise locations: daily labor
+  budgets, royalty reconciliation, weekly cash position, and the back-office opening checklist your
+  franchisor doesn't hand you. A free account unlocks everything below.</p>
+
+  <div class="card" id="gate-card">
+    <h2>Create a free account to unlock the library</h2>
+    <p>Nine downloads, organized by where you are in the journey. Your free account is also your
+    Fran Wallet sign-in, so when you're ready to connect your books it's already yours. We email
+    you when a new skill lands, and that's the only email you'll get from us.</p>
+    <form class="gate" id="gate-form">
+      <input id="gate-email" type="email" placeholder="you@yourstores.com" required aria-label="Email address">
+      <button type="submit" class="btn btn-primary" id="gate-btn">Create my free account →</button>
+    </form>
+    <div id="gate-ok" class="notice ok"><b>Check your email.</b> Click the sign-in link we just sent
+    and this page unlocks. The link is valid for one hour.</div>
+    <div id="gate-err" class="notice err"></div>
+  </div>
+  <div class="card" id="signed-in-card" style="display:none">
+    <h2>Library unlocked</h2>
+    <p><span id="signed-in-as"></span> · every download below is live.
+    <a href="wallet.html" style="color:var(--coral-light)">Open your wallet →</a></p>
+  </div>
+
+  <div id="library">
+
+  <h2 class="kicker" style="display:block;margin:30px 0 -8px">Stage 1 · Deciding</h2>
+  <div class="grid">
+    <div class="card locked" data-file="skills/fdd-interrogator.md">
+      <span class="tag skill">Claude skill</span>
+      <h2>FDD Interrogator</h2>
+      <p>Paste Item 19 and the fee tables from any FDD. Get the unit-economics reality check
+      a CPA charges $1,500 for, the survivor-bias warnings, and the 20 questions the document
+      is quietly not answering.</p>
+      <a class="btn btn-ghost dl" href="skills/fdd-interrogator.md" download>Download the skill ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+    <div class="card locked" data-file="skills/sba-loan-readiness.md">
+      <span class="tag skill">Claude skill</span>
+      <h2>SBA Loan Readiness Pack</h2>
+      <p>Your file, assembled the way the underwriter reads it: DSCR and post-close liquidity
+      computed, the document checklist, and every gap flagged while it's still fixable.</p>
+      <a class="btn btn-ghost dl" href="skills/sba-loan-readiness.md" download>Download the skill ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+  </div>
+
+  <h2 class="kicker" style="display:block;margin:30px 0 -8px">Stage 2 · Opening</h2>
+  <div class="grid">
+    <div class="card locked" data-file="skills/new-location-opening-checklist.md">
+      <span class="tag template">Checklist</span>
+      <h2>New Location Opening — Back-Office Edition</h2>
+      <p>Entity, EIN, banking, payroll state registration, sales tax, insurance, document vault:
+      sequenced by date, each item tagged with the expensive trap it prevents.</p>
+      <a class="btn btn-ghost dl" href="skills/new-location-opening-checklist.md" download>Download the checklist ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+    <div class="card locked" data-file="skills/new-hire-onboarding-sop.md">
+      <span class="tag template">SOP</span>
+      <h2>New Hire Onboarding SOP</h2>
+      <p>Day 1, week 1, day 30. The employer paperwork with fines attached, and the first-week
+      experience that decides whether your hire is still there in month three.</p>
+      <a class="btn btn-ghost dl" href="skills/new-hire-onboarding-sop.md" download>Download the SOP ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+  </div>
+
+  <h2 class="kicker" style="display:block;margin:30px 0 -8px">Stage 3 · Running</h2>
+  <div class="grid">
+    <div class="card locked" data-file="skills/read-your-pl.md">
+      <span class="tag skill">Claude skill</span>
+      <h2>Read Your P&amp;L in 10 Minutes</h2>
+      <p>Paste last month's P&amp;L. Get the three things that changed, the ordinary causes an
+      operator can check tomorrow, and this week's homework in under 25 lines.</p>
+      <a class="btn btn-ghost dl" href="skills/read-your-pl.md" download>Download the skill ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+    <div class="card locked" data-file="skills/manager-1on1-template.md">
+      <span class="tag template">Template</span>
+      <h2>The Weekly Manager 1:1</h2>
+      <p>The 30-minute standing agenda that turns a shift lead into a GM: numbers first, stuck
+      list, people by name, one skill handed over, and the question that surfaces problems early.</p>
+      <a class="btn btn-ghost dl" href="skills/manager-1on1-template.md" download>Download the template ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+    <div class="card locked" data-file="skills/daily-labor-budget.md">
+      <span class="tag skill">Claude skill</span>
+      <h2>Daily Labor Budget</h2>
+      <p>Yesterday's sales + today's schedule → one answer before the shift starts: over or under,
+      and the exact hours to trim. The skill that pays for itself the first Tuesday you use it.</p>
+      <a class="btn btn-ghost dl" href="skills/daily-labor-budget.md" download>Download the skill ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+    <div class="card locked" data-file="skills/royalty-reconciliation.md">
+      <span class="tag skill">Claude skill</span>
+      <h2>Royalty &amp; Ad-Fund Reconciliation</h2>
+      <p>Once a month: what you paid vs what you should have paid, wrong sales base caught, and the
+      polite email to franchisor finance already drafted.</p>
+      <a class="btn btn-ghost dl" href="skills/royalty-reconciliation.md" download>Download the skill ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+  </div>
+
+  <h2 class="kicker" style="display:block;margin:30px 0 -8px">Stage 4 · Growing</h2>
+  <div class="grid">
+    <div class="card locked" data-file="skills/weekly-cash-position.md">
+      <span class="tag skill">Claude skill</span>
+      <h2>Weekly Cash Position</h2>
+      <p>For multi-unit owners: which store gets tight, on what date, from which obligation, and the
+      specific transfer that fixes it. Monday morning in under 15 lines.</p>
+      <a class="btn btn-ghost dl" href="skills/weekly-cash-position.md" download>Download the skill ↓</a>
+      <span class="locked-hint">🔒 Create a free account above to unlock</span>
+    </div>
+  </div>
+  </div>
+
+  <div class="card" style="text-align:center;padding:34px">
+    <h2 style="font-size:24px">Want the version that runs itself?</h2>
+    <p style="max-width:520px;margin:8px auto 18px">Fran Wallet connects your QuickBooks, bank
+    accounts, and payroll so these answers are already on one screen. No copy-pasting reports.</p>
+    <a class="btn btn-primary" href="https://franwallet.com">See Fran Wallet →</a>
+  </div>
+
+  <footer>Questions? <a href="mailto:taylor@coverpanda.co?subject=Fran%20skills">taylor@coverpanda.co</a> · <a href="guides.html">Free guides</a> · <a href="https://franwallet.com">franwallet.com</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_sgBgHWWwCgArAVu2udMCD9LbH7RESavBuRxhpLBNsZHi',{api_host:'https://us.i.posthog.com'});
+
+const sb = window.supabase.createClient(
+  'https://nlshvthmcnwuygaeague.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sc2h2dGhtY253dXlnYWVhZ3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjM4NTksImV4cCI6MjA5NDY5OTg1OX0.fOTXhlZWtl8MOtC7kJnc8JI8TEvBm2J518mDXKkPGyA'
+);
+const $ = (id)=>document.getElementById(id);
+
+// Arriving via someone's share link? Remember the code until this visitor signs up.
+{ const r = new URLSearchParams(location.search).get('ref'); if(r) localStorage.setItem('fran_ref', r); }
+
+function unlock(email){
+  document.querySelectorAll('#library .card').forEach(c=>c.classList.remove('locked'));
+  $('gate-card').style.display='none';
+  if(email){
+    $('signed-in-card').style.display='block';
+    $('signed-in-as').textContent = 'Signed in as ' + email;
+  }
+}
+
+document.querySelectorAll('#library .dl').forEach(a=>a.addEventListener('click', ()=>{
+  try{ posthog.capture('skill_downloaded',{file:a.closest('.card').dataset.file}); }catch(_){}
+}));
+
+// The library unlocks with a real free account (the same magic-link identity as the wallet).
+// Anyone who unlocked under the old email-only gate stays unlocked.
+async function boot(session){
+  if(session && session.user){
+    unlock(session.user.email);
+    try{ posthog.identify(session.user.email); posthog.capture('skills_unlocked',{email:session.user.email}); }catch(_){}
+    // Their account IS a member row — create it on first sign-in so the wallet is ready.
+    const u = session.user;
+    const { data: row } = await sb.from('members').select('id').eq('id', u.id).maybeSingle();
+    if(!row){
+      const fresh = { id:u.id, email:u.email };
+      const refCode = localStorage.getItem('fran_ref');
+      if(refCode) fresh.referred_by = refCode;
+      await sb.from('members').insert(fresh).then(()=>{}, ()=>{});
+    }
+  } else if(localStorage.getItem('fran_skills_unlocked')){
+    unlock(null);
+  }
+}
+sb.auth.getSession().then(({data:{session}})=>boot(session));
+sb.auth.onAuthStateChange((evt, session)=>{ if(evt==='SIGNED_IN') boot(session); });
+
+$('gate-form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = $('gate-email').value.trim();
+  if(!email) return;
+  $('gate-btn').disabled = true; $('gate-btn').textContent = 'Sending your link…';
+  try{ posthog.identify(email); posthog.capture('skills_gate_submitted',{email}); }catch(_){}
+  // Capture the lead even if they never click the confirmation link.
+  // Duplicate signups return 409 under insert-only RLS — that's a success for our purposes.
+  sb.from('waitlist').insert({ email, referrer:'skills' }).then(()=>{}, ()=>{});
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo:'https://franwallet.com/skills.html' } });
+  $('gate-btn').disabled = false; $('gate-btn').textContent = 'Create my free account →';
+  if(error){
+    $('gate-err').textContent = error.message.includes('rate') ?
+      'We send sign-in links in small batches and just hit the hourly limit. Try again in a bit — your spot is saved.' :
+      'Could not send your link: ' + error.message;
+    $('gate-err').classList.add('show');
+    return;
+  }
+  $('gate-err').classList.remove('show');
+  $('gate-form').style.display='none';
+  $('gate-ok').classList.add('show');
+});
+</script>
+</body>
+</html>

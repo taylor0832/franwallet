@@ -854,7 +854,26 @@
   function briefPreview(row) {
     return '<details data-la-keep="la-brief-preview" class="la-brief-preview"><summary>What the manager receives</summary><pre>' + E(managerBrief(row)) + '</pre><p class="la-handoff-note">FranWallet does not publish to When I Work; publishing is a separate approval there. <a href="https://app.wheniwork.com/" target="_blank" rel="noopener noreferrer">Open When I Work ↗</a></p></details>';
   }
+  function readinessPanel(row) {
+    const r=row.labor_readiness;
+    if(!r)return '<section class="la-readiness" aria-label="Existing labor inputs"><h2>Existing labor inputs</h2><p>'+E(row.readiness_error||'Reading existing store inputs…')+'</p><button type="button" data-la-readiness>Check existing inputs</button></section>';
+    const f=r.facts,o=f.latest_completed_sales_observation;
+    return '<section class="la-readiness" aria-label="Existing labor inputs"><h2>Existing labor inputs</h2><p>Read-only source check · '+E(r.generated_at)+' · '+E(r.schedule_period.start)+'–'+E(r.schedule_period.end)+'</p><ul>'+[
+      'Framework: '+f.framework.availability+(f.framework.as_of?' · source '+f.framework.as_of:'')+' · '+(f.framework.approved_for_preview?'approved for preview':'review needed'),
+      'Configured labor target: '+(f.target.configured_percent==null?'not recorded':f.target.configured_percent+'%')+' · '+(f.target.cost_basis||'definition unconfirmed')+' · booked goals remain separate',
+      'Costs: '+(f.cost.eligible_for_preview?'current confirmed inputs':'historical/unverified; excluded from preview')+(f.cost.as_of?' · source '+f.cost.as_of:''),
+      'Payroll: '+f.payroll.availability+(f.payroll.latest?.period.end?' · through '+f.payroll.latest.period.end:''),
+      'Schedule: '+f.schedule.availability+(f.schedule.source_period?.end?' · through '+f.schedule.source_period.end:'')+' · '+(f.schedule.covers_requested_week?'covers requested week':'requested week not covered'),
+      'Saved plans: '+f.saved_runs.length+' recent records; existing projections are not current actuals',
+      o?'Latest complete observed sales: '+money2(o.net_sales)+' · '+o.source_period.start+'–'+o.source_period.end+' · '+o.status+' · finalization '+(o.source_finalized===true?'verified':'unverified'):'No usable recent complete observation',
+      'Overtime workweek: '+(r.overtime_workweek?r.overtime_workweek.timezone+' · start day '+r.overtime_workweek.start_day:'not confirmed; separate from sales and schedule periods')
+    ].map(x=>'<li>'+E(x)+'</li>').join('')+'</ul>'+(r.gaps.length?'<h3>Decisions still needed</h3><ul>'+r.gaps.map(g=>'<li>'+E(g.decision)+'</li>').join('')+'</ul><p>Budget preview withheld. Existing snapshots and default hour floors are not substituted.</p>':'<p>Verified inputs support an explicit scenario; no plan will be saved.</p><form data-la-budget-preview><fieldset ' + (busy?'disabled':'') + '><label><input type="checkbox" name="use_latest_observation" ' + (row.readiness_request?.use_latest_observation?'checked':'') + ' required> Use this exact observed sales period as a provisional baseline</label><label>Sales outlook % <input type="number" name="adjustment_percent" min="-90" max="100" step="0.1" value="' + E(row.readiness_request?.adjustment_percent??'') + '" required></label><button type="submit">Preview without saving</button></fieldset></form>')+(row.readiness_preview?'<div data-la-preview-result><p role="status"><strong>Non-persisted scenario</strong> · projected sales '+money2(row.readiness_preview.projected_net_sales)+' · labor dollars '+money2(row.readiness_preview.labor_budget_dollars)+' · affordable total hours '+number(row.readiness_preview.affordable_total_hours)+' · '+(row.readiness_preview.coverage_floor_affordable?'coverage floor affordable':'coverage shortfall; review required')+'</p><ul>'+row.readiness_preview.assumptions.map(a=>'<li>'+E(a)+'</li>').join('')+'</ul></div>':'')+'<button type="button" data-la-readiness>Refresh input check</button></section>';
+  }
   function renderDetail() {
+    if(detail.readiness_view !== false){
+      const row=detail;
+      return '<header><button type="button" data-la-list>← All stores</button><h1>'+E(row.wallet.name)+'</h1><p>Read existing inputs before making a labor decision. Nothing here saves a plan or changes payroll.</p><button type="button" data-la-legacy>Open existing planner · stored references</button></header>'+readinessPanel(row)+'<details><summary>Existing saved plans and references</summary><p>These historical records are not a new verified budget.</p>'+(row.labor_readiness?.facts.saved_runs||[]).map(r=>'<p>'+E(r.week_start)+'–'+E(r.week_end)+' · '+E(r.status)+' · revision '+E(r.revision)+' · '+money2(r.projection.sales)+' · '+E(r.projection.metric||'metric unconfirmed')+'</p>').join('')+'</details>';
+    }
     const row = detail,
       rawDecision = row.run?.plan || row.preview,
       decision = Core.withSalesInput(rawDecision, priorValue(row, rawDecision), row.run || row.outlook_touched ? rawDecision.forecast.adjustment_percent : null,preserveManualForecast(row)),
@@ -917,7 +936,7 @@
     return (
       '<button class="la-back" data-la-list>← All stores</button><section class="la-detail-head"><div><span class="la-kicker">Store ' + position + " of " + locations.length + " · " + E(date(week) + " – " + date(add(week, 6))) + '</span><h1 id="la-store-heading" tabindex="-1">' + E(row.wallet.name) + '</h1><p>Four steps, about 10 minutes: sales outlook, hours, schedule, approve and hand off.</p><div class="la-head-help"><button type="button" class="la-help-btn primary" data-la-guide-run><span aria-hidden="true">▶</span> Walk me through it</button><button type="button" class="la-help-btn" data-la-guide-intro>What to expect</button></div></div><span class="la-status ' + (isConfirmed ? "confirmed" : row.run ? "draft" : "ready") + '">' + (isConfirmed ? "Approved" : row.run ? "Draft saved" : "Recommendation") + "</span></section>" +
       heroPlan(row, decision, isConfirmed, d) + storeSteps(row, decision, isConfirmed) + '<div class="la-store-grid"><div class="la-store-main">' +
-      '<form id="la-plan-form" class="la-plan-form" data-wallet="' + E(row.wallet.id) + '" data-prior-imported="' + (currentSales(row) ? "true" : "false") + '">' +
+      '<p><button type="button" data-la-input-view>Review existing inputs</button> Existing planner values are stored references; use the separate input check for a verified preview.</p><form id="la-plan-form" class="la-plan-form" data-wallet="' + E(row.wallet.id) + '" data-prior-imported="' + (currentSales(row) ? "true" : "false") + '">' +
       '<section class="la-step-section" id="la-step-outlook" aria-labelledby="la-outlook-heading"><h2 id="la-outlook-heading" tabindex="-1"><span class="la-step-number">1</span>What will sales do next week?</h2><div class="la-sales-builder"><div class="la-field"><label>Starting sales <em>' + E(baselineInUse ? baselineInUse.badge : prior != null ? "Saved in this draft" : "Needed") + '</em><div><span>$</span><input name="last_week_sales" type="number" min="1" step="1" value="' + E(prior ?? "") + '" ' + (isConfirmed ? "disabled" : currentSales(row) ? "readonly" : "") + " required></div><small>" + E(baselineInUse ? baselineInUse.helper : prior != null && priorMeta.sales != null && Math.abs(Number(priorMeta.sales) - Number(prior)) >= 0.01 ? "Entered earlier in this draft. " + (closedSales ? "Last closed week (" + date(closedSales.start) + "–" + date(closedSales.end) + ") was " + money(closedSales.sales) + "." : "") : priorHelper) + "</small></label>" + baselineChooser + "</div>" +
       "<fieldset " + (isConfirmed ? "disabled" : "") + "><legend>Your call</legend>" +
       (suggestion.available && !row.run ? '<div class="la-suggestion"><span>Fran suggests <b>' + E(suggestion.direction === "same" ? "flat" : suggestion.direction + " " + suggestion.percent + "%") + "</b></span><small>" + E(suggestion.reason) + '</small><button type="button" data-la-use-suggestion>Use suggestion</button></div>' : "") +
@@ -1173,6 +1192,10 @@
         row.roster_loading = false;
       }
     }
+    if(!row.labor_readiness){
+      try { row.labor_readiness=await api('readiness',{wallet_id:row.wallet.id,week_start:week});row.readiness_error=null; }
+      catch(error){row.readiness_error='Existing inputs could not be checked. '+error.message;}
+    }
     if (!row.history) {
       row.history_loading = true;
       try { row.history = (await api("history", { wallet_id: row.wallet.id, week_start: week })).weeks || []; }
@@ -1261,6 +1284,13 @@
   }
   function runGuide(){const G=window.FranLaborGuide;if(G&&detail)G.run(page,()=>guidedStops(detail),{auto:true});}
   function bind() {
+    page.querySelector('[data-la-legacy]')?.addEventListener('click',()=>{detail.readiness_view=false;render();});
+    page.querySelector('[data-la-input-view]')?.addEventListener('click',()=>{detail.readiness_view=true;render();});
+    page.querySelector('[data-la-readiness]')?.addEventListener('click',()=>{if(busy)return;const row=detail;row.readiness_generation=(row.readiness_generation||0)+1;row.readiness_preview=null;row.readiness_request=null;row.labor_readiness=null;row.readiness_error=null;work(async()=>{try{row.labor_readiness=await api('readiness',{wallet_id:row.wallet.id,week_start:week});}catch(error){row.readiness_error=error.message;}});});
+    const previewForm=page.querySelector('[data-la-budget-preview]');
+    previewForm?.addEventListener('input',()=>{detail.readiness_generation=(detail.readiness_generation||0)+1;detail.readiness_preview=null;detail.readiness_request=null;page.querySelector('[data-la-preview-result]')?.remove();});
+    previewForm?.addEventListener('submit',event=>{event.preventDefault();if(busy)return;const form=event.currentTarget,row=detail,request={use_latest_observation:form.elements.use_latest_observation.checked,adjustment_percent:Number(form.elements.adjustment_percent.value)};const generation=(row.readiness_generation||0)+1;row.readiness_generation=generation;row.readiness_preview=null;row.readiness_request=request;work(async()=>{const result=await api('budget_preview',{wallet_id:row.wallet.id,week_start:week,...request});if(row.readiness_generation!==generation)return;row.labor_readiness=result;row.readiness_preview=result.preview;});});
+
     page.querySelectorAll("[data-la-guide-intro]").forEach((button)=>button.addEventListener("click",openGuide));
     page.querySelector("[data-la-guide-run]")?.addEventListener("click",runGuide);
     if(locations.length&&!busy&&window.FranLaborGuide?.shouldIntro()){window.FranLaborGuide.markSeen();setTimeout(openGuide,350);}

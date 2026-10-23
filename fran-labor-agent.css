@@ -799,3 +799,7 @@ body.fran-labor-demo .main{margin-left:0!important;max-width:1440px!important;ma
 #page-labor-agent .la-metrics>div:nth-child(3)::before{background:var(--c-cost)}
 #page-labor-agent .la-metrics>div:nth-child(4)::before{background:var(--c-good)}
 @media(max-width:760px){#page-labor-agent .la-hero-plan h2{font-size:44px}.la-hp-checks li{border-left:0;border-top:1px solid rgba(255,255,255,.1)}.la-hp-checks li:first-child{border-top:0}}
+
+.la-readiness{padding:1.25rem;margin:1rem 0;border:1px solid #cbd8d2;border-radius:16px;background:#f8fbf9;}
+.la-readiness h2{margin:0 0 .5rem;}.la-readiness li{margin:.4rem 0;line-height:1.5;}
+.la-readiness form{display:grid;gap:.75rem;margin:1rem 0;}.la-readiness input[type=number]{max-width:9rem;}

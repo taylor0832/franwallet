@@ -7,6 +7,12 @@ const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
 function required(value,name,{min=0,max=1e9}={}){const x=n(value);if(x===null||x<min||x>max)throw Error(name+' is missing or outside its allowed range.');return x;}
 function provenance(value,source,type='operator-set',asOf=null){return {value:n(value),source:String(source||'Source not recorded'),type,as_of:asOf||null};}
 function normalizedShape(shape,openDays){const values=DAY_NAMES.map((day,i)=>(openDays?.[i]===false||openDays?.[i]===0)?0:Math.max(0,n(shape?.[i])||0)),total=values.reduce((a,b)=>a+b,0);if(total<=0)throw Error('Day-of-week demand shape is required.');return values.map(v=>v/total);}
+function withSalesInput(plan,base,adjustment,preserveManual=false){
+ if(preserveManual&&plan?.forecast?.method==='manual_projection'&&n(plan.forecast.sales)>0)return {...plan};
+ const last=n(base),pct=n(adjustment),known=last!==null&&last>0&&pct!==null;
+ if(known)return {...plan,forecast:{...plan.forecast,base_sales:last,adjustment_percent:pct,sales:round(last*(1+pct/100),2)}};
+ return {...plan,forecast:{...plan.forecast,base_sales:last,sales:null},financials:{...plan.financials,estimated_labor_percent:null,goal_hours_supported:null}};
+}
 function chooseForecast(input,config){
  const last=n(input.last_week_sales),adjustment=n(input.adjustment_percent);
  if(last!==null&&last>0&&adjustment!==null){const sales=last*(1+clamp(adjustment,-90,300)/100);return {sales:round(sales,2),base_sales:round(last,2),adjustment_percent:round(adjustment),method:'operator_adjusted_last_week',confidence:'high',provenance:input.projection_provenance||provenance(sales,input.last_week_source||'Prior-week POS sales plus operator adjustment','derived',input.as_of)};}
@@ -142,5 +148,5 @@ function portfolioSummary(rows){
  const avg=x=>x.count?round(x.total/x.count,1):null;
  return {stores:rows.length,confirmed:rows.filter(r=>r.run?.status==='confirmed').length,sales,hours,scheduled,labor,labor_percent:comparableSales.total>0?round(labor.total/comparableSales.total*100,1):null,average:{sales:avg(sales),hours:avg(hours),scheduled:avg(scheduled),labor:avg(labor)}};
 }
-const api={revenueHours,budgetDerivation,weekComparison,portfolioSummary,fitScheduleToBudget,calendarWeeks,budgetCost,monthSummary,reviewSchedule,DAY_NAMES,provenance,chooseForecast,modelHours,dailyEnvelope,evaluateSchedule,plan};root.FranLaborAgentCore=api;if(typeof module==='object'&&module.exports)module.exports=api;
+const api={withSalesInput,revenueHours,budgetDerivation,weekComparison,portfolioSummary,fitScheduleToBudget,calendarWeeks,budgetCost,monthSummary,reviewSchedule,DAY_NAMES,provenance,chooseForecast,modelHours,dailyEnvelope,evaluateSchedule,plan};root.FranLaborAgentCore=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

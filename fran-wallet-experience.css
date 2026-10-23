@@ -808,3 +808,9 @@ body.wallet-refined #wallet-home .wallet-operating-pulse header h2{color:#fff!im
 .ag-card.ag-list .sx-renewal{border-top:0}
 .ag-stats strong em{font:600 14px 'DM Sans',sans-serif;font-style:normal;letter-spacing:0;color:var(--sx-muted);margin-left:2px}
 .ag-source{margin:0 0 18px}.ag-gnote{margin:0 0 6px;font-size:12.5px;line-height:1.45;color:var(--sx-muted)}
+
+/* Source observations retain exact dates and separate sales measures. */
+.wallet-evidence-daily{overflow-x:auto;margin:16px 0}
+.wallet-evidence-daily table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.wallet-evidence-daily th,.wallet-evidence-daily td{padding:10px 14px;text-align:right;border-bottom:1px solid #dfe7e2;white-space:nowrap}
+.wallet-evidence-daily th:first-child{text-align:left}

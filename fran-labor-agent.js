@@ -175,17 +175,24 @@
   const signed = (v, f) => (v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + f(Math.abs(v)));
   // Last week: planned versus actual. Final variance when sources are final; otherwise a labeled provisional
   // difference. When something is missing, one sentence says what and when it arrives.
+  function salesQualification(x){
+    if(x?.ambiguous_revision)return 'Conflicting observations share this period and revision. Review the source records.';
+    if(x?.duplicate_dates?.length)return 'Duplicate daily rows: '+x.duplicate_dates.join(', ')+'. Review the source records.';
+    if(x?.invalid_dates?.length)return 'Invalid net sales for: '+x.invalid_dates.join(', ')+'.';
+    if(x?.missing_days?.length)return 'Missing dates: '+x.missing_days.join(', ')+'.';
+    return 'Source coverage or period does not qualify for this requested total.';
+  }
   function priorResults(row){
     const r=row.prior_week_results,lastStart=r?.week_start||add(week,-7),lastEnd=r?.week_end||add(lastStart,6),cmp=Core.weekComparison(r||{week_start:lastStart,week_end:lastEnd}),p=r?.projected,s=r?.sales,h=r?.hours;
     const when={plan:"No FranWallet plan was saved for that week, so there is nothing to compare against.",sales:"Actual sales for that week are not in FranWallet yet; they fill in after the closed week is collected from Crumbl Internal (Sunday morning) or imported from the workbook.",hours:"Worked hours for that week are not in FranWallet yet; they fill in after When I Work timesheets are imported (timesheets close Sunday)."};
     const line=(label,planned,actual,c,fmt,unit)=>'<tr><th scope="row">'+label+'</th><td>'+planned+'</td><td>'+actual+'</td><td>'+(c?'<strong>'+signed(c.difference,fmt)+unit+(c.percent!=null?' ('+signed(c.percent,v=>number(v)+'%')+')':'')+info(label.toLowerCase()+" difference","Actual "+fmt(c.actual)+unit+" − planned "+fmt(c.planned)+unit+" = "+signed(c.difference,fmt)+unit+(c.percent!=null?" ("+signed(c.percent,v=>number(v)+"%")+" of planned)":"")+". "+(c.final?"Both sources are final.":"Provisional: "+c.reasons.join("; ")+"."))+'</strong><small>'+(c.final?'Final':'Provisional · '+E(c.reasons.join('; ')))+'</small>':'<span class="la-muted">Not available</span>')+'</td></tr>';
-    const src=x=>x?E(pos(x.source))+' · through '+date(x.through)+(x.final?' · final':' · not final'):null;
+    const src=x=>x?E(pos(x.source))+' · '+E(x.metric||x.basis||'')+' · through '+date(x.through)+' · collected '+E(x.collected_at||'unknown')+(x.revision?' · revision '+E(x.revision):'')+(x.final?' · final':' · source finalization unverified'):null;
     return '<section class="la-prior-results" aria-labelledby="la-prior-heading"><h2 id="la-prior-heading">Last closed week: planned versus actual</h2><p>'+E(date(cmp.week_start||lastStart)+' – '+date(cmp.week_end||lastEnd))+(row.in_progress_week?' · this week ('+date(row.in_progress_week.start)+'–'+date(row.in_progress_week.end)+') is still in progress; its results appear after it closes Sunday':'')+'</p>'+
       '<div class="la-table la-compact-table"><table><thead><tr><th scope="col"></th><th scope="col">Planned</th><th scope="col">Actual</th><th scope="col">Difference</th></tr></thead><tbody>'+
       line('Sales',money(p?.sales??null),money(s?.amount??null),cmp.sales,money,'')+
       line('Hours',p?.hours==null?'—':number(p.hours)+' h budget',h?.amount==null?'—':number(h.amount)+' h worked'+(h.basis==='total_hours'?' (incl. salaried)':''),cmp.hours,v=>number(v),' h')+
       '</tbody></table></div>'+
-      (cmp.missing.length?'<p class="la-missing-note">'+E(when[cmp.missing[0]])+'</p>':'')+
+      (s&&s.amount==null?'<p class="la-missing-note">'+E(salesQualification(s))+' The full-week total remains unavailable.</p>':cmp.missing.length?'<p class="la-missing-note">'+E(when[cmp.missing[0]])+'</p>':'')+
       '<details data-la-keep="la-sources" class="la-sources"><summary>Sources for last week</summary><ul>'+[['Plan',p?E(p.source||'Saved FranWallet plan'):null],['Sales',src(s)],['Hours',src(h)]].map(([k,v])=>'<li><b>'+k+':</b> '+(v||'not imported')+'</li>').join('')+'</ul><p>Differences stay provisional until sources are final and use the same sales and hours definitions.</p></details></section>';
   }
   // One quiet info button for every computed number: click/Enter toggles a short plain-language explanation with the
@@ -245,10 +252,11 @@
     const a=d.affordable_hours!=null?"Labor target: "+number(d.affordable_hours)+" h":"Labor target: not available (crew rate missing)",b=d.lean_hours!=null?"last week’s staffing "+number(d.lean.hours)+" h × ("+money(d.sales)+" ÷ "+money(d.lean.sales)+") = "+number(d.lean_hours)+" h":"no comparable last week";
     return a+"; "+b+". FranWallet takes the lower, rounds down to the half hour, and never goes below "+number(d.floor_hours)+" h → "+number(d.recommended_hours)+" h, set by the "+(bindingLabel[d.binding]||"labor target")+".";
   }
+  function preserveManualForecast(row){return !!row?.run&&row.run.plan?.forecast?.method==='manual_projection'&&!row.sales_input_touched;}
   function liveDecision(decision,form){
-    if(!form)return decision;
-    const last=Number(form.elements.last_week_sales?.value||0),dir=form.elements.direction?.value,chosen=form.querySelector("[name=change_percent]:checked"),pct=chosen?.value==="custom"?Math.abs(Number(form.elements.custom_percent.value||0)):Math.abs(Number(chosen?.value||0)),factor=dir==="down"?1-pct/100:dir==="up"?1+pct/100:1,hours=Number(form.elements.hours?.value);
-    return {...decision,forecast:{...decision.forecast,sales:last>0?Math.round(last*factor*100)/100:null,adjustment_percent:dir==="down"?-pct:dir==="up"?pct:dir==="same"?0:decision.forecast.adjustment_percent},decision:{...decision.decision,hours:Number.isFinite(hours)&&hours>0?hours:decision.decision.hours}};
+    if(!form)return Core.withSalesInput(decision,priorValue(detail,decision),detail.run||detail.outlook_touched?decision.forecast.adjustment_percent:null,preserveManualForecast(detail));
+    const last=Number(form.elements.last_week_sales?.value||0),dir=form.elements.direction?.value,chosen=form.querySelector("[name=change_percent]:checked"),pct=chosen?.value==="custom"?Math.abs(Number(form.elements.custom_percent.value||0)):Math.abs(Number(chosen?.value||0)),hours=Number(form.elements.hours?.value);
+    return {...Core.withSalesInput(decision,last,dir==="same"?0:(dir==="up"||dir==="down")&&chosen?dir==="down"?-pct:pct:null,preserveManualForecast(detail)),decision:{...decision.decision,hours:Number.isFinite(hours)&&hours>0?hours:decision.decision.hours}};
   }
   // Labor dollars, labor % and affordable hours for whatever hours the operator picks. Tips are never labor cost.
   function budgetResult(row,decision,d=Core.budgetDerivation(row.config,decision)){
@@ -774,7 +782,7 @@
   function trackCard(row) {
     if (row.history_loading) return '<section class="la-track"><h3>Your last 6 weeks</h3><p class="la-track-lede">Loading this store’s recent weeks…</p></section>';
     const rows = trackRows(row);
-    if (!rows.length) return '<section class="la-track"><h3>Your last 6 weeks</h3><p class="la-track-lede">No closed weeks with sales and hours yet. This fills in after the first Sunday import.</p></section>';
+    if (!rows.length) return '<section class="la-track"><h3>Your last 6 weeks</h3><p class="la-track-lede">No comparable weeks with qualified sales and matching hours yet. Provisional or incomplete evidence appears in the source details below.</p></section>';
     const over = rows.reduce((x, r) => x + Math.max(0, r.diff || 0), 0), rate = rows.find((r) => r.rate)?.rate, dollars = rate ? over * rate : null, goal = row.config.target_labor_percent;
     const max = Math.max(...rows.map((r) => Math.max(r.hours || 0, r.allowed || 0))) * 1.08;
     const tip = "For each closed week: hours worked (When I Work timesheets, or the published schedule when timesheets are missing) against what your " + percent(goal) + " labor target allowed for the point-of-sale sales that week, never below the " + number(row.config.minimum_hours ?? 110) + " h floor. Uses today’s crew cost per hour from Gusto, tips excluded.";
@@ -848,9 +856,10 @@
   }
   function renderDetail() {
     const row = detail,
-      decision = row.run?.plan || row.preview,
+      rawDecision = row.run?.plan || row.preview,
+      decision = Core.withSalesInput(rawDecision, priorValue(row, rawDecision), row.run || row.outlook_touched ? rawDecision.forecast.adjustment_percent : null,preserveManualForecast(row)),
       isConfirmed = row.run?.status === "confirmed",
-      prior = priorValue(row, decision),
+      prior = priorValue(row, rawDecision),
       adjustment = Number(decision.forecast.adjustment_percent || 0),
       direction = (row.run || row.outlook_touched) ? (adjustment > 0 ? "up" : adjustment < 0 ? "down" : "same") : "",
       absolute = Math.abs(adjustment),
@@ -861,7 +870,11 @@
       eventCap = Number.isFinite(maximum) && maximum > target ? maximum - target : 0,
       priorMeta = row.prior_week_sales || {},
       suggestion = row.sales_suggestion || {},
-      priorHelper = priorMeta.kind === "projection"
+      priorHelper = priorMeta.kind === "observed_actuals" && !priorMeta.coverage_complete
+        ? "Observed source coverage is incomplete for " + date(priorMeta.start) + "–" + date(priorMeta.end) + ". " + salesQualification(priorMeta) + " No full-period total is available."
+        : priorMeta.kind === "observed_actuals"
+        ? "Observed net sales · " + date(priorMeta.start) + "–" + date(priorMeta.end) + " · collected " + (priorMeta.collected_at || "unknown") + " · revision " + priorMeta.revision + ". Source finalization unverified; review before using as a forecast."
+        : priorMeta.kind === "projection"
         ? "Forecast baseline for " + date(priorMeta.start) + "–" + date(priorMeta.end) + " · " + priorMeta.source + ". This is a forecast, not closed sales."
         : priorMeta.kind === "workbook_actual"
         ? "Workbook actual for " + date(priorMeta.start) + "–" + date(priorMeta.end) + " · " + priorMeta.source + ". Net versus gross sales still needs confirmation."
@@ -870,15 +883,16 @@
         : priorMeta.complete
         ? "Pulled automatically from " + date(priorMeta.start) + "–" + date(priorMeta.end) + " · " + priorMeta.source
         : "Crumbl Internal has not supplied a complete closed week yet" + (priorMeta.days != null && priorMeta.expected ? " (" + priorMeta.days + " of " + priorMeta.expected + " days closed" + (priorMeta.missing_days?.length ? "; " + priorMeta.missing_days.join(", ") + " missing" : "") + ")" : "") + ". Enter the Monday–Saturday total to plan; it will be labeled operator-set.",
-      salesKnown = prior != null,
+      salesKnown = decision.forecast.sales != null,
       closedSales = row.closed_week_sales?.complete && Number(row.closed_week_sales.sales) > 0 ? row.closed_week_sales : priorMeta.complete && !["projection", "workbook_actual"].includes(priorMeta.kind) && Number(priorMeta.sales) > 0 ? priorMeta : null,
       baselines = [
+        priorMeta.kind === "observed_actuals" && priorMeta.coverage_complete && priorMeta.sales != null && {key:"observed",value:priorMeta.sales,title:"Provisional observed net sales",range:date(priorMeta.start)+"–"+date(priorMeta.end),source:priorMeta.source,badge:"Finalization unverified",helper:priorHelper},
         closedSales && { key: "closed", value: Number(closedSales.sales), title: "Last closed week", range: date(closedSales.start) + "–" + date(closedSales.end), source: pos(closedSales.source || "Point of sale net sales"), badge: "Last closed week", helper: "Point of sale · closed " + date(closedSales.start).replace(/, \d{4}$/, "") + "–" + date(closedSales.end).replace(/, \d{4}$/, "") + (row.in_progress_week ? " · this week is still open" : "") },
         ["projection", "workbook_actual"].includes(priorMeta.kind) && Number(priorMeta.sales) > 0 && { key: "ref", value: Number(priorMeta.sales), title: priorMeta.kind === "projection" ? "Forecast for " + date(priorMeta.start) + "–" + date(priorMeta.end) : "Workbook figure", range: date(priorMeta.start) + "–" + date(priorMeta.end), source: pos(priorMeta.source), badge: priorMeta.kind === "projection" ? "Forecast" : "Workbook figure", helper: priorHelper },
       ].filter(Boolean),
       shortRange = (a, b) => date(a).replace(/, \d{4}$/, "") + "–" + date(b).replace(/, \d{4}$/, ""),
       baselineInUse = baselines.find((b) => prior != null && Math.abs(b.value - Number(prior)) < 0.01) || null,
-      baselineChooser = isConfirmed || baselines.length + (baselineInUse || prior == null ? 0 : 1) < 2 ? "" :
+      baselineChooser = isConfirmed || baselines.length + (baselineInUse || prior == null ? 0 : 1) < (priorMeta.kind === "observed_actuals" ? 1 : 2) ? "" :
         '<fieldset class="la-baseline-choice"><legend>Which sales should drive next week?</legend>' +
         baselines.map((b) => '<label><input type="radio" name="baseline_choice" value="' + b.value + '" data-la-baseline="' + E(b.key) + '" ' + (baselineInUse === b ? "checked" : "") + '><span><b>' + E(b.title) + " · " + money(b.value) + "</b><small>" + E(b.range + " · " + b.source) + "</small></span></label>").join("") +
         (!baselineInUse && prior != null ? '<label><input type="radio" name="baseline_choice" value="' + E(prior) + '" checked><span><b>Saved in this draft · ' + money(prior) + '</b><small>Entered earlier; source not recorded</small></span></label>' : "") +
@@ -1103,6 +1117,7 @@
     return direction === "down" ? -amount : amount;
   }
   function values(form) {
+    if(preserveManualForecast(detail))return {projected_sales:detail.run.plan.forecast.sales,projection_source:detail.run.plan.forecast.provenance?.source||'Saved operator projection',sales_metric:detail.run.plan.forecast.sales_metric||'unconfirmed',projection_as_of:detail.run.plan.forecast.provenance?.as_of||null,event_hours:form.elements.event_hours?Number(form.elements.event_hours.value||0):Number(detail.run.plan.model?.inputs?.event_hours||0),confirmed_hours:Number(form.elements.hours.value),outlook_reason:form.elements.outlook_reason?.value||null};
     const last = Number(form.elements.last_week_sales.value),
       adjustment = selectedChange(form),
       imported =
@@ -1170,7 +1185,7 @@
   // Done for you: with no saved draft, take Fran's outlook, keep the recommended hours and start from this store's
   // latest When I Work week trimmed to budget. Nothing is saved until the operator approves or saves.
   function autoDraft(row) {
-    if (row.run || row.autodraft_tried || detail !== row || window.navigator?.webdriver) return;
+    if (row.run || row.autodraft_tried || detail !== row || window.navigator?.webdriver || !(priorValue(row,row.preview)>0)) return;
     row.autodraft_tried = true;
     const form = page.querySelector("#la-plan-form"); if (!form || form.elements.last_week_sales?.disabled) return;
     const suggest = page.querySelector("[data-la-use-suggestion]");
@@ -1352,7 +1367,7 @@
         if (options)
           options.hidden = !(direction === "up" || direction === "down");
         if (customField) customField.hidden = chosen?.value !== "custom";
-        const projected = last > 0 ? last * factor : null,
+        const projected = preserveManualForecast(detail) ? detail.run.plan.forecast.sales : last > 0 && (direction === "same" || (["up","down"].includes(direction) && chosen)) ? last * factor : null,
           decision = detail.run?.plan || detail.preview,
           cost = decision.financials?.estimated_labor_cost,
           laborPercent = page.querySelector("[data-la-labor-percent]"),
@@ -1387,23 +1402,24 @@
           el.classList.add("la-flash");
         });
         const side = page.querySelector("[data-la-side-summary]");
-        if (side && projected)
-          side.textContent =
+        if (side)
+          side.textContent = projected ?
             money(projected) +
             " projected sales" +
             (cost != null
               ? " · " + money(cost) + " labor · " + percent(Math.round((cost / projected) * 1000) / 10)
-              : "");
+              : "") : "Enter starting sales and choose an outlook.";
       };
       form
         .querySelectorAll(
           "[name=last_week_sales],[name=direction],[name=change_percent],[name=custom_percent],[name=hours]",
         )
-        .forEach((input) => input.addEventListener("input", (event) => { if (event.isTrusted && event.target.name === "hours") detail.hours_touched = true; updateProjection(); }));
-      form.querySelectorAll("[name=baseline_choice]").forEach((radio) => radio.addEventListener("change", () => { form.elements.last_week_sales.value = radio.value; updateProjection(); }));
+        .forEach((input) => input.addEventListener("input", (event) => { if (event.isTrusted && event.target.name === "hours") detail.hours_touched = true; if(!quietProjection&&event.target.name!=="hours")detail.sales_input_touched=true; updateProjection(); }));
+      form.querySelectorAll("[name=baseline_choice]").forEach((radio) => radio.addEventListener("change", () => { detail.sales_input_touched=true; form.elements.last_week_sales.value = radio.value; updateProjection(); }));
       page
         .querySelector("[data-la-use-suggestion]")
         ?.addEventListener("click", () => {
+          detail.sales_input_touched=true;
           const suggestion = detail.sales_suggestion || {},
             direction = form.querySelector(
               '[name=direction][value="' + suggestion.direction + '"]',

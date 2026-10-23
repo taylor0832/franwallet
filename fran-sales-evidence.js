@@ -37,5 +37,20 @@ function aggregateForPeriod(record,start,end){
  return {...raw,start,end,source_period:{start:sourceStart,end:sourceEnd},amount:exact?raw.amount:null,observed_amount:contained&&cents(raw.amount)!==null?raw.amount:null,coverage_complete:exact,missing_days:expected.filter(d=>!covered.includes(d)),final:exact&&raw.final===true&&raw.metric==='net_sales',source_finalized:raw.final===true,status:exact?(raw.final===true?'finalized_source':'provisional_aggregate'):'period_mismatch'};
 }
 function latest(records,walletId){const o=observations(records,walletId)[0];return o?forPeriod(records,walletId,o.source_period.start,o.source_period.end):null;}
-const api={observations,forPeriod,aggregateForPeriod,latest,dates};root.FranSalesEvidence=api;if(typeof module!=='undefined')module.exports=api;
+// Operating sales weeks are Sunday–Saturday. Completion is coverage, never formal finalization.
+function selectOperatingWeek(input,options={}){
+ const instant=Date.parse(options.as_of||new Date().toISOString());if(!Number.isFinite(instant))return null;
+ const today=new Date(instant).toISOString().slice(0,10),cutoff=options.schedule_start&&options.schedule_start<today?options.schedule_start:today;
+ const ordered=[...(input||[])].sort((a,b)=>String(b.source_period?.end||'').localeCompare(String(a.source_period?.end||''))||Number(b.revision)-Number(a.revision));
+ const seen=new Set();
+ for(const o of ordered){
+  const p=o.source_period||{},key=p.start+'/'+p.end;if(seen.has(key))continue;seen.add(key);
+  if(!iso(p.start)||!iso(p.end)||dates(p.start,p.end).length!==7||new Date(p.start+'T12:00:00Z').getUTCDay()!==0||new Date(p.end+'T12:00:00Z').getUTCDay()!==6||p.end>=cutoff)continue;
+  if(options.source_start&&(p.start!==options.source_start||p.end!==options.source_end))continue;
+  if(!o.complete_daily_observation||o.ambiguous_revision||!Number.isFinite(Date.parse(o.collected_at))||Date.parse(o.collected_at)>instant)continue;
+  return {...o,selection_basis:options.source_start?'explicit_exact_operating_week':'latest_available_complete_operating_week',evaluated_at:new Date(instant).toISOString(),schedule_period_separate:true,outlook_approved:false};
+ }
+ return null;
+}
+const api={observations,forPeriod,aggregateForPeriod,latest,dates,selectOperatingWeek};root.FranSalesEvidence=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

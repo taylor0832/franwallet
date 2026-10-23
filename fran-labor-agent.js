@@ -108,9 +108,10 @@
   }
   // Operators know their point of sale, not the internal portal's name.
   const pos = (v) => String(v ?? "").replace(/Crumbl Internal/g, "Point of sale").replace(/Imported daily POS summaries/g, "Point of sale daily summaries");
-  function currentSales(row) { return row.prior_week_sales?.complete && !row.prior_week_sales?.stale && row.prior_week_sales.start === add(week,-7); }
+  function currentSales(row) { return !!(row.prior_week_sales?.kind==='observed_actuals'&&row.prior_week_sales.coverage_complete || row.prior_week_sales?.complete&&!row.prior_week_sales?.stale&&row.prior_week_sales.start===add(week,-7)); }
   function status(row) {
     if (row.run?.status === "confirmed") return [row.run.approval_review?.exception_reason ? "Confirmed · exception" : "Confirmed", "confirmed"];
+    if(row.prior_week_sales?.kind==='observed_actuals'&&row.prior_week_sales.coverage_complete&&!row.run)return ['Observed baseline · outlook needed','needs'];
     if (!currentSales(row)) return [(row.prior_week_sales?.complete ? "Sales need review" : "Needs sales input") + (row.run ? " · draft" : ""), "needs"];
     if (row.run) {
       const plan = row.run.plan || row.preview,
@@ -129,6 +130,7 @@
   // Store list: one short line on where the starting sales came from.
   function source(row) {
     const ps = row.prior_week_sales, sd = (v) => date(v).replace(/, \d{4}$/, "");
+    if(ps?.kind==='observed_actuals'&&ps.coverage_complete)return 'Observed operating week '+sd(ps.start)+'–'+sd(ps.end)+' · provisional, not an approved forecast';
     if (ps?.stale) return "Historical reference · last closed " + sd(ps.end);
     if (!ps?.complete && !row.run) return "Sales not in yet";
     const p = row.preview.forecast.provenance, asOf = p.as_of || (ps?.complete ? ps.end : null);
@@ -169,7 +171,7 @@
   function priorValue(row, decision) {
     return (
       decision.forecast.base_sales ??
-      (row.prior_week_sales?.complete ? row.prior_week_sales.sales : null)
+      (currentSales(row) ? row.prior_week_sales.sales : null)
     );
   }
   const signed = (v, f) => (v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + f(Math.abs(v)));
@@ -238,10 +240,10 @@
   function modelNote(row){const m=row.config.labor_model;if(!m)return "";return '<p class="la-model-note"><b>Your labor model</b> '+(m.budget_hours!=null?number(m.budget_hours)+' h weekly budget':'')+(m.outline_hours!=null?' · '+number(m.outline_hours)+' h minimum daily outline':'')+(m.salaried_names?.length?' · salaried: '+E(m.salaried_names.join(', ')):'')+info("store labor model",(m.source||"Store labor model")+(m.as_of?" · "+date(m.as_of):"")+". Shown for comparison; the recommendation comes from projected sales, the labor target and the "+number(row.config.minimum_hours)+" h floor."+(m.note?" "+m.note:""))+'</p>';}
   // Where every number on the page comes from, so the operator can check it against the source systems.
   function provenance(row){
-    const cs=row.closed_week_sales||(row.prior_week_sales?.complete&&!["projection","workbook_actual"].includes(row.prior_week_sales?.kind)?row.prior_week_sales:null),sch=row.schedule,ev=row.economics_evidence,c=row.config,imported=String(sch?.imported_at||sch?.updated_at||"").slice(0,10);
+    const cs=(row.prior_week_sales?.kind==='observed_actuals'&&row.prior_week_sales.coverage_complete?row.prior_week_sales:null)||row.closed_week_sales||(row.prior_week_sales?.complete&&!["projection","workbook_actual"].includes(row.prior_week_sales?.kind)?row.prior_week_sales:null),sch=row.schedule,ev=row.economics_evidence,c=row.config,imported=String(sch?.imported_at||sch?.updated_at||"").slice(0,10);
     const item=(sys,value,ok,tip)=>'<li class="'+(ok?'':'missing')+'"><i aria-hidden="true"></i><b>'+E(sys)+'</b><span>'+E(value)+'</span>'+info(sys.toLowerCase(),tip)+'</li>';
     return '<section class="la-provenance" aria-labelledby="la-prov-heading"><h2 id="la-prov-heading">Built from</h2><ul>'+
-      item("Point of sale",cs?.start?date(cs.start).replace(/, \d{4}$/,"")+"–"+date(cs.end).replace(/, \d{4}$/,"")+(cs.sales!=null?" · "+money(cs.sales):""):"Not in yet",!!cs?.start,"Net sales for the last closed Monday–Saturday week, collected from your point of sale on Sunday morning. It is the starting point for next week’s projection.")+
+      item("Point of sale",cs?.start?date(cs.start).replace(/, \d{4}$/,"")+"–"+date(cs.end).replace(/, \d{4}$/,"")+(cs.sales!=null?" · "+money(cs.sales):""):"Not in yet",!!cs?.start,"Net sales for the latest available complete Sunday–Saturday observation. Coverage completion does not imply formal source finalization. It is the starting point for next week’s projection.")+
       item("When I Work",imported?"Imported "+date(imported).replace(/, \d{4}$/,""):"Not in yet",!!imported,"Shifts from the When I Work schedule export for "+date(week)+"–"+date(add(week,6))+". Published shifts count as confirmed; drafts are shown separately.")+
       item("Gusto",ev?new Date(ev.period_start+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",timeZone:"UTC"})+" payroll":c.measured_cost_as_of?"Measured "+date(c.measured_cost_as_of).replace(/, \d{4}$/,""):"Not in yet",!!(ev||c.blended_hourly_cost),"Crew cost per hour and salaried cost from the latest complete Gusto payroll: wages plus employer taxes, tips excluded.")+
       item("Your rules",percent(c.target_labor_percent)+" target · "+number(c.minimum_hours??110)+" h floor",true,"Set by the store owner. Recommendations aim at the labor target and never go below the floor. Tips never count as labor.")+
@@ -260,13 +262,10 @@
   }
   // Labor dollars, labor % and affordable hours for whatever hours the operator picks. Tips are never labor cost.
   function budgetResult(row,decision,d=Core.budgetDerivation(row.config,decision)){
-    const known=d.sales!=null&&d.sales>0;
-    if(d.total_cost==null)return '<div class="la-budget-result missing" data-la-budget-result><strong>Labor cost pending</strong><small>'+(isTeam(row)?'The store owner has not recorded a measured crew cost per hour yet.':'Add a measured crew cost per hour under “How we got these hours” to calculate labor dollars and labor %.')+'</small></div>';
-    const costTip=number(d.budget_hours)+" h − "+number(d.salaried_hours)+" salaried h = "+number(d.crew_hours)+" crew h × "+money2(d.crew_rate)+" = "+money(d.crew_cost)+", + "+money(d.fixed_leadership)+" salaried = "+money(d.total_cost)+". Employer cost, excluding tips · "+gustoPeriod(row)+".";
-    const goal=d.goal_percent,within=known&&d.labor_percent!=null&&goal!=null&&d.labor_percent<=goal+0.05;
-    return '<div class="la-budget-result" aria-live="polite" data-la-budget-result><div class="la-br-main"><span>Weekly labor</span><strong><span data-la-labor-cost>'+money(known?d.total_cost:null)+'</span>'+info("estimated weekly labor",costTip)+'</strong></div><div class="la-br-main"><span>Labor % of sales</span><strong><span data-la-labor-percent>'+percent(known?d.labor_percent:null)+'</span>'+info("labor %",money(d.total_cost)+" ÷ "+money(d.sales)+" projected sales = "+percent(d.labor_percent)+". Fully loaded employer cost, excluding tips.")+'</strong>'+(known&&goal!=null?'<em class="la-goal-chip '+(within?'ok':'warn')+'">'+(within?'Within '+percent(goal)+' goal':number(Math.round((d.labor_percent-goal)*10)/10)+' pts above '+percent(goal)+' goal')+'</em>':'')+'</div><div><span>'+percent(goal)+' target allows</span><strong>'+(d.affordable_hours==null?'—':number(d.affordable_hours)+' h')+info("hours affordable",d.affordable_hours==null?"Needs a crew cost per hour.":money(d.labor_dollars)+" labor budget − "+money(d.fixed_leadership)+" salaried = "+money(d.crew_dollars)+" ÷ "+money2(d.crew_rate)+" per crew hour = "+number(d.affordable_crew_hours)+" crew h + "+number(d.salaried_hours)+" salaried h.")+'</strong></div><p>Employer cost incl. payroll taxes · tips never counted · hours include salaried staff'+info("how labor is calculated",laborDefinition(row))+'</p></div>';
+    const verified=row.labor_readiness?.facts.cost.eligible_for_preview===true,ratio=verified&&d.sales>0?d.labor_percent:null;
+    return '<div class="la-budget-result" data-la-budget-result><div><span>Historical known cost components</span><strong>'+money2(d.total_cost)+'</strong><small>'+E(referenceCostLabel(row))+'</small></div><div><span>Labor % of projected sales</span><strong>'+percent(ratio)+'</strong><small>'+E(d.labor_percent==null?percentMissing(d):verified?'Source inputs verified for scenario only':'Historical cost inputs need review')+'</small></div><div><span>Affordable hours</span><strong>'+(verified&&d.sales>0?number(d.affordable_hours)+' h':'Withheld')+'</strong></div><p>'+E(number(d.budget_hours)+' reference hours minus '+number(d.salaried_hours)+' payroll-equivalent salaried hours; this is not the salary shift-hours measure. Shared leadership allocation '+(row.config.weekly_shared_leadership_cost==null?'is unknown and excluded from the known-components estimate.':'is included as recorded.'))+'</p></div>';
   }
-  // "How we got N hours": the budget math in plain language, every number with its source.
+
   function derivationBody(row,decision){
     const d=Core.budgetDerivation(row.config,decision),ev=row.economics_evidence,revenue=d.planning_mode==="revenue",step=(text,src)=>'<li><span class="la-math">'+text+'</span>'+(src?'<small>'+src+'</small>':'')+'</li>';
     if(d.sales==null)return '<p>Enter last week’s sales to see the labor math.</p>';
@@ -452,7 +451,7 @@
   function renderScheduleBuilder(row,decision,isConfirmed){
     const roster=row.roster?.people||[],items=assignments(row),day=decision.envelope[activeDay]||decision.envelope[0],dayItems=items.filter(item=>item.day===activeDay).sort((a,b)=>a.start.localeCompare(b.start)),assigned=dayItems.reduce((sum,item)=>sum+assignmentHours(item),0),weeklyAssigned=items.reduce((sum,item)=>sum+assignmentHours(item),0),budget=Number(decision.decision.hours||0),remaining=Number(day.hours||0)-assigned,weeklyRemaining=budget-weeklyAssigned,daysOnTarget=decision.envelope.filter((entry,index)=>entry.open&&Math.abs(items.filter(item=>item.day===index).reduce((sum,item)=>sum+assignmentHours(item),0)-Number(entry.hours||0))<=.5).length,openDays=decision.envelope.filter(entry=>entry.open).length;
     const salariedNames=new Set((row.config.labor_model?.salaried_names||[]).map(x=>x.toLowerCase())),isSalaried=name=>salariedNames.has(String(name||"").toLowerCase()),salariedPlaced=items.filter(item=>isSalaried(item.employee)).reduce((sum,item)=>sum+assignmentHours(item),0);
-    const live=Core.budgetDerivation(row.config,{...decision,decision:{...decision.decision,hours:weeklyAssigned}}),liveLine=items.length&&live.total_cost!=null&&live.sales?' · est. labor '+money(live.total_cost)+' = '+percent(live.labor_percent)+' of projected sales':'';
+    const hourMeasures=Core.laborHourMeasures(row.config,items),live=Core.budgetDerivation({...row.config,salaried_schedule_hours:salariedPlaced},{...decision,decision:{...decision.decision,hours:weeklyAssigned}}),salaryComparable=hourMeasures.salary_measures_match===true,liveLine=items.length&&salaryComparable&&live.total_cost!=null&&live.sales?' · est. labor '+money(live.total_cost)+' = '+percent(live.labor_percent)+' of projected sales':'';
     const initials=name=>E(String(name).split(/\s+/).map(x=>x[0]).slice(0,2).join(""));
     const overBanner=!isConfirmed&&items.length&&weeklyRemaining<-0.5?'<div class="la-over-budget"><div><b>'+number(Math.abs(weeklyRemaining))+' h over your '+number(budget)+' h budget</b><span>Trim builds a version at or under budget by removing overlapping shifts first and shortening shifts where two people overlap. Single-coverage hours are never left empty.</span></div><button type="button" class="btn btn-primary" data-la-fit-budget>Trim to '+number(budget)+' h</button></div>':'';
     const filtered=roster.filter(person=>!rosterSearch||[person.name,person.role,...(person.tags||[])].join(" ").toLowerCase().includes(rosterSearch.toLowerCase()));
@@ -484,7 +483,7 @@
     const open=row.schedule_open??(items.length>0),pct=v=>Math.max(0,Math.min(100,v));
     const railInfo=info("the team list","Team from the latest Gusto payroll and the When I Work export. Start times shown are each person’s most common shift start in the imported When I Work export"+(period?" "+date(period.start)+"–"+date(period.end):"")+", not their availability. "+(row.roster?.template_source||"")+(row.roster?.source?" · "+row.roster.source:""));
     return '<details class="la-schedule-builder" id="la-schedule" data-la-schedule-panel '+(open?'open':'')+'><summary><span class="la-step-number">3</span><span><b>Schedule</b> <small>Optional · '+(items.length?number(weeklyAssigned)+' of '+number(budget)+' h placed':row.roster&&!row.roster_loading&&!roster.length?'no When I Work roster imported yet':'not started')+'</small></span></summary>'+
-      '<header class="la-sb-head"><div><p>Shape the week day by day. The manager confirms availability and publishes in When I Work; FranWallet never changes When I Work.</p>'+source+'</div><div class="la-weekly-progress" aria-live="polite"><strong>'+number(weeklyAssigned)+' / '+number(budget)+' h</strong><span class="la-wp-bar" aria-hidden="true"><i class="'+(weeklyRemaining<-0.5?'over':'')+'" style="width:'+pct(budget?weeklyAssigned/budget*100:0)+'%"></i></span><span>'+(weeklyRemaining>=0?number(weeklyRemaining)+' h left':number(Math.abs(weeklyRemaining))+' h over')+' · '+daysOnTarget+' of '+openDays+' open days on target'+E(liveLine)+(items.length&&live.total_cost!=null?info("schedule labor","("+number(weeklyAssigned)+" h placed − "+number(live.salaried_hours)+" salaried h) × "+money2(live.crew_rate)+" crew cost per hour + "+money(live.fixed_leadership)+" salaried cost = "+money(live.total_cost)+"; ÷ "+money(live.sales)+" projected sales = "+percent(live.labor_percent)+". Tips excluded. Updates as you add, edit or remove shifts."):'')+'</span>'+(salariedNames.size?'<small>Includes '+number(salariedPlaced)+' h for salaried staff ('+E([...(row.config.labor_model.salaried_names)].join(', '))+'). Their pay is the weekly salaried cost, not the crew rate; their hours still count toward the budget.</small>':'')+'</div></header>'+overBanner+starts+
+      '<header class="la-sb-head"><div><p>Shape the week day by day. The manager confirms availability and publishes in When I Work; FranWallet never changes When I Work.</p>'+source+'</div><div class="la-weekly-progress" aria-live="polite"><strong>'+number(weeklyAssigned)+' / '+number(budget)+' h</strong><span class="la-wp-bar" aria-hidden="true"><i class="'+(weeklyRemaining<-0.5?'over':'')+'" style="width:'+pct(budget?weeklyAssigned/budget*100:0)+'%"></i></span><span>'+(weeklyRemaining>=0?number(weeklyRemaining)+' h left':number(Math.abs(weeklyRemaining))+' h over')+' · '+daysOnTarget+' of '+openDays+' open days on target'+E(liveLine)+(items.length&&salaryComparable&&live.total_cost!=null?info("schedule labor","("+number(weeklyAssigned)+" h placed − "+number(live.salaried_hours)+" salaried h) × "+money2(live.crew_rate)+" crew cost per hour + "+money(live.fixed_leadership)+" salaried cost = "+money(live.total_cost)+"; ÷ "+money(live.sales)+" projected sales = "+percent(live.labor_percent)+". Tips excluded. Updates as you add, edit or remove shifts."):'')+'</span>'+(salariedNames.size?'<small>Pattern includes '+number(salariedPlaced)+' salaried shift hours, distinct from '+number(row.config.salaried_schedule_hours)+' payroll-equivalent hours in the historical cost model. Cost comparison is withheld when these measures differ.</small>':'')+'</div></header>'+overBanner+starts+
       '<nav class="la-day-tabs" aria-label="Schedule days">'+decision.envelope.map((entry,index)=>{const total=items.filter(item=>item.day===index).reduce((sum,item)=>sum+assignmentHours(item),0),done=entry.open&&Math.abs(total-Number(entry.hours||0))<=.5,over=entry.open&&total-Number(entry.hours||0)>.5;return '<button type="button" data-la-day="'+index+'" class="'+(activeDay===index?'active ':'')+(done?'complete'+(completedBefore.has(index)?'':' just-complete'):over?'over':'')+'" '+(!entry.open?'disabled':'')+'><span>'+E(entry.day.slice(0,3))+'</span><small>'+(entry.open?number(total)+' / '+number(entry.hours)+' h':'Closed')+'</small>'+(entry.open?'<i class="la-tab-bar" aria-hidden="true"><b style="width:'+pct(entry.hours?total/entry.hours*100:0)+'%"></b></i>':'')+'</button>';}).join("")+'</nav>'+
       '<div class="la-day-summary" aria-live="polite" data-la-day-summary><div><span>'+E(day.day)+' target</span><strong>'+number(day.hours)+' hours</strong></div><div><span>Assigned</span><strong>'+number(assigned)+' hours</strong></div><div class="'+(remaining<0?'over':'')+'"><span>'+(remaining<0?'Over target':'Remaining')+'</span><strong>'+number(Math.abs(remaining))+' hours</strong></div>'+(gapHours?'<div class="gap"><span>Coverage gap</span><strong>'+gapHours+' h with nobody on</strong></div>':'')+'<div class="la-day-progress"><i style="width:'+Math.min(100,day.hours?(assigned/day.hours)*100:0)+'%" class="'+(remaining<0?'over':'')+'"></i></div></div>'+
       (()=>{if(isConfirmed||!day.open||!items.length)return "";const gap=gapSuggestion(roster,day.day,dayItems,remaining);
@@ -511,12 +510,14 @@
       '</ol></section>';
   }
   // Pinned plan summary: the answer and the save action stay in view while the operator works down the page.
+  function percentMissing(d){return d.percent_unavailable_reason==='crew_cost_missing'?'Labor % needs a crew cost':d.percent_unavailable_reason==='salaried_cost_missing'?'Labor % needs salaried cost':'Labor % needs projected sales';}
+  function referenceCostLabel(row){return 'Historical input estimate · source '+(row.config.measured_cost_as_of||'date unrecorded')+' · not a validated budget'+(row.config.weekly_shared_leadership_cost==null?' · shared allocation unconfirmed':'');}
   function planBar(row,decision,d=Core.budgetDerivation(row.config,decision)){
     const isConfirmed=row.run?.status==="confirmed",goal=d.goal_percent??row.config.target_labor_percent,pct=d.labor_percent,hours=Number(decision.decision.hours),floor=Number(row.config.minimum_hours??110),
       placed=assignments(row).reduce((x,i)=>x+assignmentHours(i),0),
       tone=pct==null?'':pct<=goal+0.05?'ok':hours<=floor+0.01?'floor':'warn',
-      chip=pct==null?'Labor % needs a crew cost':tone==='ok'?'Within '+percent(goal)+' goal':tone==='floor'?'At the '+number(floor)+' h floor':number(Math.round((pct-goal)*10)/10)+' pts above '+percent(goal)+' goal';
-    return '<aside class="la-planbar" data-la-planbar aria-label="Plan summary"><div class="la-pb-store"><b>'+E(row.wallet.name.replace(/^Crumbl\s*[—-]\s*/,''))+'</b><small>'+E(date(week)+' – '+date(add(week,6)))+'</small></div><dl><div><dt>Projected sales</dt><dd>'+money(d.sales)+'</dd></div><div><dt>Hour budget</dt><dd>'+number(hours)+' h</dd></div><div><dt>Labor at budget</dt><dd>'+money(d.total_cost)+(pct!=null?' · '+percent(pct):'')+'</dd></div>'+(placed?'<div><dt>Scheduled</dt><dd>'+number(placed)+' / '+number(hours)+' h</dd></div>':'')+'</dl><span class="la-pb-chip '+tone+'">'+E(chip)+'</span>'+(isConfirmed?'<span class="la-pb-chip ok">Approved</span>':'<button type="button" class="btn btn-primary" data-la-planbar-save>Save</button>')+'</aside>';
+      chip=pct==null?percentMissing(d):tone==='ok'?'Within '+percent(goal)+' goal':tone==='floor'?'At the '+number(floor)+' h floor':number(Math.round((pct-goal)*10)/10)+' pts above '+percent(goal)+' goal';
+    return '<aside class="la-planbar" data-la-planbar aria-label="Plan summary"><div class="la-pb-store"><b>'+E(row.wallet.name.replace(/^Crumbl\s*[—-]\s*/,''))+'</b><small>'+E(date(week)+' – '+date(add(week,6)))+'</small></div><dl><div><dt>Projected sales</dt><dd>'+money(d.sales)+'</dd></div><div><dt>Hour budget</dt><dd>'+number(hours)+' h</dd></div><div><dt>Historical cost at reference hours</dt><dd>'+money(d.total_cost)+(pct!=null?' · '+percent(pct):'')+'</dd></div>'+(placed?'<div><dt>Scheduled</dt><dd>'+number(placed)+' / '+number(hours)+' h</dd></div>':'')+'</dl><span class="la-pb-chip '+tone+'">'+E(chip)+'<small>'+E(referenceCostLabel(row))+'</small></span>'+(isConfirmed?'<span class="la-pb-chip ok">Approved</span>':'<button type="button" class="btn btn-primary" data-la-planbar-save>Save</button>')+'</aside>';
   }
   function portfolioBrief() {
     return (
@@ -729,7 +730,7 @@
             (f?.estimated_labor_percent != null
               ? percent(f.estimated_labor_percent) + " of sales"
               : "") +
-            (f?.estimated_labor_percent != null ? "" : "labor % needs a crew cost") +
+            (f?.estimated_labor_percent != null ? "" : !plan.forecast?.sales?"labor % needs projected sales":"labor % inputs need review") +
             (plan.model.review_required ? " · review needed" : "") +
             "</small></td><td><strong>" +
             scheduleCell(row, plan) +
@@ -757,13 +758,13 @@
   // The answer first: next week's plan for this store, what was done for the operator, and one approve action.
   function heroPlan(row, decision, isConfirmed, d = Core.budgetDerivation(row.config, decision)) {
     const items = assignments(row), placed = items.reduce((x, i) => x + assignmentHours(i), 0), hours = Number(decision.decision.hours), goal = d.goal_percent ?? row.config.target_labor_percent, within = d.labor_percent != null && d.labor_percent <= goal + 0.05, f = decision.forecast, planForm = page.querySelector("#la-plan-form"), base = (planForm?.dataset.wallet === row.wallet.id && Number(planForm.elements.last_week_sales?.value)) || f.base_sales || null, adj = base && d.sales ? Math.round((d.sales / base - 1) * 1000) / 10 : 0, cs = row.closed_week_sales;
-    const kicker = isConfirmed ? "Approved" : row.autodrafted ? "Drafted for you" : row.run ? "Your saved draft" : "Recommended plan";
+    const kicker = isConfirmed ? "Approved" : row.autodrafted ? "Drafted for you" : row.run ? "Your saved draft" : "Stored reference hours · no approved outlook";
     const checks = [
-      ["Sales", base != null ? money(base) + (cs && Math.abs(Number(cs.sales) - Number(base)) < 0.01 ? " last closed week" : " starting point") + " · " + (adj ? (adj > 0 ? "+" : "−") + number(Math.abs(adj)) + "%" : "flat") + " → " + money(d.sales) : "Enter last week’s total to start"],
+      ["Sales", base != null ? money(base) + (cs && Math.abs(Number(cs.sales) - Number(base)) < 0.01 ? " last closed week" : " starting point") + " · " + (d.sales==null?"outlook not selected":(adj ? (adj > 0 ? "+" : "−") + number(Math.abs(adj)) + "%" : "explicit flat outlook") + " → " + money(d.sales)) : "Enter last week’s total to start"],
       ["Hours", number(hours) + " h · " + (bindingLabel[d.binding] || "store framework") + " · floor " + number(d.floor_hours ?? row.config.minimum_hours) + " h"],
       ["Schedule", items.length ? number(placed) + " of " + number(hours) + " h · " + items.length + " shifts" + (row.autodrafted ? " from last week’s When I Work schedule" : "") : "Not started · optional"],
     ];
-    return '<section class="la-hero-plan' + (row.autodrafted && !isConfirmed ? " drafted" : "") + '" data-la-hero aria-labelledby="la-hp-title"><div class="la-hp-copy"><span class="la-hp-kicker">' + (row.autodrafted && !isConfirmed ? '<i aria-hidden="true">✦</i>' : "") + E(kicker) + " · " + E(date(week) + " – " + date(add(week, 6))) + '</span><h2 id="la-hp-title">' + number(hours) + " hours" + '</h2><p class="la-hp-metrics"><span><b>' + money(d.total_cost) + "</b> labor</span><span><b>" + percent(d.labor_percent) + "</b> of " + money(d.sales) + " projected</span>" + (d.labor_percent != null && goal != null ? '<em class="la-goal-chip ' + (within ? "ok" : "warn") + '">' + (within ? "Within " + percent(goal) + " goal" : number(Math.round((d.labor_percent - goal) * 10) / 10) + " pts above goal") + "</em>" : "") + '</p><ul class="la-hp-checks">' + checks.map(([k, v]) => "<li><b>" + k + "</b><span>" + E(v) + "</span></li>").join("") + '</ul></div><div class="la-hp-actions">' + (isConfirmed ? '<span class="la-pb-chip ok">Approved</span><button type="button" class="btn btn-ghost" data-la-goto="la-step-save">Send to the manager</button>' : '<button type="button" class="btn btn-primary la-hp-approve" data-la-hero-approve>Approve plan</button><button type="button" class="la-link-btn" data-la-goto="la-step-outlook">Review the details</button>') + "</div></section>";
+    return '<section class="la-hero-plan' + (row.autodrafted && !isConfirmed ? " drafted" : "") + '" data-la-hero aria-labelledby="la-hp-title"><div class="la-hp-copy"><span class="la-hp-kicker">' + (row.autodrafted && !isConfirmed ? '<i aria-hidden="true">✦</i>' : "") + E(kicker) + " · " + E(date(week) + " – " + date(add(week, 6))) + '</span><h2 id="la-hp-title">' + number(hours) + " hours" + '</h2><p class="la-hp-metrics"><span><b>' + money(d.total_cost) + "</b> historical-input estimate</span><span><b>" + percent(d.labor_percent) + "</b> of " + money(d.sales) + " projected</span>" + (d.labor_percent != null && goal != null ? '<em class="la-goal-chip ' + (within ? "ok" : "warn") + '">' + (within ? "Within " + percent(goal) + " goal" : number(Math.round((d.labor_percent - goal) * 10) / 10) + " pts above goal") + "</em>" : "") + '</p><p>'+E(referenceCostLabel(row))+'</p><ul class="la-hp-checks">' + checks.map(([k, v]) => "<li><b>" + k + "</b><span>" + E(v) + "</span></li>").join("") + '</ul></div><div class="la-hp-actions">' + (isConfirmed ? '<span class="la-pb-chip ok">Approved</span><button type="button" class="btn btn-ghost" data-la-goto="la-step-save">Send to the manager</button>' : '<button type="button" class="btn btn-primary la-hp-approve" data-la-hero-approve>Approve plan</button><button type="button" class="la-link-btn" data-la-goto="la-step-outlook">Review the details</button>') + "</div></section>";
   }
   // Why trust it: this store's own recent weeks, the sources, and how last week went.
   function trustRail(row) {
@@ -816,7 +817,7 @@
   }
   // One-sentence explanation at the decision point: what the outlook changes and what it does not.
   function impactText(row, decision, sales) {
-    if (!(sales > 0)) return "Enter the starting sales to see the projection.";
+    if (!(sales > 0)) return "Choose an explicit sales outlook to see a projection; historical sales alone do not approve one.";
     const hours = Number(decision.decision.hours);
     if (row.config.planning_mode === "revenue") {
       const r = Core.budgetDerivation(row.config, { ...decision, forecast: { ...decision.forecast, sales } }), at = Core.budgetDerivation(row.config, { ...decision, forecast: { ...decision.forecast, sales }, decision: { ...decision.decision, hours: r.recommended_hours } });
@@ -865,6 +866,8 @@
       'Payroll: '+f.payroll.availability+(f.payroll.latest?.period.end?' · through '+f.payroll.latest.period.end:''),
       'Schedule: '+f.schedule.availability+(f.schedule.source_period?.end?' · through '+f.schedule.source_period.end:'')+' · '+(f.schedule.covers_requested_week?'covers requested week':'requested week not covered'),
       'Saved plans: '+f.saved_runs.length+' recent records; existing projections are not current actuals',
+      f.hour_measures?'Distinct hours: framework '+number(f.hour_measures.framework_budget_hours)+' h; stored policy floor '+number(f.hour_measures.stored_policy_floor_hours)+' h; source outline '+number(f.hour_measures.source_outline_hours)+' h; imported pattern '+number(f.hour_measures.placed_pattern_hours)+' h (unchanged)':'Hour source comparison not exposed',
+      f.hour_measures?'Salary measures: '+number(f.hour_measures.cost_model_salaried_payroll_equivalent_hours)+' payroll-equivalent h versus '+number(f.hour_measures.pattern_salaried_shift_hours)+' imported pattern shift h; separate measures, no inferred equality':'Salary source comparison not exposed',
       o?'Latest complete observed sales: '+money2(o.net_sales)+' · '+o.source_period.start+'–'+o.source_period.end+' · '+o.status+' · finalization '+(o.source_finalized===true?'verified':'unverified'):'No usable recent complete observation',
       'Overtime workweek: '+(r.overtime_workweek?r.overtime_workweek.timezone+' · start day '+r.overtime_workweek.start_day:'not confirmed; separate from sales and schedule periods')
     ].map(x=>'<li>'+E(x)+'</li>').join('')+'</ul>'+(r.gaps.length?'<h3>Decisions still needed</h3><ul>'+r.gaps.map(g=>'<li>'+E(g.decision)+'</li>').join('')+'</ul><p>Budget preview withheld. Existing snapshots and default hour floors are not substituted.</p>':'<p>Verified inputs support an explicit scenario; no plan will be saved.</p><form data-la-budget-preview><fieldset ' + (busy?'disabled':'') + '><label><input type="checkbox" name="use_latest_observation" ' + (row.readiness_request?.use_latest_observation?'checked':'') + ' required> Use this exact observed sales period as a provisional baseline</label><label>Sales outlook % <input type="number" name="adjustment_percent" min="-90" max="100" step="0.1" value="' + E(row.readiness_request?.adjustment_percent??'') + '" required></label><button type="submit">Preview without saving</button></fieldset></form>')+(row.readiness_preview?'<div data-la-preview-result><p role="status"><strong>Non-persisted scenario</strong> · projected sales '+money2(row.readiness_preview.projected_net_sales)+' · labor dollars '+money2(row.readiness_preview.labor_budget_dollars)+' · affordable total hours '+number(row.readiness_preview.affordable_total_hours)+' · '+(row.readiness_preview.coverage_floor_affordable?'coverage floor affordable':'coverage shortfall; review required')+'</p><ul>'+row.readiness_preview.assumptions.map(a=>'<li>'+E(a)+'</li>').join('')+'</ul></div>':'')+'<button type="button" data-la-readiness>Refresh input check</button></section>';
@@ -901,7 +904,7 @@
         ? "Historical reference from " + date(priorMeta.start) + "–" + date(priorMeta.end) + ". The requested prior week has not closed. Treat this as a provisional forecast and refresh before final approval."
         : priorMeta.complete
         ? "Pulled automatically from " + date(priorMeta.start) + "–" + date(priorMeta.end) + " · " + priorMeta.source
-        : "Crumbl Internal has not supplied a complete closed week yet" + (priorMeta.days != null && priorMeta.expected ? " (" + priorMeta.days + " of " + priorMeta.expected + " days closed" + (priorMeta.missing_days?.length ? "; " + priorMeta.missing_days.join(", ") + " missing" : "") + ")" : "") + ". Enter the Monday–Saturday total to plan; it will be labeled operator-set.",
+        : "Crumbl Internal has not supplied a complete closed week yet" + (priorMeta.days != null && priorMeta.expected ? " (" + priorMeta.days + " of " + priorMeta.expected + " days closed" + (priorMeta.missing_days?.length ? "; " + priorMeta.missing_days.join(", ") + " missing" : "") + ")" : "") + ". Enter an exact Sunday–Saturday source total to plan; it will be labeled operator-set.",
       salesKnown = decision.forecast.sales != null,
       closedSales = row.closed_week_sales?.complete && Number(row.closed_week_sales.sales) > 0 ? row.closed_week_sales : priorMeta.complete && !["projection", "workbook_actual"].includes(priorMeta.kind) && Number(priorMeta.sales) > 0 ? priorMeta : null,
       baselines = [
@@ -1141,7 +1144,7 @@
       adjustment = selectedChange(form),
       imported =
         form.dataset.priorImported === "true" &&
-        detail.prior_week_sales?.complete &&
+        currentSales(detail) &&
         Math.abs(last - Number(detail.prior_week_sales.sales)) < 0.01,
       enteredHours = Number(form.elements.hours.value),
       liveRec = detail.config.planning_mode === "revenue" ? Core.budgetDerivation(detail.config, liveDecision(detail.run?.plan || detail.preview, form)).recommended_hours : null,
@@ -1203,22 +1206,7 @@
       finally { row.history_loading = false; }
     }
     // The operator may have moved on while the roster loaded.
-    if (detail === row) { render(); autoDraft(row); }
-  }
-  // Done for you: with no saved draft, take Fran's outlook, keep the recommended hours and start from this store's
-  // latest When I Work week trimmed to budget. Nothing is saved until the operator approves or saves.
-  function autoDraft(row) {
-    if (row.run || row.autodraft_tried || detail !== row || window.navigator?.webdriver || !(priorValue(row,row.preview)>0)) return;
-    row.autodraft_tried = true;
-    const form = page.querySelector("#la-plan-form"); if (!form || form.elements.last_week_sales?.disabled) return;
-    const suggest = page.querySelector("[data-la-use-suggestion]");
-    if (suggest) suggest.click(); else { const flat = form.querySelector('[name=direction][value="same"]'); if (flat) { flat.checked = true; flat.dispatchEvent(new Event("input", { bubbles: true })); } }
-    row.autodrafted = true;
-    if (!assignments(row).length && row.roster?.imported_template?.assignments?.length) { row.start_choice = "imported"; page.querySelector("[data-la-load-start]")?.click(); }
-    else render();
-    const placed = assignments(row).reduce((x, i) => x + assignmentHours(i), 0), budget = Number(page.querySelector("#la-plan-form [name=hours]")?.value) || 0, short = Math.round((budget - placed) * 10) / 10;
-    message = row.schedule_fit ? "Drafted from last week’s When I Work schedule (" + number(placed) + " h)." + (short > 0.5 ? " You have " + number(short) + " h of room to add where you need it, or keep it lean." : " Review and approve.") : "Drafted for you from the recommendation. Review and approve.";
-    errorMessage = ""; showToast();
+    if (detail === row) { render(); }
   }
   async function saveDraft(form, note, input = values(form)) {
     const
@@ -1271,13 +1259,13 @@
     const payroll=ev?new Date(ev.period_start+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",timeZone:"UTC"})+" payroll":"latest payroll";
     return [
       {sel:".la-provenance",title:"Your numbers are already in",body:"Pulled from the systems you use. Nothing to type.",math:["Point of sale","When I Work","Gusto","Your rules"]},
-      {sel:"#la-step-outlook .la-field",title:"Start: "+money(base),body:cs?.start?"Last closed week’s net sales.":"Last week’s Monday–Saturday sales.",tag:{label:"Point of sale",detail:cs?.start?sd(cs.start)+"–"+sd(cs.end):"closed week"}},
+      {sel:"#la-step-outlook .la-field",title:"Start: "+money(base),body:cs?.start?"Last closed week’s net sales.":"Latest available complete Sunday–Saturday sales.",tag:{label:"Point of sale",detail:cs?.start?sd(cs.start)+"–"+sd(cs.end):"closed week"}},
       {sel:"#la-step-outlook fieldset",title:"Make one call",body:"Up, flat or down for next week? Pick one now.",waitFor:"change",ready:()=>{const f=page.querySelector("#la-plan-form"),dir=f?.querySelector("[name=direction]:checked")?.value,pct=f?.querySelector("[name=change_percent]:checked")?.value;return dir==="same"||(!!pct&&(pct!=="custom"||Number(f.elements.custom_percent.value)>0));}},
       {sel:".la-projection",title:"Projected: "+money(d.sales),body:"Everything below follows this number.",math:[money(base),adj===0?"flat":(adj>0?"+":"−")+number(Math.abs(adj))+"%","= "+money(d.sales)],count:["[data-la-projection]"]},
       {sel:".la-rec",title:"Recommended: "+number(d.recommended_hours)+" h",body:d.binding==="lean_check"?"Last week’s staffing, scaled to sales, came in lower, so that wins.":d.binding==="floor"?"The target allows less, so the 110 h floor holds.":"What your labor target affords, never below the floor.",math:d.binding==="lean_check"&&d.lean_hours!=null?[number(d.lean.hours)+" h last week","× "+money(d.sales)+" ÷ "+money(d.lean.sales),"= "+number(d.lean_hours)+" h","→ "+number(d.recommended_hours)+" h"]:d.crew_rate!=null&&d.sales!=null?[money(d.sales),"× "+percent(d.goal_percent)].concat(d.fixed_leadership>0?["− "+money(d.fixed_leadership)+" salary"]:[],["÷ "+money2(d.crew_rate)+"/h"],d.salaried_hours>0?["+ "+number(d.salaried_hours)+" salaried h"]:[],["= "+number(d.affordable_hours)+" h"],d.binding==="floor"?["floor "+number(d.floor_hours)+" h"]:[],["→ "+number(d.recommended_hours)+" h"]):null,tag:{label:"Gusto",detail:payroll+" · tips excluded"},count:[".la-rec strong"]},
       {sel:".la-wiw",title:w.hours==null?"When I Work: nothing yet":w.hours===0&&w.unpublished>0?"Why it says 0 h":number(w.hours)+" h already published",body:w.hours==null?"No schedule imported for this week yet. You’ll build one below.":w.hours===0&&w.unpublished>0?number(w.unpublished)+" h are drafted but not published. Drafts can change, so they don’t count yet.":"Compare it with your budget on the bar.",tag:{label:"When I Work",detail:w.imported?"imported "+sd(w.imported):"schedule export"}},
       {sel:".la-budget-builder",title:"Your call on hours",body:"Change the number and labor % updates instantly. Under goal is fine.",math:[number(live.decision.hours)+" h","= "+money(d.total_cost),percent(d.labor_percent)+" of sales"],count:["[data-la-labor-cost]","[data-la-labor-percent]"]},
-      {sel:"#la-schedule > header",open:"la-schedule",title:"Build the schedule",body:items.length?"Go day by day with Next. Labor % tracks what’s on screen.":"Start from last week’s When I Work schedule, trimmed to budget.",action:!items.length&&r.imported_template?.assignments?.length?{label:"Load last week’s schedule",run:()=>{const radio=page.querySelector('[data-la-start-choice][value="imported"]');if(radio)radio.checked=true;page.querySelector("[data-la-load-start]")?.click();}}:null},
+      {sel:"#la-schedule > header",open:"la-schedule",title:"Build the schedule",body:items.length?"Go day by day with Next. Labor % tracks what’s on screen.":"Review an unchanged historical When I Work pattern; availability and coverage still need verification.",action:!items.length&&r.imported_template?.assignments?.length?{label:"Load last week’s schedule",run:()=>{const radio=page.querySelector('[data-la-start-choice][value="imported"]');if(radio)radio.checked=true;page.querySelector("[data-la-load-start]")?.click();}}:null},
       {sel:"[data-la-planbar]",title:"Always in view",body:"Budget, labor % and Save stay pinned here."},
       {sel:"#la-step-save",title:"Approve and hand off",body:"Approve, save, send the brief, next store. The manager publishes in When I Work.",math:["Approve","Save","Send brief","Next store"]}
     ];
@@ -1529,12 +1517,11 @@
       render();
     });
     const applyStartingPoint=(source,label)=>{
-      const base=detail.run?.plan||detail.preview,typed=Number(page.querySelector("#la-plan-form [name=hours]")?.value),ratio=typed>0&&base.decision.hours?typed/Number(base.decision.hours):1,target=ratio===1?base:{...base,decision:{...base.decision,hours:typed},envelope:base.envelope.map(e=>({...e,hours:Math.round(e.hours*ratio*2)/2}))};
-      const original=templateAssignments(source),fit=FranLaborAgentCore.fitScheduleToBudget(detail.config,target,original);
-      detail.schedule_original=original;detail.schedule_fit=fit;detail.schedule_source_label=label+" ("+original.length+" shifts), trimmed toward the budget";
-      detail.assignments=fit.assignments;
+      const original=templateAssignments(source);
+      detail.schedule_original=original.map(s=>({...s}));detail.schedule_fit=null;detail.schedule_source_label=label+' · unchanged historical pattern';
+      detail.assignments=original.map(s=>({...s}));
       freshIds=new Set(detail.assignments.filter(item=>item.day===activeDay).map(item=>item.id));
-      message=label+" loaded. Built a "+fit.review.hours+" h candidate. "+(fit.within_budget?"Within budget; availability and coverage require review.":"Review conflicts: "+fit.conflicts.join("; "));
+      message=label+' loaded unchanged for explicit review. No outlook selected or shifts trimmed; availability, coverage and workweek remain unverified.';
       render();
     };
     // Shift editing: one inline form for add and edit. Drag-and-drop is a shortcut, never required.

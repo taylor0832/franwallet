@@ -45,7 +45,7 @@ window.addEventListener('fran:readiness',e=>{if(!current||current.wallet.access_
    through grants lands on a store they can open, never on an owner's portfolio they can't load. */
 (()=>{'use strict';
 const prior=typeof loadWallets==='function'?loadWallets:null;if(!prior)return;
-const DEEP=['team_wallet','billing_wallet','location','wallet','qbo','gusto','plaid','service_view','oauth_state_id'];
+const DEEP=['team_wallet','billing_wallet','location','wallet','qbo','gusto','plaid','service_view','service_return','service_canceled','oauth_state_id'];
 function land(){if(typeof ME==='undefined'||!ME?.id||typeof WALLETS==='undefined')return;
  /* No location yet: Home shows an example Wallet and a prompt to start (fran-journey.js). */
  window.FRAN_FIRST_RUN=typeof WALLETS_LIVE!=='undefined'&&WALLETS_LIVE&&!WALLETS.length;
@@ -54,7 +54,7 @@ function land(){if(typeof ME==='undefined'||!ME?.id||typeof WALLETS==='undefined
  /* Grant-only access: the portfolio view only rolls up owned stores, so open a store they can see. */
  if(!own.length&&WALLETS.length&&(WALLET_ID==='all'||!WALLETS.some(w=>w.id===WALLET_ID)))WALLET_ID=WALLETS[0].id;
  if(!fresh)return;
- const q=new URLSearchParams(location.search);if(DEEP.some(p=>q.has(p)))return;
+ const q=new URLSearchParams(location.search);if(DEEP.some(p=>q.has(p))||window.FranEntry?.routeContext?.(location.search,location.hash)?.kind!=='home')return;
  try{if(localStorage.getItem('fran-service-route'))return}catch(_){}
  if(ownStores.length>1){WALLET_ID='all';window.FRAN_LANDED_PORTFOLIO=true}}
 window.loadWallets=async function(...a){const r=await prior.apply(this,a);try{land()}catch(_){}return r};

@@ -2045,6 +2045,7 @@ body.demo-active .main{padding-top:104px}
 </style>
 <link rel="stylesheet" href="fran-public.css?v=20261005-s1">
 <script src="fran-analytics-privacy.js?v=20261002-1"></script>
+<link rel="stylesheet" href="fran-entry.css?v=20261028-entry-local-2"><script src="fran-entry.js?v=20261028-entry-local-2"></script>
 </head>
 <body>
 
@@ -4639,7 +4640,7 @@ const SERVICES={
 /* =====================================================================
    SCREEN / NAV PRIMITIVES
    ===================================================================== */
-function go(id){if(id==='s-signup'){location.href='wallet.html';return;}document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function go(id){if(id==='s-signup'){window.FranEntry.openChoice();return;}document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
 
 function switchTab(name,el){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));

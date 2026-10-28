@@ -120,7 +120,7 @@ function shell(){if(dialog)return dialog
 dialog=document.createElement('dialog');dialog.id='fran-journey';dialog.className='fj';dialog.setAttribute('aria-label','Set up your Wallet with Fran')
 dialog.innerHTML='<div class="fj-top"><span class="fj-brand"><b>F.</b> Set up with Fran</span><span class="fj-phase" data-fj-phase></span><button type="button" class="fj-exit" data-fj-exit>Save & exit</button></div><div class="fj-main"><section class="fj-chat"><div class="fj-log" role="log" aria-live="polite" aria-label="Setup conversation"></div><div class="fj-turn" data-fj-turn></div></section><aside class="fj-wallet" aria-label="Your Wallet, as it comes together"></aside></div>'
 dialog.addEventListener('cancel',e=>{if(phase==='create'&&busy)e.preventDefault()})
-dialog.addEventListener('close',()=>{showPill();renderHome();metric('journey_closed',{phase,ready:loc?readyCount():0})})
+dialog.addEventListener('close',()=>{if(phase==='create')window.FranEntry?.pause(memberId());showPill();renderHome();metric('journey_closed',{phase,ready:loc?readyCount():0})})
 dialog.querySelector('[data-fj-exit]').onclick=()=>{if(phase==='create'&&!loc?.wallet){if(!confirm('Leave setup? Your location hasn’t been created yet.'))return}dialog.close()}
 document.body.append(dialog);return dialog}
 const log=()=>dialog.querySelector('.fj-log'),turn=()=>dialog.querySelector('[data-fj-turn]')
@@ -163,28 +163,31 @@ const draftKey=()=>'fran_journey_draft:'+(memberId()||'signed-out')
 function keepDraft(){try{sessionStorage.setItem(draftKey(),JSON.stringify(draft))}catch(_){}}
 function priorDraft(){try{const d=JSON.parse(sessionStorage.getItem(draftKey())||'null');return d&&typeof d==='object'&&!Array.isArray(d)&&typeof d.name==='string'&&d.name.trim()?d:null}catch(_){return null}}
 function dropDraft(){try{sessionStorage.removeItem(draftKey())}catch(_){}}
-async function create(){phase='create';shell();log().innerHTML='';clearTurn();draft={};stepKey=null;setPhase('Launch your business · Your starting point');renderWallet();if(!dialog.open)dialog.showModal()
+async function create(){if(busy||dialog?.open&&phase==='create')return;phase='create';shell();log().innerHTML='';clearTurn();draft={};stepKey=null;setPhase('Launch your business · Your starting point');renderWallet();if(!dialog.open)dialog.showModal()
 metric('journey_started',{phase:'create'})
-const prior=priorDraft()
+let entry;try{entry=await window.FranEntry.claim(memberId());window.FRAN_ENTRY_FLOW=entry;}catch(e){await say(E(e.message));return}
+const savedDraft=priorDraft(),prior=savedDraft?.flowId===entry.id?savedDraft:null;
 await say('<strong>Your next chapter starts here.</strong> I’m Fran, your guide from business setup toward opening day. If your brand, broker or advisor sent you here, this is where you turn that handoff into a practical plan. We’ll start with where you are today—not a list of accounts you must connect.',{lead:true})
-await say('First we’ll name your location, confirm what already exists and choose your next milestone. No legal entity, site or documents yet? That’s OK. Your wallet keeps the next steps, records and people together. Creating a wallet does not form a company or notify the person who referred you.')
-if(prior){await say('Welcome back. I kept the answers you gave earlier in this browser session for <strong>'+E(prior.name)+'</strong>. Nothing has been created yet.')
+await say('First we’ll confirm whether you need a new entity or already have one, then name your wallet and choose your next milestone. No legal entity, site or documents yet? That’s OK. Your wallet keeps the next steps, records and people together. Creating a wallet does not form a company or notify the person who referred you.')
+if(prior){await say('Welcome back. I kept the answers you gave earlier in this browser session for <strong>'+E(prior.name)+'</strong>. '+(entry.phase==='creating'?'Creation may have saved records already; we will recover the same wallet.':'Nothing has been created yet.'))
  const c=await ask({choices:[{label:'Continue where I left off',value:'keep',primary:true},{label:'Start over',value:'reset'}]})
  if(c==='keep'){draft=prior;renderWallet()}else dropDraft()}
 const has=k=>Object.prototype.hasOwnProperty.call(draft,k)
+draft.flowId=entry.id;if(entry.intent)draft.formed={new:'no',existing:'yes',unsure:'unsure'}[entry.intent];
+if(entry.phase==='creating'){const created=typeof WALLETS!=='undefined'&&WALLETS.find(w=>w.id===entry.walletId);if(created&&!draft.name){draft.name=created.name;draft.state=created.state||'';}await say('An interrupted setup is waiting. We will recover the same wallet and preserve anything already saved.');}
+if(!has('formed')){await say('Where are you starting with the legal entity?')
+ const formed=await ask({choices:[{label:'Start a new entity',value:'no',sub:'Plan it first; nothing is filed'},{label:'I already have an entity',value:'yes',sub:'Confirm and organize its records'},{label:'I’m not sure yet',value:'unsure',sub:'Check what exists before deciding'}]})
+ draft.formed=formed;entry=await window.FranEntry.setIntent(memberId(),entry.id,{no:'new',yes:'existing',unsure:'unsure'}[formed]);keepDraft()}
 if(!has('name')){await say('First, what do you call this location?')
- const name=await ask({input:{placeholder:'For example, Crumbl · Eastlake',button:'Continue',hint:'A store name or nickname is perfect. The legal name can come later.',live:v=>{draft.name=v;renderWallet()}}});draft.name=name;keepDraft();renderWallet()}
-if(!has('brand')){await say('Which franchise brand is it?')
+ const name=await ask({input:{placeholder:'For example, Crumbl · Eastlake',button:'Continue',hint:'This is a wallet nickname, not a legal name. You can change it later.',live:v=>{draft.name=v;renderWallet()}},skip:{label:'Name it later',value:'New business'}});draft.name=name;keepDraft();renderWallet()}
+if(!has('brand')){await say('Is there a franchise brand? You can skip this.')
  draft.brand=await ask({input:{placeholder:'For example, Crumbl',required:false,button:'Continue'},skip:{label:'Skip',value:''}});keepDraft();renderWallet()}
 if(!has('stage')){await say('Where is '+E(draft.name)+' today?')
  draft.stage=await ask({choices:[{label:'Getting ready to open',sub:'Signing, building out or hiring',value:'preopening',icon:'lease'},{label:'Open and operating',sub:'Already serving customers',value:'operating',icon:'accounting'}]});keepDraft();renderWallet()}
 if(!has('state')){await say('Which state will it operate in?')
- draft.state=await ask({input:{options:STATES(),placeholder:'Choose a state',button:'Continue'}});keepDraft();renderWallet()}
-if(!has('formed')){await say('Has the company that will own it been formed yet, like an LLC or corporation?')
- const formed=await ask({choices:[{label:'Yes, it’s formed',value:'yes',sub:'I know the legal name'},{label:'Not yet',value:'no',sub:'I’ll help you plan it'},{label:'Not sure',value:'unsure',sub:'We’ll sort it out together'}]})
- draft.formed=formed;keepDraft()}
+ draft.state=await ask({input:{options:STATES(),placeholder:'Choose a state',button:'Continue'},skip:{label:'Operating state not decided yet',value:''}});keepDraft();renderWallet()}
 if(draft.formed==='yes'&&!has('legal')){await say('What’s the legal name?');draft.legal=await ask({input:{placeholder:'For example, Eastlake Cookies LLC',required:false,button:'Save name'},skip:{label:'I’ll add it later',value:''}});keepDraft()}
-draft.entityType=/\bllc\b/i.test(draft.legal||'')?'LLC':/\binc\b|corp/i.test(draft.legal||'')?'Corporation':'';renderWallet()
+draft.entityType='';renderWallet()
 if(!has('goal')){await say('Last question. What’s the next big milestone for '+E(draft.name)+'? I’ll put the right things first.')
  draft.goal=await ask({choices:draft.stage==='preopening'?[{label:'Opening day',sub:'Get every piece in place to open',value:'maintain',primary:true},{label:'Financing the build-out',sub:'Organized for lenders from the start',value:'financing'}]:[{label:'Clearer monthly numbers',sub:'Know cash, profit and labor',value:'maintain',primary:true},{label:'Financing or refinancing',sub:'Records organized for lender review',value:'financing'},{label:'Selling someday',sub:'Records organized for a buyer’s review',value:'exit'}]});keepDraft();renderWallet()}
 const plan=draft.stage==='preopening'?ORDERS.preopening:ORDERS[draft.goal]||ORDERS.maintain,why=WHY[draft.stage==='preopening'?'preopening':'operating']
@@ -193,24 +196,26 @@ const go=await ask({choices:[{label:'Create '+draft.name+'’s Wallet',value:'go
 if(go!=='go')return
 await createWallet(plan)}
 function STATES(){const codes=typeof STATE_CODES!=='undefined'?STATE_CODES:[];return codes.map(c=>[c,c])}
-async function createWallet(plan){busy=true;setPhase('Creating your Wallet');const t=turn();t.innerHTML='<ul class="fj-building" aria-live="polite"><li data-b="1">Creating '+E(draft.name)+'</li><li data-b="2">Saving the company profile</li><li data-b="3">Building your plan</li></ul>'
-const form=$('wallet-form');try{window.FRAN_JOURNEY_ORIGINAL_OPEN?.('create');$('wallet-modal').classList.add('hidden')
+const entryFlowId=()=>window.FRAN_ENTRY_FLOW?.id||draft.flowId||'';
+async function createWallet(plan){if(busy)return;busy=true;setPhase('Creating your Wallet');const t=turn();t.innerHTML='<ul class="fj-building" aria-live="polite"><li data-b="1">Creating '+E(draft.name)+'</li><li data-b="2">Saving the company profile</li><li data-b="3">Building your plan</li></ul>'
+const form=$('wallet-form');dialog.querySelector('[data-fj-exit]').disabled=true;try{window.FRAN_JOURNEY_ORIGINAL_OPEN?.('create');$('wallet-modal').classList.add('hidden')
  form.elements.wallet_name.value=draft.name;form.elements.state.value=draft.state;form.elements.operating_status.value=draft.stage;if(form.elements.brand)form.elements.brand.value=draft.brand||''
+ form.elements.entity_intent.value={no:'new',yes:'existing',unsure:'unsure'}[draft.formed];form.elements.creation_flow_id.value=entryFlowId();window.FRAN_ENTRY_PLAN=plan;
  if(form.elements.legal_name)form.elements.legal_name.value=draft.legal||'';if(form.elements.entity_type&&draft.entityType)form.elements.entity_type.value=draft.entityType
  const radio=form.querySelector('[name=onboarding_goal][value="'+draft.goal+'"]');if(radio)radio.checked=true
- const before=(typeof WALLETS!=='undefined'?WALLETS.length:0);WMODE='create';WSTEP=3
+ window.FRAN_ENTRY_CREATED=null;WMODE='create';WSTEP=3
  t.querySelector('[data-b="1"]').classList.add('on');pendingPlan={plan,stage:draft.stage,formed:draft.formed}
  await submitWalletModal()
  $('wallet-modal').classList.add('hidden')
- if((typeof WALLETS!=='undefined'?WALLETS.length:0)<=before){throw new Error($('wallet-modal-error')?.textContent||'We couldn’t create the location.')}
+ if(!window.FRAN_ENTRY_CREATED?.wallet||window.FRAN_ENTRY_CREATED.wallet.id!==window.FranEntry.get(memberId())?.walletId||!WALLETS.some(w=>w.id===window.FRAN_ENTRY_CREATED.wallet.id)){throw new Error($('wallet-modal-error')?.textContent||'We couldn’t create the location.')}
  dropDraft();t.querySelectorAll('li').forEach(li=>li.classList.add('on','done'))
-}catch(e){busy=false;pendingPlan=null;t.innerHTML='';await say('That didn’t save: '+E(e.message||'please try again')+' Your answers are still here.');const r=await ask({choices:[{label:'Try again',value:'retry',primary:true}]});if(r==='retry')return createWallet(plan);return}
-busy=false}
+}catch(e){busy=false;dialog.querySelector('[data-fj-exit]').disabled=false;pendingPlan=null;t.innerHTML='';await say('That didn’t save: '+E(e.message||'please try again')+' Your answers are still here.');const r=await ask({choices:[{label:'Try again',value:'retry',primary:true}]});if(r==='retry')return createWallet(plan);return}
+busy=false;dialog.querySelector('[data-fj-exit]').disabled=false}
 let pendingPlan=null
 
 /* ---------- phase B: the six parts, one at a time ---------- */
 async function afterCreate(){const p=pendingPlan;pendingPlan=null;if(!p)return
-save({order:p.plan,stage:p.stage,formed:p.formed})
+const recovered=window.FRAN_ENTRY_CREATED?.setup;if(recovered){server={data:recovered};pending=null;try{localStorage.setItem(key(),JSON.stringify(fromServer(recovered)))}catch(_){}}
 phase='slots';document.querySelectorAll('#view-wallet .main>.notice.ok').forEach(n=>n.remove());renderWallet();setPhase(p.stage==='preopening'?'Launch your business · Your first next step':'Step 2 of 2 · Fill your Wallet')
 await say('<strong>'+E(loc.wallet.name)+' is live.</strong> '+(saved('entity')?'Your company name is already in. ':'')+'Let’s fill it in, one piece at a time. You can do most of it right here.')
 metric('journey_wallet_created',{stage:p.stage})
@@ -233,7 +238,7 @@ while(s){stepKey=s;save({current:s});renderWallet();let r;do{r=await slot(s)}whi
 stepKey=null;renderWallet();if(!store().plan_asked)await planStep();await people();await finish()}
 function leave(slot,status,fn){mark(slot,status);save({last:slot});window.FRAN_HUB?.quiet?.(SLOTS[slot].hub,8000);metric('journey_handoff',{slot,status});dialog.close();setTimeout(fn,60);return 'left'}
 const help=service=>()=>dispatchEvent(new CustomEvent('fran:service-profile',{detail:{service}}))
-const formationGuide=()=>{window.switchTab?.('entity');setTimeout(()=>{document.querySelector('#fw-entity [data-workspace=entity]')?.click();document.querySelector('.formation-concierge')?.scrollIntoView({block:'start'})},150)}
+const formationGuide=()=>dispatchEvent(new CustomEvent('fran:rehearsal-open'))
 async function laterOrNext(s,reason){mark(s,'later');renderWallet();await say('No problem. I’ll keep '+E(SLOTS[s].noun)+' on your list'+(reason?' '+reason:'')+'.');return 'next'}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms))
 
@@ -366,13 +371,13 @@ const W=WHY[pre?'preopening':'operating'][s]
 if(s==='entity'){
  /* "Not sure" gets one clarifying question first: papers in hand, or help working it out. */
  if(store().formed==='unsure'&&!saved('entity')&&store().slots?.entity!=='diy'){await head('You weren’t sure whether the company behind '+E(n)+' has been formed. That’s common. Do you have papers like articles of organization, an operating agreement or an EIN letter?',W)
-  const c=await ask({choices:[{label:'I have documents',sub:'Upload them and I’ll read the legal name, EIN, state and owners',value:'up',primary:true,icon:'upload'},{label:'Guide me through formation',sub:'Prepare my brief and work out what’s still undecided',value:'guide',icon:'entity'},{label:'Ask my attorney',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
+  const c=await ask({choices:[{label:'I have documents',sub:'Upload them and I’ll read the legal name, EIN, state and owners',value:'up',primary:true,icon:'upload'},{label:'Prepare formation and try a private rehearsal',sub:'Prepare my brief and work out what’s still undecided',value:'guide',icon:'entity'},{label:'Ask my attorney',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
   if(c==='up'){const r=await uploadFlow(s,'Other','Upload your articles, operating agreement or EIN letter','entity');if(r!=='back')return r;return 'back'}
   if(c==='guide')return leave(s,'started',formationGuide)
   if(c==='att')return inviteFlow(s,'entity','attorney')
   return laterOrNext(s,'until you know more')}
  if(store().formed==='no'&&!saved('entity')&&store().slots?.entity!=='diy'){await head('Let’s prepare the business that will own your location. You don’t have to choose a legal structure alone.',W)
-  const c=await ask({choices:[{label:'Guide me through formation',sub:'Prepare my brief, clarify decisions and choose support',value:'guide',primary:true,icon:'entity'},{label:'Explore forming it with CoverPanda',sub:'See provider scope and pricing. Nothing is requested or purchased yet.',value:'cp',icon:'entity'},{label:'I’ll do it myself',sub:'I’ll give you the three steps',value:'diy'},{label:'My attorney is handling it',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
+  const c=await ask({choices:[{label:'Prepare formation and try a private rehearsal',sub:'Prepare my brief, clarify decisions and choose support',value:'guide',primary:true,icon:'entity'},{label:'Explore forming it with CoverPanda',sub:'See provider scope and pricing. Nothing is requested or purchased yet.',value:'cp',icon:'entity'},{label:'I’ll do it myself',sub:'I’ll give you the three steps',value:'diy'},{label:'My attorney is handling it',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
   if(c==='guide')return leave(s,'started',formationGuide);
   if(c==='cp')return leave(s,'exploring',help('entity'))
   if(c==='att')return inviteFlow(s,'entity','attorney')
@@ -583,7 +588,7 @@ function dropWelcome(){welcomeHost?.remove();welcomeHost=null;document.body.clas
 /* ---------- wiring ---------- */
 const orig=window.openWalletModal
 if(orig){window.FRAN_JOURNEY_ORIGINAL_OPEN=orig
- window.openWalletModal=function(mode,...a){if((mode||'create')==='create'&&typeof WALLETS!=='undefined'&&!WALLETS.length&&!busy){/* Sign-in for an account with no location yet: show the example Home first. */if(window.FRAN_FIRST_RUN){window.FRAN_FIRST_RUN=false;return welcome()}return create()}return orig.call(this,mode,...a)}}
+ window.openWalletModal=function(mode,...a){if((mode||'create')==='create')return create();return orig.call(this,mode,...a)}}
 window.addEventListener('fran:location',e=>{const prev=loc?.wallet?.id;loc=e.detail;if(loc?.wallet)dropWelcome();if(prev!==loc?.wallet?.id){life=null;server=null;pending=null;lastPut=0}if(prev&&prev!==loc?.wallet?.id&&dialog?.open&&phase!=='create')dialog.close();renderWallet();showPill();renderHome()})
 window.addEventListener('fran:readiness',e=>{if(e.detail?.location?.wallet?.id!==loc?.wallet?.id)return;life=e.detail.life;/* A refresh fetched just before our own save lands can carry the previous copy; keep what we just wrote. */const row=(life?.records||[]).find(r=>r.kind==='setup');if(row&&!(server&&Date.now()-lastPut<15000))server={data:row.data||{},updated_at:row.updated_at||row.created_at};renderWallet();showPill();renderHome()
  /* Back from a provider’s authorization screen: continue the conversation once per return. */

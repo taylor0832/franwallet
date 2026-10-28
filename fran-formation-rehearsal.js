@@ -28,7 +28,9 @@ function render(){const host=document.getElementById('fran-rehearsal');if(!host|
  if(busy)host.querySelectorAll('input,select,button').forEach(e=>e.disabled=true);}
 function mount(){if(!context||!context.wallet?.id||context.wallet.id==='all')return;const parent=document.getElementById('fw-entity');if(!parent)return;const destination=parent.querySelector('[data-workspace-panel=entity]')||parent;const existing=document.getElementById('fran-rehearsal');if(existing){if(destination!==parent&&existing.parentElement!==destination)destination.prepend(existing);return;}const host=document.createElement('section');host.id='fran-rehearsal';host.className='fw-shell';destination.prepend(host);render();load();}
 window.addEventListener('fran:location',e=>{seq++;context=e.detail;view=null;message='';error=false;if(!context){document.getElementById('fran-rehearsal')?.remove();return;}if(document.getElementById('fran-rehearsal')){render();load();}setTimeout(mount,0);});
-window.addEventListener('fran:readiness',mount);
-const parent=document.getElementById('fw-entity');if(parent)new MutationObserver(mount).observe(parent,{childList:true});
+let opening=false;function openRehearsal(){if(!opening)return;mount();const tab=document.querySelector('#compliance-tabs [data-workspace=entity]');if(tab)tab.click();const host=document.getElementById('fran-rehearsal'),details=host?.querySelector('details');if(!details)return;details.open=true;opening=false;host.scrollIntoView({block:'start'});const heading=host.querySelector('h3');heading.tabIndex=-1;heading.focus({preventScroll:true});}
+window.addEventListener('fran:rehearsal-open',()=>{opening=true;window.switchTab?.('entity');openRehearsal();});
+window.addEventListener('fran:readiness',()=>{mount();openRehearsal();});
+const parent=document.getElementById('fw-entity');if(parent)new MutationObserver(()=>{mount();openRehearsal();}).observe(parent,{childList:true});
 if(typeof WALLET_ID==='string'&&typeof WALLETS!=='undefined'){const wallet=WALLETS.find(w=>w.id===WALLET_ID);if(wallet){context={wallet};mount();}}
 })();

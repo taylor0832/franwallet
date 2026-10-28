@@ -620,6 +620,7 @@ footer a{color:var(--g500)}
 </style>
 <link rel="stylesheet" href="fran-public.css?v=20261005-s1">
 <script src="fran-analytics-privacy.js?v=20261002-1"></script>
+<link rel="stylesheet" href="fran-entry.css?v=20261028-entry-local-2"><script src="fran-entry.js?v=20261028-entry-local-2"></script>
 </head>
 <body>
 <!-- ============ SIGNED-OUT — demo signup screen ============ -->
@@ -659,7 +660,7 @@ footer a{color:var(--g500)}
   <!-- New wallet / rename (Slack/Notion new-workspace pattern) -->
   <div class="tour-overlay hidden" id="wallet-modal" role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title"><div class="tour-card wallet-setup-card">
     <header><h2 id="wallet-modal-title">Set up a location</h2><p id="wallet-modal-body"></p><ol class="wallet-progress" id="wallet-progress" aria-label="Setup progress"></ol></header>
-    <form id="wallet-form" novalidate>
+    <form id="wallet-form" novalidate><input type="hidden" name="entity_intent"><input type="hidden" name="creation_flow_id">
       <section class="wallet-step" data-wallet-step="0"><span class="agent-avatar" aria-hidden="true">F.</span><h3>What would you like to name this wallet?</h3><p>This is your location’s home for money, records and the people who help you run it. A store name or nickname is perfect. We can add the legal entity later.</p><div class="wallet-form-grid">
         <label class="full">Wallet name<input id="wallet-name-input" name="wallet_name" maxlength="120" autocomplete="organization" placeholder="For example, Crumbl · Eastlake" required></label>
         <label>What’s its status today?<select name="operating_status" required><option value="">Choose status</option><option value="operating">Operating</option><option value="preopening">Getting ready to open</option><option value="temporarily_closed">Temporarily closed</option><option value="sold">Sold</option><option value="closed">Closed</option></select></label>
@@ -2624,10 +2625,10 @@ function renderWsRow(){
   renderRollout();
 }
 function wsItem(val, icon, name, meta, active){
-  return `<div class="ws-item ${active?'active':''}" data-loc="${val}">
+  return `<button type="button" class="ws-item ${active?'active':''}" data-loc="${val}" aria-pressed="${String(active)}">
     <div class="ws-icon" style="background:${active?'var(--coral)':'var(--teal-mid)'}">${icon}</div>
     <div class="ws-info"><div class="ws-name">${escapeHtml(name)}</div><div class="ws-meta">${escapeHtml(meta)}</div></div>
-    ${active?'<div class="ws-check">✓</div>':''}</div>`;
+    ${active?'<div class="ws-check">✓</div>':''}</button>`;
 }
 function buildWsMenu(){
   const m = $('ws-menu');
@@ -2639,12 +2640,11 @@ function buildWsMenu(){
   if(WALLETS.length > 1)
     html += wsItem('all', '🏪', 'All locations — portfolio', `${WALLETS.filter(w=>!['management','holding'].includes(w.wallet_type)).length} stores · portfolio`, isAllWallets());
   html += WALLETS.map(w=>wsItem(w.id, '🏪', w.name, [w.state, w.team_role==='team_member'?'Team member':w.access_role==='reviewer'?'Read-only reviewer':w.access_role==='payroll_editor'?'Payroll import access':connSummary(w.id)].filter(Boolean).join(' · '), WALLET_ID===w.id)).join('');
-  html += `<div class="ws-item" data-loc="__add"><div class="ws-icon" style="background:var(--g300)">＋</div>
-    <div class="ws-info"><div class="ws-name">Add new wallet</div><div class="ws-meta">A new location, with its own books, bank, and payroll</div></div></div>`;
   if(!isAllWallets() && !activeWallet()?.access_role)
-    html += `<div class="ws-item" data-loc="__rename"><div class="ws-icon" style="background:var(--g300)">✎</div>
-      <div class="ws-info"><div class="ws-name">Rename this wallet</div><div class="ws-meta">Shown across your dashboard and reports</div></div></div>`;
-  m.innerHTML = html;
+    html += `<button type="button" class="ws-item" data-loc="__rename"><div class="ws-icon" style="background:var(--g300)">✎</div>
+      <div class="ws-info"><div class="ws-name">Rename this wallet</div><div class="ws-meta">Shown across your dashboard and reports</div></div></button>`;
+  m.setAttribute('role','dialog');m.setAttribute('aria-label','Wallet switcher');
+  m.innerHTML = '<div class="ws-actions"><button type="button" class="btn btn-primary" data-loc="__add">＋ Add wallet</button></div><div class="ws-scroll" role="group" aria-label="Saved wallets">'+html+'</div>';
   m.querySelectorAll('[data-loc]').forEach(el=>el.addEventListener('click', ()=>{
     const v = el.dataset.loc;
     toggleWsMenu(false);
@@ -2715,21 +2715,19 @@ async function submitWalletModal(){
     const position=WALLET_STEP_SEQUENCE.indexOf(WSTEP);WSTEP=WALLET_STEP_SEQUENCE[position+1];errorEl.classList.remove('show');renderWalletStep();return;
   }
   if(!name){errorEl.textContent='Give this location a name before saving.';errorEl.classList.add('show');$('wallet-name-input').focus();return;}
-  if(WMODE==='create'&&!STATE_CODES.includes(setup.state)){errorEl.textContent='Choose the state where this location operates.';errorEl.classList.add('show');WSTEP=0;renderWalletStep();return;}
+  if(WMODE==='create'&&setup.state&&!STATE_CODES.includes(setup.state)){errorEl.textContent='Choose the state where this location operates.';errorEl.classList.add('show');WSTEP=0;renderWalletStep();return;}
   const firstFile=$('wallet-first-file').files[0];
   if(WMODE==='create'&&firstFile&&(firstFile.size>25*1024*1024||!$('wallet-file-consent').checked)){errorEl.textContent=firstFile.size>25*1024*1024?'Choose a file smaller than 25 MB.':'Confirm private storage and processing, or remove the file to continue without it.';errorEl.classList.add('show');WSTEP=1;renderWalletStep();return;}
   walletSaveInFlight=true;const buttonLabel=$('wallet-save').textContent;$('wallet-form').querySelectorAll('button,input,select').forEach(el=>el.disabled=true);$('wallet-save').textContent='Saving…';errorEl.classList.remove('show');
   try{
     if(!WALLETS_LIVE)throw new Error('wallets_unavailable');
     if(WMODE==='create'){
-      const {data:w,error}=await sb.from('wallets').insert({member_id:ME.id,name,state,brand:setup.brand||null}).select().single();if(error||!w)throw error||new Error('wallet_missing');
       const {data:{session}}=await sb.auth.getSession();if(!session)throw new Error('session_missing');
-      const entity={onboarding_draft:true,name:setup.legal_name||'',entity_type:setup.entity_type||'Undecided',jurisdiction:setup.jurisdiction||'',stage:setup.legal_name?'existing':'planning',registration_reference:setup.registration_reference||'',dba:setup.dba||'',brand:setup.brand||'',operating_status:setup.operating_status||'preopening',ein:setup.ein||'',effective_date:setup.effective_date||'',physical_address:setup.physical_address,mailing_address:setup.mailing_address,owners:setup.owners,ownership_status:setup.owners.length?'owner_confirmed':'awaiting_confirmation',entity_docs_status:setup.entity_docs_status,consent:false};
-      const saved=await fetch(SUPABASE_URL+'/functions/v1/lifecycle',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+session.access_token},body:JSON.stringify({action:'save',wallet_id:w.id,kind:'entity',data:entity,request_id:crypto.randomUUID()})});
-      if(!saved.ok){await sb.from('wallets').delete().eq('id',w.id);const problem=await saved.json().catch(()=>({}));throw new Error(problem.error||'entity_not_saved');}
-      const profile=await fetch(SUPABASE_URL+'/functions/v1/lifecycle',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+session.access_token},body:JSON.stringify({action:'readiness_profile',wallet_id:w.id,data:{goal:setup.onboarding_goal,stage:setup.operating_status==='preopening'?'preopening':'operating',premises:'undecided',purpose:'working_capital'}})});
-      if(!profile.ok){await sb.from('wallets').delete().eq('id',w.id);throw new Error('goal_not_saved');}
-      WALLETS.push(w);setActiveWallet(w.id,{silent:true});
+      const entity={onboarding_draft:true,name:setup.legal_name||'',entity_type:setup.entity_type||'Undecided',jurisdiction:setup.jurisdiction||'',stage:setup.entity_intent==='existing'?'existing':'planning',registration_reference:setup.registration_reference||'',dba:setup.dba||'',brand:setup.brand||'',operating_status:setup.operating_status||'preopening',ein:setup.ein||'',effective_date:setup.effective_date||'',physical_address:setup.physical_address,mailing_address:setup.mailing_address,owners:setup.owners,ownership_status:setup.owners.length?'owner_confirmed':'awaiting_confirmation',entity_docs_status:setup.entity_docs_status,consent:false};
+      const call=async(action,body,walletId)=>{const r=await fetch(SUPABASE_URL+'/functions/v1/lifecycle',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+session.access_token},body:JSON.stringify({action,wallet_id:walletId,...body}),signal:AbortSignal.timeout(20000)});const d=await r.json();if(!r.ok)throw Error(d.error||'Saved setup could not be confirmed. Resume the same setup.');return d;};
+      const result=await window.FranEntry.createWalletOnce({member:ME.id,flowId:setup.creation_flow_id,db:sb,call,name,operatingState:state,brand:setup.brand||'',entity,profile:{goal:setup.onboarding_goal,stage:setup.operating_status==='preopening'?'preopening':'operating',premises:'undecided',purpose:'working_capital'},setup:{order:window.FRAN_ENTRY_PLAN||['entity','lease','banking','insurance','accounting','payroll'],stage:setup.operating_status==='preopening'?'preopening':'operating',parts:{},finished:false}});
+      const w=result.wallet;window.FRAN_ENTRY_CREATED=result;
+      if(!WALLETS.some(existing=>existing.id===w.id))WALLETS.push(w);setActiveWallet(w.id,{silent:true});
       let uploadIssue='';
       if(setup.brand_website){try{await saveWalletFirstDocument(w.id,new File(['Brand profile — owner supplied\nWallet: '+name+'\nBrand: '+(setup.brand||'Not supplied')+'\nWebsite: '+setup.brand_website+'\nPhysical address: '+(setup.physical_address||'Not supplied')+'\nSaved: '+new Date().toISOString()+'\nWebsite content has not been independently retrieved or verified.'],'Brand profile.txt',{type:'text/plain'}),session);}catch(_){uploadIssue='Your wallet is saved. The brand profile could not be uploaded. Add the website and brand details from Documents when ready.';}}
       if(firstFile){try{await saveWalletFirstDocument(w.id,firstFile,session);}catch(_){uploadIssue='Your wallet is saved. The document upload did not finish. Add it from Documents; no need to create another wallet.';}}
@@ -2855,12 +2853,14 @@ function toggleWsMenu(force){
   const m = $('ws-menu');
   const show = force===undefined ? !m.classList.contains('active') : !!force;
   if(show) buildWsMenu();
-  m.classList.toggle('active', show);
+  m.classList.toggle('active', show);$('sb-ws').setAttribute('aria-expanded',String(show));$('sb-ws').setAttribute('aria-controls','ws-menu');$('sb-ws').setAttribute('aria-haspopup','dialog');if(show)requestAnimationFrame(()=>{if(m.classList.contains('active'))m.querySelector('[data-loc=__add]')?.focus();});
 }
 $('sb-ws').addEventListener('click', (e)=>{ e.stopPropagation(); toggleWsMenu(); });
+$('ws-menu').addEventListener('keydown',e=>{const m=$('ws-menu'),items=[...m.querySelectorAll('button[data-loc]')];if(e.key==='Escape'){e.preventDefault();toggleWsMenu(false);$('sb-ws').focus();return;}if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;e.preventDefault();const i=items.indexOf(document.activeElement),next=e.key==='Home'?0:e.key==='End'?items.length-1:(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length;items[next]?.focus();});
+
 document.addEventListener('click', (e)=>{
   const m = $('ws-menu');
-  if(m.classList.contains('active') && !m.contains(e.target)) m.classList.remove('active');
+  if(m.classList.contains('active') && !m.contains(e.target)) toggleWsMenu(false);
 });
 
 /* ---------- free toolkit + referral loop ---------- */
@@ -3459,6 +3459,7 @@ async function boot(session){
   });
   return bootInFlight;
 }
+function routeWalletEntryAfterAuth(needsFirstLocation){const action=window.FranEntry?.afterSignIn?.(ME.id,needsFirstLocation)||'defer';if(action==='start')openWalletModal('create');else if(action==='normal')nameMaybePrompt(()=>{});return action;}
 async function bootMember(session, generation){
   const user = session.user;
   analyticsSignedOut = false;
@@ -3476,7 +3477,7 @@ async function bootMember(session, generation){
   sidebarInit();
   renderWallet();
   renderOverview();
-  if(needsFirstLocation)openWalletModal('create');else nameMaybePrompt(()=>{});
+  routeWalletEntryAfterAuth(needsFirstLocation);
   renderToolkit();
   renderReferral();
   renderVault();
@@ -3593,7 +3594,7 @@ if(FRAN_LABOR_DEMO){
 <link rel="stylesheet" href="fran-room-presentation.css?v=20261010-1"><script src="fran-record-viewer.js?v=3f08f2cb51d6"></script><script src="fran-room-presentation.js?v=20261010-1"></script><script src="fran-room-builder.js?v=20261010-1"></script>
 <link rel="stylesheet" href="fran-room-builder.css?v=e9aef3725b36">
 <script src="fran-financing-core.js?v=6eac1373770e"></script>
-<link rel="stylesheet" href="fran-formation.css?v=20261006-demo-1"><script src="fran-formation.js?v=20261006-demo-1"></script><script src="fran-lifecycle.js?v=20261006-demo-1"></script>
+<script src="fran-lifecycle.js?v=20261006-demo-1"></script>
 <script src="fran-workspace.js?v=2d19431a7742"></script>
 <script src="fran-revenue.js?v=e22dbc88a3a0"></script>
 <script src="fran-billing.js?v=f51bb55e5066"></script>
@@ -3601,7 +3602,7 @@ if(FRAN_LABOR_DEMO){
 <script src="fran-concierge.js?v=0166f27f9332"></script>
 <script src="fran-activation.js?v=1bda3a591b93"></script>
 <script src="fran-onboarding-email.js?v=6a2e44bd4bd3"></script>
-<script src="fran-plan-core.js?v=7c2941cc4455"></script><script src="fran-plan.js?v=7809af502316"></script><script src="fran-navigation.js?v=20261010-1"></script><link rel="stylesheet" href="fran-plan.css?v=4f3758e73982"><script src="fran-design.js?v=0cc77393d428"></script><link rel="stylesheet" href="fran-design.css?v=ae1f8d49ec7b"><script src="fran-partners.js?v=02e542bfd2d3"></script><script src="fran-sections.js?v=20260922-portfolio-groups-2"></script><link rel="stylesheet" href="fran-sections.css?v=f36985d9fb89"><script src="fran-ecosystem.js?v=d03fd113d280"></script><link rel="stylesheet" href="fran-ecosystem.css?v=55b61b1f0110"><script src="fran-sales-evidence.js?v=20261023-inspection-2"></script><script src="fran-wallet-model.js?v=20261007-data-1"></script><script src="fran-wallet-experience.js?v=20261022-evidence-1"></script><link rel="stylesheet" href="fran-wallet-experience.css?v=20261022-evidence-1"><script src="fran-service-commerce.js?v=20261002-3"></script><link rel="stylesheet" href="fran-service-commerce.css?v=01cf2822961a"><script src="fran-spend-ledger.js?v=9e618e412235"></script><link rel="stylesheet" href="fran-spend-ledger.css?v=3240bd134205"><link rel="stylesheet" href="fran-health.css?v=20261006-demo-1"><script src="fran-health.js?v=20261006-demo-1"></script>
+<script src="fran-plan-core.js?v=7c2941cc4455"></script><script src="fran-plan.js?v=7809af502316"></script><script src="fran-navigation.js?v=20261028-entry-local-2"></script><link rel="stylesheet" href="fran-plan.css?v=4f3758e73982"><script src="fran-design.js?v=0cc77393d428"></script><link rel="stylesheet" href="fran-design.css?v=ae1f8d49ec7b"><script src="fran-partners.js?v=02e542bfd2d3"></script><script src="fran-sections.js?v=20260922-portfolio-groups-2"></script><link rel="stylesheet" href="fran-sections.css?v=f36985d9fb89"><script src="fran-ecosystem.js?v=d03fd113d280"></script><link rel="stylesheet" href="fran-ecosystem.css?v=55b61b1f0110"><script src="fran-sales-evidence.js?v=20261023-inspection-2"></script><script src="fran-wallet-model.js?v=20261007-data-1"></script><script src="fran-wallet-experience.js?v=20261022-evidence-1"></script><link rel="stylesheet" href="fran-wallet-experience.css?v=20261022-evidence-1"><script src="fran-service-commerce.js?v=20261002-3"></script><link rel="stylesheet" href="fran-service-commerce.css?v=01cf2822961a"><script src="fran-spend-ledger.js?v=9e618e412235"></script><link rel="stylesheet" href="fran-spend-ledger.css?v=3240bd134205"><link rel="stylesheet" href="fran-health.css?v=20261006-demo-1"><script src="fran-health.js?v=20261006-demo-1"></script>
 <link rel="stylesheet" href="fran-portfolio.css?v=20261010-3"><script src="fran-portfolio-model.js?v=20261007-test-1"></script><script src="fran-portfolio.js?v=20261010-3"></script>
 <link rel="stylesheet" href="fran-payroll-agent.css?v=20260923-client-2"><script src="fran-payroll-agent.js?v=20260923-client-2"></script>
 <link rel="stylesheet" href="fran-labor-agent.css?v=20261023-readiness-1"><link rel="stylesheet" href="fran-labor-guide.css?v=20261009-done-2"><script src="fran-labor-agent-core.js?v=20261023-inspection-2"></script><script src="fran-labor-agent-demo.js?v=20261009-done-2"></script><script src="fran-labor-guide.js?v=20261009-done-2"></script><script src="fran-labor-agent.js?v=20261023-inspection-2"></script>
@@ -3616,8 +3617,8 @@ if(FRAN_LABOR_DEMO){
 <link rel="stylesheet" href="fran-details.css?v=20261010-3"><script src="fran-extract.js?v=20261004-b2"></script><script src="fran-details.js?v=20261010-3"></script>
 <link rel="stylesheet" href="fran-journey.css?v=20261010-1"><link rel="stylesheet" href="fran-invite.css?v=20261005-i1"><script src="fran-invite.js?v=20261006-demo-1"></script><script src="fran-drive.js?v=20261006-paged-1"></script>
 <link rel="stylesheet" href="fran-routines.css?v=20261010-1"><script src="fran-routines.js?v=20261010-1"></script>
-<script src="fran-journey.js?v=20261010-1"></script>
+<script src="fran-journey.js?v=20261028-entry-local-2"></script>
 <script src="fran-bloomfield-pilot.js?v=20261021-1"></script>
-<script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script src="fran-formation-rehearsal.js?v=20261028-rehearsal-2"></script>
+<script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script src="fran-formation-rehearsal.js?v=20261028-entry-local-1"></script>
 </body>
 </html>

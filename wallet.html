@@ -620,7 +620,7 @@ footer a{color:var(--g500)}
 </style>
 <link rel="stylesheet" href="fran-public.css?v=20261005-s1">
 <script src="fran-analytics-privacy.js?v=20261002-1"></script>
-<link rel="stylesheet" href="fran-entry.css?v=20261028-entry-local-2"><script src="fran-entry.js?v=20261028-entry-local-2"></script>
+<link rel="stylesheet" href="fran-entry.css?v=20261106-cards-1"><script src="fran-entry.js?v=20261106-cards-1"></script>
 </head>
 <body>
 <!-- ============ SIGNED-OUT — demo signup screen ============ -->
@@ -662,7 +662,7 @@ footer a{color:var(--g500)}
     <header><h2 id="wallet-modal-title">Set up a location</h2><p id="wallet-modal-body"></p><ol class="wallet-progress" id="wallet-progress" aria-label="Setup progress"></ol></header>
     <form id="wallet-form" novalidate><input type="hidden" name="entity_intent"><input type="hidden" name="creation_flow_id">
       <section class="wallet-step" data-wallet-step="0"><span class="agent-avatar" aria-hidden="true">F.</span><h3>What would you like to name this wallet?</h3><p>This is your location’s home for money, records and the people who help you run it. A store name or nickname is perfect. We can add the legal entity later.</p><div class="wallet-form-grid">
-        <label class="full">Wallet name<input id="wallet-name-input" name="wallet_name" maxlength="120" autocomplete="organization" placeholder="For example, Crumbl · Eastlake" required></label>
+        <label class="full">Wallet name<input id="wallet-name-input" name="wallet_name" maxlength="120" autocomplete="organization" placeholder="For example, Austin, TX Jersey Mike’s" required></label>
         <label>What’s its status today?<select name="operating_status" required><option value="">Choose status</option><option value="operating">Operating</option><option value="preopening">Getting ready to open</option><option value="temporarily_closed">Temporarily closed</option><option value="sold">Sold</option><option value="closed">Closed</option></select></label>
         <label class="wallet-state-label">Where will this store earn revenue?<input id="wallet-state-input" name="state" maxlength="2" autocomplete="address-level1" placeholder="CA" aria-describedby="wallet-state-help" required></label>
         </div><details class="wallet-state-help"><summary>Which state should I use?</summary><p id="wallet-state-help">Use the state where this location primarily operates and earns revenue, which may differ from its incorporation state. A brick-and-mortar store in California uses CA, even if its LLC was formed elsewhere.</p></details><details><summary>Add the brand and physical address (optional)</summary><div class="wallet-form-grid"><label class="full">Which brand is this location part of?<input id="wallet-brand-input" name="brand" maxlength="120" placeholder="For example, Crumbl"></label><label class="full">Physical street address<input name="physical_street" maxlength="180" autocomplete="street-address" placeholder="123 Main Street"></label>
@@ -1035,7 +1035,7 @@ footer a{color:var(--g500)}
         <p class="sub">Hand off the back office. Pick a service and we follow up within one business day with pricing and next steps. Delivered by CoverPanda's franchise-fluent team.</p>
         <div class="mkt-grid">
           <div class="mkt-card"><div class="mk-icon">📚</div><h3>Monthly bookkeeping &amp; close</h3><div class="mk-price">$450 <span>flat / month</span></div><p>Franchise-standard chart of accounts, royalty and ad-fund reconciliation, tax-ready monthly close. Your QuickBooks connection makes onboarding instant.</p><button class="mk-btn" data-svc="bookkeeping">Get started →</button></div>
-          <div class="mkt-card"><div class="mk-icon">🏛️</div><h3>Entity formation</h3><div class="mk-price">One-time <span>quoted by state</span></div><p>LLC or S-Corp registered right for franchising: EIN, operating agreement, and the documents your franchisor and lender will ask for.</p><button class="mk-btn" data-svc="formation">Get started →</button></div>
+          <div class="mkt-card"><div class="mk-icon">🏛️</div><h3>Entity formation</h3><div class="mk-price">One-time <span>quote required</span></div><p>Prepare an LLC or corporation for franchising, and organize the EIN, operating agreement and documents your franchisor and lender will ask for. An S-Corp tax election is a separate choice.</p><button class="mk-btn" data-svc="formation">Get started →</button></div>
           <div class="mkt-card"><div class="mk-icon">💼</div><h3>Payroll setup &amp; support</h3><div class="mk-price">Free setup <span>with Gusto</span></div><p>Hourly teams, tips, multi-location: set up correctly from day one, connected straight into your Wallet's labor numbers.</p><button class="mk-btn" data-svc="payroll">Get started →</button></div>
           <div class="mkt-card"><div class="mk-icon">🛡️</div><h3>Insurance &amp; COIs</h3><div class="mk-price">Free quotes <span>1-day turnaround</span></div><p>GL, workers' comp, umbrella from franchise-fluent carriers, plus the COIs your landlord keeps asking for.</p><button class="mk-btn" data-goto="insurance">Get covered →</button></div>
         </div>
@@ -1043,7 +1043,7 @@ footer a{color:var(--g500)}
           <select id="svc-type" required aria-label="Service" class="input-lite" style="margin-top:0">
             <option value="" disabled selected>What do you need?</option>
             <option value="bookkeeping">Monthly bookkeeping &amp; close</option>
-            <option value="formation">Entity formation (LLC / S-Corp)</option>
+            <option value="formation">Entity formation (LLC or corporation)</option>
             <option value="payroll">Payroll setup &amp; support</option>
           </select>
           <input id="svc-note" type="text" class="input-lite" placeholder="Anything we should know? (brand, # of locations, timing)" aria-label="Details">
@@ -1146,7 +1146,7 @@ const sb = FRAN_LABOR_DEMO
   : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const CHECKLIST = [
-  {key:'entity',          label:'Business entity formed',      hint:'LLC / S-Corp registered with your state',                cta:null},
+  {key:'entity',          label:'Business entity formed',      hint:'LLC or corporation registered with your state',                cta:null},
   {key:'banking',         label:'Business banking open',       hint:'Mercury business checking',                              cta:'https://mercury.com'},
   {key:'card',            label:'Spend card active',           hint:'Company cards for build-out & supplies (BILL Spend & Expense or similar)', cta:'https://www.bill.com/product/spend-and-expense'},
   {key:'payments',        label:'Payments connected',          hint:'Stripe for revenue into your account',                   cta:'https://stripe.com'},
@@ -2746,7 +2746,9 @@ $('wallet-back').addEventListener('click',()=>{const position=WALLET_STEP_SEQUEN
 $('wallet-mailing-same').addEventListener('change',e=>document.querySelectorAll('.wallet-mailing-field').forEach(x=>x.classList.toggle('hidden',e.target.checked)));
 function nameMaybePrompt(next){
   if(activeWallet()?.access_role==='payroll_editor') return;
+  // Any named wallet counts: on a new device an owner with several wallets starts on the all-locations view.
   const named = (activeWallet() && activeWallet().name && activeWallet().name !== 'My wallet')
+    || WALLETS.some(w=>w.name && w.name !== 'My wallet')
     || (ME && ME.wallet_name) || localStorage.getItem('fran_wallet_name:'+ME?.id);
   if(named || localStorage.getItem('fran_name_prompted:'+(ME?.id||''))){ if(next) next(); return; }
   NAME_NEXT = next || null;
@@ -3594,7 +3596,7 @@ if(FRAN_LABOR_DEMO){
 <link rel="stylesheet" href="fran-room-presentation.css?v=20261010-1"><script src="fran-record-viewer.js?v=3f08f2cb51d6"></script><script src="fran-room-presentation.js?v=20261010-1"></script><script src="fran-room-builder.js?v=20261010-1"></script>
 <link rel="stylesheet" href="fran-room-builder.css?v=e9aef3725b36">
 <script src="fran-financing-core.js?v=6eac1373770e"></script>
-<script src="fran-lifecycle.js?v=20261006-demo-1"></script>
+<link rel="stylesheet" href="fran-incorporate.css?v=20261106-inc-2"><script src="fran-formation-core.js?v=20261106-inc-2"></script><script src="fran-incorporate.js?v=20261106-inc-2"></script><script src="fran-lifecycle.js?v=20261106-inc-1"></script>
 <script src="fran-workspace.js?v=2d19431a7742"></script>
 <script src="fran-revenue.js?v=e22dbc88a3a0"></script>
 <script src="fran-billing.js?v=f51bb55e5066"></script>
@@ -3617,8 +3619,8 @@ if(FRAN_LABOR_DEMO){
 <link rel="stylesheet" href="fran-details.css?v=20261010-3"><script src="fran-extract.js?v=20261004-b2"></script><script src="fran-details.js?v=20261010-3"></script>
 <link rel="stylesheet" href="fran-journey.css?v=20261010-1"><link rel="stylesheet" href="fran-invite.css?v=20261005-i1"><script src="fran-invite.js?v=20261006-demo-1"></script><script src="fran-drive.js?v=20261006-paged-1"></script>
 <link rel="stylesheet" href="fran-routines.css?v=20261010-1"><script src="fran-routines.js?v=20261010-1"></script>
-<script src="fran-journey.js?v=20261028-entry-local-2"></script>
+<script src="fran-journey.js?v=20261106-inc-2"></script>
 <script src="fran-bloomfield-pilot.js?v=20261021-1"></script>
-<script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script src="fran-formation-rehearsal.js?v=20261028-entry-local-1"></script>
+<script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script src="fran-formation-rehearsal.js?v=20261106-after-inc-1"></script>
 </body>
 </html>

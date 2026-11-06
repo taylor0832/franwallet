@@ -38,12 +38,12 @@ const UNLOCKS=[
 const CANON=['entity','lease','banking','accounting','payroll','insurance']
 const HUBKEY={entity:'company',lease:'lease',banking:'banking',accounting:'books',payroll:'payroll',insurance:'insurance'}
 const ORDERS={
- preopening:['entity','lease','banking','insurance','accounting','payroll'],
+ preopening:['entity','banking','lease','insurance','accounting','payroll'],
  maintain:['entity','accounting','banking','payroll','insurance','lease'],
  financing:['entity','accounting','banking','lease','insurance','payroll'],
  exit:['entity','lease','accounting','banking','insurance','payroll']}
 const WHY={
- preopening:{entity:'Your bank, landlord and payroll provider will all ask for it.',lease:'Rent, term and renewal dates drive your opening budget.',banking:'Keeps business money separate from day one.',insurance:'Landlords and franchisors often ask for proof before you open.',accounting:'Start clean books before the first sale.',payroll:'Ready before your first hire.'},
+ preopening:{entity:'Your EIN, bank account, lease and insurance are all opened in the company’s name, so it comes first.',banking:'Opened with your formation papers and EIN; keeps business money separate from day one.',lease:'Usually signed by your company, so it follows the company and bank account.',insurance:'Your landlord and franchisor usually ask for proof before you open.',accounting:'Start clean books before the first sale.',payroll:'Ready before your first hire.'},
  operating:{accounting:'Your monthly numbers, with the reporting period on each one.',banking:'Cash and activity, dated.',payroll:'Your largest controllable cost.',insurance:'Coverage limits and renewal dates in one place.',lease:'Rent, term and renewal dates.',entity:'Owners, EIN and filings lenders will ask for.'}}
 
 /* ---------- state ----------
@@ -135,7 +135,7 @@ function clearTurn(){turn().innerHTML=''}
 const question=()=>{const q=[...log().querySelectorAll('.fj-msg.fran .fj-bubble[id]')].pop();return q?q.id:''}
 /* A turn is one question: choices (cards) and/or an input. Resolves with the picked value. */
 function ask({choices=[],input=null,skip=null,note=''}){return new Promise(resolve=>{const t=turn();t.innerHTML='';const q=question(),named=q?' aria-labelledby="'+q+'"':''
- if(input){const f=document.createElement('form');f.className='fj-input';const by=input.label?'':named;f.innerHTML=(input.label?'<label for="fj-in">'+E(input.label)+'</label>':'')+'<div>'+(input.options?'<select id="fj-in" required'+by+'><option value="">'+E(input.placeholder||'Choose')+'</option>'+input.options.map(o=>'<option value="'+E(o[0])+'">'+E(o[1])+'</option>').join('')+'</select>':'<input id="fj-in"'+by+(input.hint?' aria-describedby="fj-in-hint"':'')+' type="'+(input.type||'text')+'" autocomplete="'+(input.type==='email'?'email':'off')+'" '+(input.required===false?'':'required ')+'maxlength="'+(input.type==='email'?254:80)+'" placeholder="'+E(input.placeholder||'')+'" value="'+E(input.value||'')+'">')+'<button type="submit">'+E(input.button||'Continue')+' →</button></div>'+(input.hint?'<small id="fj-in-hint">'+E(input.hint)+'</small>':'')
+ if(input){const f=document.createElement('form');f.className='fj-input';const by=input.label?'':named;f.innerHTML=(input.label?'<label for="fj-in">'+E(input.label)+'</label>':'')+'<div>'+(input.options?'<select id="fj-in" required'+by+'><option value="">'+E(input.placeholder||'Choose')+'</option>'+input.options.map(o=>'<option value="'+E(o[0])+'">'+E(o[1])+'</option>').join('')+'</select>':'<input id="fj-in"'+by+(input.hint?' aria-describedby="fj-in-hint"':'')+' type="'+(input.type||'text')+'" autocomplete="'+(input.type==='email'?'email':'off')+'" '+(input.required===false?'':'required ')+'maxlength="'+(input.max||(input.type==='email'?254:80))+'" placeholder="'+E(input.placeholder||'')+'" value="'+E(input.value||'')+'">')+'<button type="submit">'+E(input.button||'Continue')+' →</button></div>'+(input.hint?'<small id="fj-in-hint">'+E(input.hint)+'</small>':'')
   f.onsubmit=e=>{e.preventDefault();const el=f.querySelector('#fj-in'),v=el.value.trim();if(input.required!==false&&!v){el.focus();return}const shown=input.options?(input.options.find(o=>o[0]===v)||[])[1]:v;if(shown)you(shown);clearTurn();resolve(v)}
   t.append(f);if(input.live)f.querySelector('#fj-in').oninput=e=>input.live(e.target.value)}
  if(choices.length){const g=document.createElement('div');g.className='fj-choices'+(choices.length>3?' grid':'');g.setAttribute('role','group');if(q)g.setAttribute('aria-labelledby',q);else g.setAttribute('aria-label','Choose an answer')
@@ -147,7 +147,7 @@ function ask({choices=[],input=null,skip=null,note=''}){return new Promise(resol
 
 /* ---------- the Wallet card ---------- */
 function renderWallet(){if(!dialog)return
-const w=dialog.querySelector('.fj-wallet'),name=loc?.wallet?.name||draft.name||'Your location',sub=[draft.brand||loc?.wallet?.brand,loc?.wallet?.state||draft.state].filter(Boolean).join(' · ')
+const w=dialog.querySelector('.fj-wallet'),name=loc?.wallet?.name||draft.name||'Your location',brand=draft.brand||loc?.wallet?.brand||(draft.candidates?.length?'Comparing '+draft.candidates.join(', '):Object.prototype.hasOwnProperty.call(draft||{},'brand')||loc?'Brand not decided yet':''),sub=[brand,loc?.wallet?.state||draft.state].filter(Boolean).join(' · ')
 const o=CANON
 const rows=o.map(s=>{const st=loc?status(s):(s==='entity'&&draft.legal?'pending':'empty'),cur=s===stepKey
  return '<li class="fj-slot" data-state="'+st+'"'+(cur?' aria-current="step"':'')+'><span class="fj-slot-icon">'+svg(st==='saved'?'check':s)+'</span><span class="fj-slot-name">'+E(SLOTS[s].name)+'</span><span class="fj-slot-state">'+E(cur&&st==='empty'?'Up next':st==='pending'?'Ready to save':LABEL[st]||'')+'</span></li>'}).join('')
@@ -157,19 +157,20 @@ const n=loc?readyCount():0
 w.innerHTML='<div class="fj-card'+(draft.name||loc?' named':'')+'"><div class="fj-card-head"><span class="fj-card-mark">FRAN WALLET</span><span class="fj-card-count">'+n+' of 6</span></div><h2>'+E(name)+'</h2><p>'+E(sub||'Name your location to begin')+'</p><div class="fj-meter" aria-hidden="true"><i style="width:'+Math.round(n/6*100)+'%"></i></div><ol class="fj-slots">'+rows+'</ol></div><div class="fj-unlocks"><small>WHAT YOUR WALLET UNLOCKS</small><div>'+unlocks+'</div></div><p class="fj-trust">Private to this location. Connections are read-only. Nothing is sent or shared without your say-so.</p>'}
 
 /* ---------- phase A: create the location in conversation ----------
-   Answers given before the Wallet exists are kept for this browser session only, so a reload doesn't lose them.
-   They are cleared as soon as the Wallet is created. */
+   Answers given before the Wallet exists are kept on this device for up to 30 days, so an owner can stop and pick up
+   later. They hold no legal or identity details and are cleared as soon as the Wallet is created. */
 const draftKey=()=>'fran_journey_draft:'+(memberId()||'signed-out')
-function keepDraft(){try{sessionStorage.setItem(draftKey(),JSON.stringify(draft))}catch(_){}}
-function priorDraft(){try{const d=JSON.parse(sessionStorage.getItem(draftKey())||'null');return d&&typeof d==='object'&&!Array.isArray(d)&&typeof d.name==='string'&&d.name.trim()?d:null}catch(_){return null}}
-function dropDraft(){try{sessionStorage.removeItem(draftKey())}catch(_){}}
+const DRAFT_DAYS=30
+function keepDraft(){try{localStorage.setItem(draftKey(),JSON.stringify({...draft,saved_at:Date.now()}))}catch(_){}}
+function priorDraft(){try{const d=JSON.parse(localStorage.getItem(draftKey())||sessionStorage.getItem(draftKey())||'null');if(!d||typeof d!=='object'||Array.isArray(d)||typeof d.name!=='string'||!d.name.trim())return null;if(d.saved_at&&Date.now()-d.saved_at>DRAFT_DAYS*864e5){dropDraft();return null}delete d.saved_at;return d}catch(_){return null}}
+function dropDraft(){try{localStorage.removeItem(draftKey());sessionStorage.removeItem(draftKey())}catch(_){}}
 async function create(){if(busy||dialog?.open&&phase==='create')return;phase='create';shell();log().innerHTML='';clearTurn();draft={};stepKey=null;setPhase('Launch your business · Your starting point');renderWallet();if(!dialog.open)dialog.showModal()
 metric('journey_started',{phase:'create'})
 let entry;try{entry=await window.FranEntry.claim(memberId());window.FRAN_ENTRY_FLOW=entry;}catch(e){await say(E(e.message));return}
 const savedDraft=priorDraft(),prior=savedDraft?.flowId===entry.id?savedDraft:null;
-await say('<strong>Your next chapter starts here.</strong> I’m Fran, your guide from business setup toward opening day. If your brand, broker or advisor sent you here, this is where you turn that handoff into a practical plan. We’ll start with where you are today—not a list of accounts you must connect.',{lead:true})
-await say('First we’ll confirm whether you need a new entity or already have one, then name your wallet and choose your next milestone. No legal entity, site or documents yet? That’s OK. Your wallet keeps the next steps, records and people together. Creating a wallet does not form a company or notify the person who referred you.')
-if(prior){await say('Welcome back. I kept the answers you gave earlier in this browser session for <strong>'+E(prior.name)+'</strong>. '+(entry.phase==='creating'?'Creation may have saved records already; we will recover the same wallet.':'Nothing has been created yet.'))
+await say('<strong>Welcome to FranWallet.</strong> I’m Fran. Your wallet keeps your company, its records and the people who help you in one private place, from first idea to opening day and beyond.',{lead:true})
+await say('A few quick questions to set it up, then '+(entry.intent==='existing'?'we’ll record your company so everything else builds on it.':'we’ll start on the most important job: setting up your company.')+' Creating a wallet does not form a company or notify the person who referred you.')
+if(prior){await say('Welcome back. I kept the answers you gave earlier on this device for <strong>'+E(prior.name)+'</strong>. '+(entry.phase==='creating'?'Creation may have saved records already; we will recover the same wallet.':'Nothing has been created yet.'))
  const c=await ask({choices:[{label:'Continue where I left off',value:'keep',primary:true},{label:'Start over',value:'reset'}]})
  if(c==='keep'){draft=prior;renderWallet()}else dropDraft()}
 const has=k=>Object.prototype.hasOwnProperty.call(draft,k)
@@ -179,22 +180,33 @@ if(!has('formed')){await say('Where are you starting with the legal entity?')
  const formed=await ask({choices:[{label:'Start a new entity',value:'no',sub:'Plan it first; nothing is filed'},{label:'I already have an entity',value:'yes',sub:'Confirm and organize its records'},{label:'I’m not sure yet',value:'unsure',sub:'Check what exists before deciding'}]})
  draft.formed=formed;entry=await window.FranEntry.setIntent(memberId(),entry.id,{no:'new',yes:'existing',unsure:'unsure'}[formed]);keepDraft()}
 if(!has('name')){await say('First, what do you call this location?')
- const name=await ask({input:{placeholder:'For example, Crumbl · Eastlake',button:'Continue',hint:'This is a wallet nickname, not a legal name. You can change it later.',live:v=>{draft.name=v;renderWallet()}},skip:{label:'Name it later',value:'New business'}});draft.name=name;keepDraft();renderWallet()}
-if(!has('brand')){await say('Is there a franchise brand? You can skip this.')
- draft.brand=await ask({input:{placeholder:'For example, Crumbl',required:false,button:'Continue'},skip:{label:'Skip',value:''}});keepDraft();renderWallet()}
+ const name=await ask({input:{placeholder:'For example, Austin, TX Jersey Mike’s',button:'Continue',hint:'A nickname you’ll recognize, like city and brand. It is not your company’s legal name, and you can change it later.',live:v=>{draft.name=v;renderWallet()}},skip:{label:'Name it later',value:'New business'}});draft.name=name;keepDraft();renderWallet()}
+/* Brand defaults to Not decided yet (saved as blank, never a guessed brand). Candidate brands are kept in this
+   device's draft only: there is no durable brand catalog yet. */
+if(!has('brand')){await say('Have you chosen a franchise brand? Not decided yet is fine. Many owners start here while comparing options.')
+ const b=await ask({choices:[{label:'Not decided yet',sub:'Keep exploring; you can add a brand later',value:'none',primary:true},{label:'I know the brand',sub:'Add it to this wallet',value:'known'},{label:'I’m comparing a few',sub:'Note the brands you’re considering',value:'compare'}]})
+ draft.brand='';draft.candidates=[]
+ if(b==='known')draft.brand=String(await ask({input:{placeholder:'Brand name',required:false,button:'Continue'},skip:{label:'Not decided yet',value:''}})||'').trim().slice(0,80)
+ if(b==='compare')draft.candidates=candidateBrands(await ask({input:{placeholder:'Brand names, separated by commas',required:false,max:420,button:'Continue',hint:'Up to five. These are notes for you, not a brand selection.'},skip:{label:'Not decided yet',value:''}}))
+ keepDraft();renderWallet()}
+if(!has('stage')&&draft.formed==='no'){draft.stage='preopening';keepDraft()}
 if(!has('stage')){await say('Where is '+E(draft.name)+' today?')
  draft.stage=await ask({choices:[{label:'Getting ready to open',sub:'Signing, building out or hiring',value:'preopening',icon:'lease'},{label:'Open and operating',sub:'Already serving customers',value:'operating',icon:'accounting'}]});keepDraft();renderWallet()}
 if(!has('state')){await say('Which state will it operate in?')
  draft.state=await ask({input:{options:STATES(),placeholder:'Choose a state',button:'Continue'},skip:{label:'Operating state not decided yet',value:''}});keepDraft();renderWallet()}
 if(draft.formed==='yes'&&!has('legal')){await say('What’s the legal name?');draft.legal=await ask({input:{placeholder:'For example, Eastlake Cookies LLC',required:false,button:'Save name'},skip:{label:'I’ll add it later',value:''}});keepDraft()}
 draft.entityType='';renderWallet()
+if(!has('goal')&&draft.stage==='preopening'&&draft.formed!=='yes'){draft.goal='maintain';keepDraft()}
 if(!has('goal')){await say('Last question. What’s the next big milestone for '+E(draft.name)+'? I’ll put the right things first.')
  draft.goal=await ask({choices:draft.stage==='preopening'?[{label:'Opening day',sub:'Get every piece in place to open',value:'maintain',primary:true},{label:'Financing the build-out',sub:'Organized for lenders from the start',value:'financing'}]:[{label:'Clearer monthly numbers',sub:'Know cash, profit and labor',value:'maintain',primary:true},{label:'Financing or refinancing',sub:'Records organized for lender review',value:'financing'},{label:'Selling someday',sub:'Records organized for a buyer’s review',value:'exit'}]});keepDraft();renderWallet()}
 const plan=draft.stage==='preopening'?ORDERS.preopening:ORDERS[draft.goal]||ORDERS.maintain,why=WHY[draft.stage==='preopening'?'preopening':'operating']
-await say('Here’s your plan. Most owners do it in this order:<ol class="fj-plan">'+plan.map(s=>'<li><strong>'+E(SLOTS[s].name)+'</strong><span>'+E(why[s])+'</span></li>').join('')+'</ol>This is a starting sequence, not your brand’s official opening checklist. We’ll adjust it as your site, funding and provider requirements become clear. You can add what you have, invite a helper or leave a step for later.')
-const go=await ask({choices:[{label:'Create '+draft.name+'’s Wallet',value:'go',primary:true,commit:true,echo:false}],note:'Free to start. Nothing connects, uploads or sends without your OK.'})
+const steps='<ol class="fj-plan">'+plan.map(s=>'<li><strong>'+E(SLOTS[s].name)+'</strong><span>'+E(why[s])+'</span></li>').join('')+'</ol>'
+if(draft.formed==='no')await say('Here’s the order new franchise owners follow, and why each step waits for the one before it:'+steps+'<strong>You’re starting at step one, and you won’t do it alone.</strong> FranWallet walks you through setting up your company: what each choice means, which one fits most franchise owners, and what’s still open. You review and approve everything before anything is filed. Questions at any point? Message the FranWallet team from inside your wallet.')
+else await say('Here’s your plan. Most owners do it in this order:'+steps+'This is a starting sequence, not your brand’s official opening checklist. We’ll adjust it as your site, funding and provider requirements become clear. You can add what you have, invite a helper or leave a step for later.')
+const go=await ask({choices:[{label:'Create '+draft.name+'’s Wallet',value:'go',primary:true,commit:true,echo:false}],note:draft.formed==='yes'?'Free to start. Nothing connects, uploads or sends without your OK.':'Free to start. Next: set up your company in about 5 minutes. Nothing is filed or charged.'})
 if(go!=='go')return
 await createWallet(plan)}
+const candidateBrands=v=>[...new Set(String(v||'').split(',').map(x=>x.trim().slice(0,80)).filter(Boolean))].slice(0,5)
 function STATES(){const codes=typeof STATE_CODES!=='undefined'?STATE_CODES:[];return codes.map(c=>[c,c])}
 const entryFlowId=()=>window.FRAN_ENTRY_FLOW?.id||draft.flowId||'';
 async function createWallet(plan){if(busy)return;busy=true;setPhase('Creating your Wallet');const t=turn();t.innerHTML='<ul class="fj-building" aria-live="polite"><li data-b="1">Creating '+E(draft.name)+'</li><li data-b="2">Saving the company profile</li><li data-b="3">Building your plan</li></ul>'
@@ -239,6 +251,7 @@ stepKey=null;renderWallet();if(!store().plan_asked)await planStep();await people
 function leave(slot,status,fn){mark(slot,status);save({last:slot});window.FRAN_HUB?.quiet?.(SLOTS[slot].hub,8000);metric('journey_handoff',{slot,status});dialog.close();setTimeout(fn,60);return 'left'}
 const help=service=>()=>dispatchEvent(new CustomEvent('fran:service-profile',{detail:{service}}))
 const formationGuide=()=>dispatchEvent(new CustomEvent('fran:rehearsal-open'))
+const incorporate=path=>()=>dispatchEvent(new CustomEvent('fran:incorporate-open',{detail:{path}}))
 async function laterOrNext(s,reason){mark(s,'later');renderWallet();await say('No problem. I’ll keep '+E(SLOTS[s].noun)+' on your list'+(reason?' '+reason:'')+'.');return 'next'}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms))
 
@@ -371,21 +384,20 @@ const W=WHY[pre?'preopening':'operating'][s]
 if(s==='entity'){
  /* "Not sure" gets one clarifying question first: papers in hand, or help working it out. */
  if(store().formed==='unsure'&&!saved('entity')&&store().slots?.entity!=='diy'){await head('You weren’t sure whether the company behind '+E(n)+' has been formed. That’s common. Do you have papers like articles of organization, an operating agreement or an EIN letter?',W)
-  const c=await ask({choices:[{label:'I have documents',sub:'Upload them and I’ll read the legal name, EIN, state and owners',value:'up',primary:true,icon:'upload'},{label:'Prepare formation and try a private rehearsal',sub:'Prepare my brief and work out what’s still undecided',value:'guide',icon:'entity'},{label:'Ask my attorney',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
+  const c=await ask({choices:[{label:'I have documents',sub:'Upload them and I’ll read the legal name, EIN, state and owners',value:'up',primary:true,icon:'upload'},{label:'Start preparing a company',sub:'Open questions are flagged, not blocking · about 5 minutes',value:'guide',icon:'entity'},{label:'Ask my attorney',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
   if(c==='up'){const r=await uploadFlow(s,'Other','Upload your articles, operating agreement or EIN letter','entity');if(r!=='back')return r;return 'back'}
-  if(c==='guide')return leave(s,'started',formationGuide)
+  if(c==='guide')return leave(s,'started',incorporate('help'))
   if(c==='att')return inviteFlow(s,'entity','attorney')
   return laterOrNext(s,'until you know more')}
- if(store().formed==='no'&&!saved('entity')&&store().slots?.entity!=='diy'){await head('Let’s prepare the business that will own your location. You don’t have to choose a legal structure alone.',W)
-  const c=await ask({choices:[{label:'Prepare formation and try a private rehearsal',sub:'Prepare my brief, clarify decisions and choose support',value:'guide',primary:true,icon:'entity'},{label:'Explore forming it with CoverPanda',sub:'See provider scope and pricing. Nothing is requested or purchased yet.',value:'cp',icon:'entity'},{label:'I’ll do it myself',sub:'I’ll give you the three steps',value:'diy'},{label:'My attorney is handling it',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
-  if(c==='guide')return leave(s,'started',formationGuide);
-  if(c==='cp')return leave(s,'exploring',help('entity'))
+ if(store().formed==='no'&&!saved('entity')&&store().slots?.entity!=='diy'){await head('Let’s set up the company that will own '+E(n)+'. Five short steps: name, owners, taxes, addresses, review. I explain each choice as we go, and your answers save after every step, so you can stop and pick up later from your wallet’s Home.',W)
+  const c=await ask({choices:[{label:'Start incorporating',sub:'About 5 minutes · saves as you go · nothing is filed or charged',value:'guide',primary:true,icon:'entity'},{label:'I’ll do it myself',sub:'I’ll give you the three steps',value:'diy'},{label:'My attorney is handling it',sub:'Invite them to add the documents, free',value:'att',icon:'people',tag:'Free'}],skip:{label:'Later',value:'later'}})
+  if(c==='guide')return leave(s,'started',incorporate('new'));
   if(c==='att')return inviteFlow(s,'entity','attorney')
   if(c==='diy'){mark(s,'diy');await say('Here’s the short version:<ol class="fj-plan"><li><strong>Prepare your filing with your provider</strong><span>Confirm structure, formation state, owners, registered agent and any legal review before filing.</span></li><li><strong>Get your EIN</strong><span>Confirm eligibility and the current application process directly with the IRS; save its official confirmation.</span></li><li><strong>Bring them here</strong><span>Upload them and I’ll read the details.</span></li></ol>');const d=await ask({choices:[{label:'I have them now',value:'up',primary:true,icon:'upload'},{label:'Continue setup',value:'next'}]});if(d==='up'){const r=await uploadFlow(s,'Other','Upload your articles, operating agreement or EIN letter','entity');if(r!=='back')return r}return 'next'}
   return laterOrNext(s,'for when it’s formed')}
  await head(saved('entity')?'Your company name is saved. Add the formation papers or EIN letter and I’ll fill in the EIN, state and owners.':'Let’s add the company behind '+E(n)+'.',W)
  const c=await ask({choices:[{label:'Upload formation documents',sub:'I’ll read the legal name, EIN, state and owners',value:'up',primary:true,icon:'upload'},{label:'Type the details',sub:'Legal name, EIN and owners',value:'type'},{label:'Invite my attorney',sub:'They add it for you',value:'att',icon:'people',tag:'Free'}],skip:{label:saved('entity')?'Good for now':'Later',value:'later'}})
- if(c==='up')return uploadFlow(s,'Other','Upload your articles, operating agreement or EIN letter','entity');if(c==='type')return leave(s,'started',()=>{window.switchTab?.('entity');setTimeout(()=>{const f=$('life-entity-form');f?.scrollIntoView({block:'start'});f?.querySelector('input,select')?.focus()},150)});if(c==='att')return inviteFlow(s,'entity','attorney')
+ if(c==='up')return uploadFlow(s,'Other','Upload your articles, operating agreement or EIN letter','entity');if(c==='type')return leave(s,'started',incorporate('existing'));if(c==='att')return inviteFlow(s,'entity','attorney')
  if(saved('entity')){mark(s,'later');return 'next'}return laterOrNext(s)}
 if(s==='lease'){await head('Where are you on the lease for '+E(n)+'?',W)
  const c=await ask({choices:[{label:'It’s signed',sub:'I’ll read the landlord, dates, base rent and CAM',value:'signed',primary:true,icon:'upload'},{label:'Still negotiating',sub:'Upload the LOI or draft',value:'loi'},...(pre?[{label:'Still looking for a site',value:'site'}]:[])],skip:{label:'Later',value:'later'}})

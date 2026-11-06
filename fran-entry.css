@@ -2,3 +2,25 @@
 .ws-menu{max-height:min(680px,calc(100dvh - 128px));overflow:hidden;flex-direction:column}.ws-menu.active{display:flex}.ws-actions{flex:none;padding:4px 0 10px;background:#fff;border-bottom:1px solid #dce6df}.ws-actions button{width:100%;min-height:44px}.ws-scroll{overflow-y:auto;overscroll-behavior:contain;min-height:0}.ws-scroll button.ws-item{width:100%;border:0;background:transparent;font:inherit;text-align:left;color:inherit}.ws-scroll button.ws-item:hover{background:#edf3ef}.ws-scroll button.ws-item.active{background:#fff0e9}.ws-menu button:focus-visible{outline:3px solid #e8734a;outline-offset:-3px}@media(max-width:600px){.ws-menu{left:12px;right:12px;top:72px;width:calc(100vw - 24px);box-sizing:border-box;max-height:calc(100dvh - 84px)}}
 
 #fran-entry-resume{padding:12px 16px;margin:12px 0;border:1px solid #c7d8ce;border-radius:12px;background:#f7faf8}#fran-entry-resume p{margin:0 0 8px}#fran-entry-resume>div{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Starting-point picker: one card per path, the whole card is the button (button names stay exact). */
+dialog[aria-label="Choose your entity starting point"]{margin:auto;padding:28px;background:#fff;color:#173b32;font-family:'DM Sans',system-ui,sans-serif;box-shadow:0 24px 60px rgba(16,62,53,.28)}
+dialog[aria-label="Choose your entity starting point"] h2{margin:0 0 6px;font-size:24px;line-height:1.25;letter-spacing:-.02em;font-weight:600;color:#173b32}
+dialog[aria-label="Choose your entity starting point"] p{margin:0 0 4px;color:#566b63;font-size:14px;line-height:1.55}
+.entry-close{position:absolute;top:12px;right:12px;width:40px;height:40px;border:0;border-radius:8px;background:transparent;color:#566b63;font-size:24px;line-height:1;cursor:pointer}
+.entry-close:hover{background:#edf3ef}.entry-close:focus-visible{outline:3px solid #298783;outline-offset:2px}
+.entry-choices{flex-direction:column;gap:10px;margin:18px 0 8px}
+.entry-option{position:relative;display:grid;gap:2px;padding:14px 44px 14px 16px;border:1px solid #b8cabe;border-radius:10px;background:#fff;text-align:left;transition:border-color .15s,background .15s}
+.entry-option::after{content:'→';position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#164f43;font-size:18px;pointer-events:none}
+.entry-option:hover{border-color:#164f43;background:#f5f7f4}
+.entry-option.is-primary{border:2px solid #164f43;background:#edf3ef}
+.entry-option button,.entry-option button.btn{all:unset;font:600 16px/1.35 'DM Sans',system-ui,sans-serif;color:#173b32;cursor:pointer}
+.entry-option button::before{content:'';position:absolute;inset:0;border-radius:10px}
+.entry-option button:focus-visible::before{outline:3px solid #298783;outline-offset:2px}
+.entry-option small{font-size:13px;line-height:1.45;color:#566b63}
+.entry-option:has([aria-pressed=true]){border-color:#a94425;background:#fff6f1}
+#fran-entry-choice .entry-option{background:#fff}
+#fran-entry-choice.is-chosen{padding:12px 16px}
+#fran-entry-choice.is-chosen h2,#fran-entry-choice.is-chosen>p:not([data-entry-status]){display:none}
+#fran-entry-choice [data-entry-status]{margin:0}
+.entry-change{margin-left:6px;padding:2px 0;border:0;background:none;color:inherit;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}

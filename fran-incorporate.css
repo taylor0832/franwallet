@@ -1,0 +1,201 @@
+/* Incorporate · FranWallet evergreen, burnt-orange actions, DM Sans (DESIGN.md). Scoped to .finc. */
+.finc{--finc-evergreen:#164f43;--finc-ink:#173b32;--finc-muted:#566b63;--finc-action:#a94425;--finc-action-hover:#90371e;--finc-line:#dce5df;--finc-field:#b8cabe;--finc-canvas:#f5f7f4;--finc-tint:#edf3ef;--finc-tint-text:#3d6555;--finc-attn:#fff2e8;--finc-attn-text:#9e492c;--finc-error:#a34226;--finc-focus:#298783;
+ display:block;container-type:inline-size;margin:0 0 28px;padding:28px;background:#fff;border:1px solid var(--finc-line);border-radius:12px;color:var(--finc-ink);font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.65}
+.finc *{box-sizing:border-box}
+.finc p{margin:6px 0 12px;max-width:68ch}
+.finc h2{margin:2px 0 8px;font-size:28px;line-height:1.2;letter-spacing:-.025em;font-weight:600}
+.finc h3{margin:0 0 4px;font-size:21px;line-height:1.3;letter-spacing:-.015em;font-weight:600}
+.finc h4{margin:0 0 6px;font-size:15px;font-weight:600}
+.finc h2:focus,.finc h3:focus{outline:none}.finc h2:focus-visible,.finc h3:focus-visible{outline:3px solid var(--finc-focus);outline-offset:3px;border-radius:4px}
+.finc :is(button,input,select,a):focus-visible{outline:3px solid var(--finc-focus);outline-offset:2px}
+.finc-eyebrow{margin:0!important;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--finc-evergreen)}
+.finc-lede{font-size:16px;color:var(--finc-muted)}
+.finc-sub{color:var(--finc-muted);margin-bottom:20px!important}
+.finc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.finc-opt{font-weight:400;color:var(--finc-muted)}
+
+/* Intro: one primary path, two alternatives */
+.finc-intro{max-width:760px}
+.finc-paths{display:grid;gap:10px;margin:20px 0 18px}
+.finc-path{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 12px;width:100%;padding:16px 18px;text-align:left;background:#fff;border:1px solid var(--finc-field);border-radius:10px;color:var(--finc-ink);font:inherit;cursor:pointer;transition:border-color .15s,background .15s}
+.finc-path strong{font-size:16px;font-weight:600}.finc-path small{grid-column:1;color:var(--finc-muted);font-size:13px}
+.finc-path span{grid-row:1/3;grid-column:2;font-size:20px;color:var(--finc-evergreen)}
+.finc-path:hover{border-color:var(--finc-evergreen);background:var(--finc-canvas)}
+.finc-path.is-primary{border:2px solid var(--finc-evergreen);background:var(--finc-tint)}
+.finc-outcomes{margin:0 0 16px;padding:0;list-style:none;display:grid;gap:6px}
+.finc-outcomes li{padding-left:24px;position:relative;color:var(--finc-ink)}
+.finc-outcomes li::before{content:'✓';position:absolute;left:2px;color:var(--finc-evergreen);font-weight:700}
+.finc-truth{padding:12px 14px;background:var(--finc-canvas);border-left:3px solid var(--finc-evergreen);border-radius:0 8px 8px 0;font-size:13px;color:var(--finc-ink);max-width:none!important}
+
+/* Header and stepper */
+.finc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.finc-steps{margin:0 0 24px}
+.finc-steps-count{display:none;font-size:13px;font-weight:600;color:var(--finc-muted);margin:0 0 6px!important}
+.finc-steps ol{display:flex;gap:6px;margin:0;padding:0;list-style:none}
+.finc-steps li{flex:1;min-width:0}
+.finc-steps button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 6px 10px;background:none;border:0;border-bottom:3px solid var(--finc-line);font:inherit;font-size:13px;font-weight:600;color:var(--finc-muted);cursor:pointer;text-align:left}
+.finc-steps button small{display:block;font-weight:500;font-size:11px;color:var(--finc-attn-text)}
+.finc-dot{flex:none;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--finc-field);font-size:12px}
+.finc-steps .is-done button{color:var(--finc-ink);border-bottom-color:var(--finc-evergreen)}
+.finc-steps .is-done .finc-dot{background:var(--finc-evergreen);border-color:var(--finc-evergreen);color:#fff}
+.finc-steps .is-open button{border-bottom-color:#e3b9a4}
+.finc-steps .is-current button{color:var(--finc-ink);border-bottom-color:var(--finc-action)}
+.finc-steps .is-current .finc-dot{border-color:var(--finc-action);color:var(--finc-action)}
+
+/* Layout: form + live company card */
+.finc-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:28px;align-items:start}
+.finc-main{min-width:0}
+.finc-card{position:sticky;top:16px;padding:18px;background:var(--finc-evergreen);color:#fff;border-radius:12px}
+.finc-card-mark{margin:0!important;font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.75}
+.finc-card-name{margin:6px 0 12px!important;font-size:18px;font-weight:600;line-height:1.3;word-break:break-word}
+.finc-card dl{margin:0;display:grid;gap:8px}
+.finc-card dl div{display:grid;gap:0}
+.finc-card dt{font-size:11px;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
+.finc-card dd{margin:0;font-size:13px;font-weight:500}
+.finc-card dd.is-muted{opacity:.7;font-style:italic}
+.finc-card-foot{margin:14px 0 0!important}
+.finc-card .finc-pill{background:rgba(255,255,255,.16);color:#fff}
+.finc-card .finc-pill.is-ok{background:#fff;color:var(--finc-evergreen)}
+
+/* Fields */
+.finc-field{display:grid;gap:4px;margin:0 0 16px}
+.finc-field label,.finc-choices legend{font-size:13px;font-weight:600;color:var(--finc-ink)}
+.finc-field small,.finc-hint{font-size:12px;color:var(--finc-muted);line-height:1.5;margin:0 0 4px}
+.finc input[type=text],.finc input[type=number],.finc select{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--finc-field);border-radius:8px;background:#fff;color:var(--finc-ink);font:inherit;font-size:15px}
+.finc [aria-invalid=true]{border-color:var(--finc-error)!important;box-shadow:0 0 0 1px var(--finc-error)}
+.finc-error{margin:2px 0 0!important;color:var(--finc-error);font-size:13px;font-weight:500}
+.finc-name-row{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:12px}
+.finc-preview{margin:-8px 0 16px!important;font-size:13px;color:var(--finc-muted)}
+.finc-choices{border:0;padding:0;margin:0 0 18px;display:grid;gap:8px}
+.finc-choices legend{margin-bottom:6px;padding:0}
+.finc-choice{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--finc-line);border-radius:10px;cursor:pointer;background:#fff}
+.finc-choice:has(input:checked){border-color:var(--finc-evergreen);background:var(--finc-tint)}
+.finc-choice input{margin-top:4px;width:18px;height:18px;accent-color:var(--finc-evergreen);flex:none}
+.finc-choice strong{display:block;font-weight:600}
+.finc-choice small{display:block;color:var(--finc-muted);font-size:13px;line-height:1.5}
+.finc-tag{font-style:normal;font-size:11px;font-weight:600;color:var(--finc-attn-text);background:var(--finc-attn);padding:1px 6px;border-radius:5px;margin-left:4px;vertical-align:1px}
+.finc-check{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;cursor:pointer}
+.finc-check input{width:18px;height:18px;margin-top:3px;accent-color:var(--finc-evergreen);flex:none}
+
+/* Owners */
+.finc-owners{display:grid;gap:10px;margin-bottom:10px}
+.finc-owner{display:grid;grid-template-columns:minmax(0,1fr) 120px auto;gap:10px;align-items:end;padding:12px;border:1px solid var(--finc-line);border-radius:10px}
+.finc-owner .finc-field{margin:0}
+.finc-owner .finc-error{grid-column:1/-1}
+.finc-pct-wrap{position:relative;display:block}.finc-pct-wrap input{padding-right:28px!important}
+.finc-pct-wrap span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--finc-muted)}
+.finc-owner .finc-link{min-height:44px}
+.finc-add{margin:0 0 12px}
+.finc-total{font-weight:600;color:var(--finc-muted)}.finc-total.is-ok{color:var(--finc-evergreen)}.finc-total.is-warn{color:var(--finc-attn-text)}
+
+/* Taxes and addresses */
+.finc-default{padding:14px 16px;margin:0 0 18px;background:var(--finc-canvas);border:1px solid var(--finc-line);border-radius:10px}
+.finc-default-v{margin:2px 0!important;font-size:18px;font-weight:600}
+.finc-default p:last-child{margin-bottom:0;color:var(--finc-muted);font-size:13px}
+.finc-block{padding:0 0 4px;margin:0 0 18px;border-bottom:1px solid var(--finc-line)}
+.finc-block:last-of-type{border-bottom:0}
+.finc-note{font-size:13px;color:var(--finc-muted)}
+
+/* Review */
+.finc-rv{padding:16px 0;border-top:1px solid var(--finc-line)}
+.finc-rv-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.finc-rv dl{margin:4px 0 0;display:grid;gap:6px}
+.finc-rv dl div{display:grid;grid-template-columns:180px minmax(0,1fr);gap:12px}
+.finc-rv dt{color:var(--finc-muted)}.finc-rv dd{margin:0;font-weight:500;word-break:break-word}
+.finc-need{color:var(--finc-attn-text);font-weight:600}
+.finc-gaps{padding:14px 16px;margin:0 0 6px;background:var(--finc-attn);border-radius:10px;color:var(--finc-attn-text)}
+.finc-gaps p{margin:0 0 4px!important}.finc-gaps ul{margin:0;padding-left:18px}
+.finc-gaps .finc-link{color:var(--finc-attn-text);padding:2px 0}
+.finc-alert{padding:12px 14px;margin:0 0 12px;background:var(--finc-attn);border-radius:10px;color:var(--finc-attn-text)}
+.finc-costs{width:100%;border-collapse:collapse;font-size:13px}
+.finc-costs th,.finc-costs td{padding:8px 0;border-bottom:1px solid var(--finc-line);text-align:left;font-weight:500}
+.finc-costs td{text-align:right;color:var(--finc-muted)}
+.finc-confirm{padding:14px 16px;margin:16px 0 0;border:1px solid var(--finc-field);border-radius:10px}
+.finc-confirm.has-error{border-color:var(--finc-error)}
+.finc-confirm .finc-check{margin:0}
+.finc-check:has(input:disabled){opacity:.6;cursor:not-allowed}
+.finc-next ol{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.finc-next li{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:12px;align-items:center}
+.finc-who{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--finc-evergreen)}
+.finc-next-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+
+/* Pills, actions, status */
+.finc-pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;letter-spacing:.02em;background:var(--finc-tint);color:var(--finc-tint-text);white-space:nowrap;vertical-align:1px}
+.finc-pill.is-ok{background:var(--finc-evergreen);color:#fff}
+.finc-pill.is-attn{background:var(--finc-attn);color:var(--finc-attn-text)}
+.finc-actions{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 4px}
+.finc-actions .btn-primary{background:var(--finc-action);border-color:var(--finc-action);color:#fff;min-height:44px}
+.finc-actions .btn-primary:hover:not(:disabled){background:var(--finc-action-hover)}
+.finc-actions .btn-primary:disabled{background:#c9d3cd;border-color:#c9d3cd;color:#4d5f57;cursor:not-allowed}
+.finc-actions .btn{min-height:44px}
+.finc-link{background:none;border:0;padding:4px 0;color:var(--finc-evergreen);font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.finc-status{min-height:1.5em;margin:10px 0 0!important;font-size:13px;color:var(--finc-tint-text)}
+.finc-status:empty{margin:0!important}
+.finc-status.is-error{color:var(--finc-error);font-weight:500}
+.finc-summary{padding:14px 16px;margin:0 0 18px;border:2px solid var(--finc-error);border-radius:10px}
+.finc-summary:focus{outline:none}.finc-summary ul{margin:6px 0 0;padding-left:18px}.finc-summary a{color:var(--finc-error)}
+.finc-main[aria-busy=true] button{pointer-events:none;opacity:.7}
+
+@media (max-width:600px){.finc{padding:20px 16px}}
+@container (max-width:760px){
+ .finc-layout{grid-template-columns:1fr}
+ .finc-card{position:static}
+ .finc-steps-count{display:block}
+ .finc-steps button>span:last-child{display:none}
+ .finc-steps button{justify-content:center}
+ .finc-name-row{grid-template-columns:1fr}
+ .finc-owner{grid-template-columns:1fr 100px}
+ .finc-owner .finc-link{grid-column:1/-1;justify-self:start;min-height:32px}
+ .finc-rv dl div{grid-template-columns:1fr;gap:0}
+ .finc-next li{grid-template-columns:1fr auto}
+ .finc-who{grid-column:1/-1}
+ .finc h2{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){.finc *{transition:none!important}}
+
+/* The workspace shell (.fw) styles every label as a column and every input as a full-width field. */
+.finc .finc-choice,.finc .finc-check{flex-direction:row}
+.finc .finc-choice input,.finc .finc-check input{width:18px;min-height:0;padding:0;border:0;box-shadow:none}
+.finc .finc-card :is(p,dt,dd){color:#fff}
+.finc .finc-field label{display:block}
+.finc-name-row:has(>.finc-field:only-child){grid-template-columns:1fr}
+.finc .finc-card{background:var(--finc-evergreen)}
+
+/* Home: the next-step card above the dashboard */
+.finc-home{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:0 0 20px;padding:22px 24px;background:#164f43;color:#fff;border-radius:12px;font-family:'DM Sans',system-ui,sans-serif}
+.finc-home-copy{flex:1 1 320px;min-width:0}
+#finc-home .finc-home-eyebrow{margin:0 0 4px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#cfe3d8}
+#finc-home h2{margin:0 0 6px;font-size:22px;line-height:1.25;letter-spacing:-.02em;font-weight:600;color:#fff}
+#finc-home p{margin:0 0 12px;color:#e4eee8;font-size:14px;line-height:1.55;max-width:62ch}
+.finc-home-bar{height:6px;max-width:360px;background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden}
+.finc-home-bar i{display:block;height:100%;background:#fff;border-radius:3px}
+.finc-home-go{flex:none;min-height:46px;padding:0 20px;border:0;border-radius:8px;background:#a94425;color:#fff;font:600 15px/1 'DM Sans',system-ui,sans-serif;cursor:pointer}
+.finc-home-go:hover{background:#90371e}
+.finc-home-go:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* The entity record that follows the setup (styles carried over from the retired fran-formation.css). */
+.life-entity-record{margin:0!important;padding:0!important;border:0!important}
+.life-entity-record>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none}
+.life-entity-record>summary::-webkit-details-marker{display:none}
+.life-entity-record>summary:before{content:'▸';color:#164f43;margin-right:-4px}
+.life-entity-record[open]>summary:before{content:'▾'}
+.life-entity-record>summary h3{flex:1;margin:0}
+.finc .finc-costs th{background:none}
+
+/* Guidance pieces: how it works, reasons, DBA pair, support link */
+.finc-how-title{margin:6px 0 8px!important;font-size:15px!important}
+.finc-how{margin:0 0 16px;padding:0;list-style:none;counter-reset:how;display:grid;gap:10px}
+.finc-how li{position:relative;padding-left:36px;color:var(--finc-ink)}
+.finc-how li::before{counter-increment:how;content:counter(how);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--finc-tint);color:var(--finc-evergreen);font-size:12px;font-weight:700;display:grid;place-items:center}
+.finc-why{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:4px;font-size:13px}
+.finc-why li{position:relative;padding-left:22px}
+.finc-why li::before{content:'✓';position:absolute;left:2px;color:var(--finc-evergreen);font-weight:700}
+.finc-dba{border:0;padding:0;margin:4px 0 8px}
+.finc-dba legend{font-size:13px;font-weight:600;padding:0;margin-bottom:2px}
+.finc-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.finc-tag.is-ok{color:var(--finc-evergreen);background:var(--finc-tint)}
+.finc-support{display:inline-block;margin-top:10px;font-size:13px}
+@container (max-width:760px){.finc-pair{grid-template-columns:1fr}}
+.finc .finc-costs{table-layout:fixed}
+.finc .finc-costs th{width:62%;padding-right:12px}
+.finc .finc-costs :is(th,td){white-space:normal;overflow-wrap:anywhere;vertical-align:top}

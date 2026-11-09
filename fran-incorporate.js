@@ -1,7 +1,7 @@
 /* Incorporate: the guided company setup in Company → Compliance & entity.
    Company → Owners → Taxes → Addresses → Review. Each step saves to the location's entity record through the lifecycle
-   API. Nothing here files with a state, charges a card, requests a tax election or orders a registered agent: those
-   stay visibly unavailable until a verified provider connection exists. */
+   API. A confirmed setup is then sent to the formation team, who quote, file and post updates through the existing
+   service request. Nothing here files with a state, charges a card or requests a tax election by itself. */
 (()=>{'use strict';
 const C=window.FranFormationCore;if(!C?.incorporationGaps)return;
 const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -38,6 +38,40 @@ function writeDraft(){try{localStorage.setItem(draftKey(ctx.wallet.id),JSON.stri
 function readDraft(id){try{const d=JSON.parse(localStorage.getItem(draftKey(id))||'null');return d&&typeof d==='object'&&d.details&&typeof d.details==='object'?d:null}catch(_){return null}}
 const clearDraft=id=>{try{localStorage.removeItem(draftKey(id))}catch(_){}};
 
+/* ---------- formation team hand-off ---------- */
+/* The request lives in the existing service pipeline (service-commerce): the server rebuilds the confirmed setup from the
+   saved record, opens the team's ticket, and carries the quote, payment and delivery updates. */
+const team=new Map(); /* wallet id → {state:'loading'|'ready'|'error', engagement, canSend} */
+let sending=false;
+async function serviceApi(action,body={}){if(typeof sb==='undefined'||typeof SUPABASE_URL==='undefined')throw Error('Sign in again to continue.');
+ const {data:{session}}=await sb.auth.getSession();if(!session)throw Error('Sign in again to continue.');
+ const r=await fetch(SUPABASE_URL+'/functions/v1/service-commerce',{method:'POST',headers:{'Content-Type':'application/json',apikey:typeof SUPABASE_ANON_KEY==='undefined'?'':SUPABASE_ANON_KEY,Authorization:'Bearer '+session.access_token},body:JSON.stringify({action,wallet_id:ctx.wallet.id,...body})});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Please retry.');return d;}
+async function loadTeam(force=false){const id=ctx?.wallet?.id,prev=team.get(id);if(!id||(!force&&prev&&prev.state!=='error'))return;
+ team.set(id,{...prev,state:prev?.state==='ready'?'ready':'loading'});
+ try{const r=await serviceApi('load');team.set(id,{state:'ready',engagement:(r.engagements||[]).find(e=>e.service==='entity')||null,canSend:r.can_purchase===true});}
+ catch(e){team.set(id,{...prev,state:'error',message:e.message});}
+ if(ctx?.wallet?.id===id)render();}
+const teamOf=()=>team.get(ctx?.wallet?.id)||{state:'idle'};
+function request(){const e=teamOf().engagement;if(!e)return null;const sent=e.intake?.setup||null;return {e,status:e.status,sent,stale:!!sent&&confirmed()&&sent.fingerprint!==st.inc.confirmed_fingerprint};}
+const STATUS_PHASE={scope_review:'preparing',proposal_ready:'quote',onboarding:'filing',active:'done',past_due:'payment',canceled:'ended'};
+/* Where the company is: confirm → send → preparing → quote → filing → done (or resend / locked after a change). */
+function phase(){const r=request(),t=teamOf();
+ if(r&&!(!r.sent&&r.status==='scope_review')){if(!r.sent)return 'locked';if(r.stale)return r.status==='scope_review'?'resend':'locked';return STATUS_PHASE[r.status]||'preparing';}
+ if(!confirmed())return 'confirm';
+ if(t.state==='idle'||t.state==='loading')return 'checking';
+ return t.state==='error'?'unknown':'send';}
+const sentDate=()=>{const s=request()?.e;return s?new Date(s.updated_at||s.created_at).toLocaleDateString('en-US',{month:'long',day:'numeric'}):'';};
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n/100);
+async function send(){if(sending||busy)return;read();if(!confirmed())return;sending=true;st.error=false;st.message='Sending to your formation team…';render();
+ try{if(st.dirty&&!await persist())return;
+  const r=await serviceApi('start',{selection:'entity_formation',consent:true,intake:{}});
+  st.message=r.locked?'Your team already prepared a quote from the details you sent earlier. Message them about the change.':r.updated?'Updated details sent. Your team will quote from these.':r.existing?'Your formation team already has these details.':'Sent. Your formation team will check the name and prepare your quote.';
+  metric('incorporate_sent_to_team',{updated:!!r.updated,locked:!!r.locked});pendingFocus='#finc-heading';await loadTeam(true);}
+ catch(e){st.error=true;st.message='Not sent yet: '+(e.message||'Please retry.')+' Your confirmed details are saved.';pendingFocus='#finc-status';}
+ finally{sending=false;render();}}
+const openRequest=()=>dispatchEvent(new CustomEvent('fran:service-open',{detail:{service:'entity'}}));
+
 /* ---------- saving ---------- */
 function patch(){const d=st.details,f=facts(),now=new Date().toISOString(),stage=st.path==='existing'?'existing':'planning';
  const owners=d.owners.filter(o=>String(o.name||'').trim()).map(o=>({name:String(o.name).trim(),percentage:o.percentage===''||o.percentage===null?null:Number(o.percentage)}));
@@ -65,8 +99,8 @@ function intro(){const w=E(ctx.wallet.name);return '<div class="finc-intro"><p c
  +'<button type="button" class="finc-path is-primary" data-finc-path="new"><strong>Start a new company</strong><small>Set up an LLC or corporation, step by step</small><span aria-hidden="true">→</span></button>'
  +'<button type="button" class="finc-path" data-finc-path="existing"><strong>I already have a company</strong><small>Record it once; no duplicate filing</small><span aria-hidden="true">→</span></button>'
  +'<button type="button" class="finc-path" data-finc-path="help"><strong>I’m not sure yet</strong><small>Start preparing; open questions are flagged, not blocking</small><span aria-hidden="true">→</span></button></div>'
- +'<h3 class="finc-how-title">How it works</h3><ol class="finc-how"><li><b>Answer five short sections.</b> Each choice is explained in plain language, with what fits most franchise owners.</li><li><b>Review your company profile.</b> We flag anything missing or inconsistent before it can hold up your filing.</li><li><b>Approve the exact filing and price.</b> Nothing is filed or charged until you do.</li></ol>'
- +'<p class="finc-truth"><b>Good to know:</b> online filing through FranWallet isn’t switched on yet, so today you’ll finish and confirm your company profile. Your answers save after every step; stop any time and pick up from your wallet’s Home.</p>'+support+'</div>';}
+ +'<h3 class="finc-how-title">How it works</h3><ol class="finc-how"><li><b>Answer five short sections.</b> Each choice is explained in plain language, with what fits most franchise owners.</li><li><b>Review your company profile.</b> We flag anything missing or inconsistent before it can hold up your filing.</li><li><b>Send it to your formation team.</b> They check the name with the state and send you one quote. Nothing is filed or charged until you accept it.</li></ol>'
+ +'<p class="finc-truth"><b>Good to know:</b> your answers save after every step. Stop any time and pick up from your wallet’s Home.</p>'+support+'</div>';}
 
 function stepper(){const gaps=C.incorporationGaps(facts(),st.inc),open=new Set(gaps.map(g=>g[0])),i=STEPS.findIndex(s=>s[0]===st.step);
  return '<nav class="finc-steps" aria-label="Company setup steps"><p class="finc-steps-count">Step '+(i+1)+' of '+STEPS.length+' · '+STEPS[i][1]+'</p><ol>'+STEPS.map(([k,l],n)=>{const cur=k===st.step,state=cur?'current':k==='review'?(confirmed()?'done':''):(n<i||st.visited?.[k])?(open.has(k)?'open':'done'):'';
@@ -80,7 +114,9 @@ function sidecard(){const f=facts(),tax=C.defaultTax(f.entity_type,f.owners),tot
   +row('Owners',owners.length?owners.length+(owners.length===1?' owner':' owners')+(total!==null?' · '+total+'%':''):'None added',!owners.length)
   +row('Taxes',st.inc.tax_election==='default'?tax.label+' (default)':st.inc.tax_election==='undecided'?'Not decided yet':C.ELECTIONS[st.inc.tax_election].replace('Request ','')+' · not submitted',st.inc.tax_election==='undecided')
   +row('Registered agent',st.inc.agent==='own'?(st.inc.agent_name||'Name needed'):st.inc.agent==='service'?'Registered agent service':'Decide later',st.inc.agent==='later')
-  +'</dl><p class="finc-card-foot">'+(confirmed()?pill('Details confirmed','ok'):pill('Draft · nothing filed'))+'</p></aside>';}
+  +'</dl><p class="finc-card-foot">'+cardStatus()+'</p></aside>';}
+const CARD={preparing:['With your formation team','attn'],quote:['Quote ready','attn'],filing:['Accepted · being filed','attn'],done:['Marked complete','ok'],payment:['Payment needs attention','attn'],ended:['Request ended',''],resend:['Updated details to send','attn'],locked:['Changed after your quote','attn']};
+const cardStatus=()=>{const c=st.path&&st.path!=='existing'&&CARD[phase()];return c?pill(c[0],c[1]):confirmed()?pill('Details confirmed','ok'):pill('Draft · nothing filed');};
 
 function companyStep(){const d=st.details,e=st.errors,endings=C.ENDINGS[d.entity_type]||[],existing=st.path==='existing';
  if(endings.length&&!endings.includes(st.inc.ending))st.inc.ending=endings[0];if(!endings.length)st.inc.ending='';
@@ -123,29 +159,58 @@ function addressesStep(){const d=st.details,i=st.inc;
 function reviewStep(){const f=facts(),gaps=C.incorporationGaps(f,st.inc),tax=C.defaultTax(f.entity_type,f.owners),ok=confirmed(),owners=f.owners.filter(o=>String(o.name||'').trim());
  const section=(step,title,rows)=>'<section class="finc-rv"><div class="finc-rv-head"><h4>'+title+'</h4><button type="button" class="finc-link" data-finc-step="'+step+'">Edit<span class="finc-sr"> '+title+'</span></button></div><dl>'+rows.map(([l,v])=>'<div><dt>'+l+'</dt><dd>'+v+'</dd></div>').join('')+'</dl></section>';
  const need=v=>'<span class="finc-need">'+E(v)+'</span>';
- return '<h3 id="finc-heading" tabindex="-1">'+(ok?'Your company is ready to file':'Review your company')+'</h3><p class="finc-sub">'+(ok?'You confirmed these details. Change anything and you’ll confirm again.':'Check everything once. Confirming saves an exact record of what you approved; it does not file or charge anything.')+'</p>'
- +(changedSinceConfirm()?'<div class="finc-alert" role="status"><b>Details changed after you confirmed.</b> Review and confirm again.</div>':'')
+ const P=phase(),[title,sub]=ok?(HEADINGS[P]||HEADINGS.send)():['Review your company','Check everything once. Confirming saves an exact record of what you approved; it does not file or charge anything.'];
+ return '<h3 id="finc-heading" tabindex="-1">'+E(title)+'</h3><p class="finc-sub">'+E(sub)+'</p>'
+ +(changedSinceConfirm()?'<div class="finc-alert" role="status"><b>Details changed after you confirmed.</b> Review and confirm again.'+(request()?.sent?' Your formation team still has the version you sent on '+E(sentDate())+'.':'')+'</div>':'')
  +(gaps.length?'<div class="finc-gaps"><p><b>'+gaps.length+(gaps.length===1?' decision':' decisions')+' before you can confirm</b></p><ul>'+gaps.map(([s,l])=>'<li><button type="button" class="finc-link" data-finc-step="'+s+'">'+E(l)+'</button></li>').join('')+'</ul></div>':'')
  +section('company','Company',[['Legal name',f.name?E(f.name):need('Not chosen')],['Structure',f.entity_type&&f.entity_type!=='Undecided'?E(f.entity_type):need('Not sure yet')],['Formation state',STATE_NAMES[f.jurisdiction]?E(stateLabel(f.jurisdiction)):need('Not chosen')],...(st.inc.name_backup?[['Backup name',E(compose(st.inc.name_backup))]]:[]),['DBA',E([st.details.dba,st.inc.dba_backup].filter(Boolean).join(' · backup: ')||'None')]])
  +section('owners','Owners',owners.length?owners.map(o=>[E(o.name),o.percentage===''||o.percentage===null?need('Share missing'):E(o.percentage+'%')]):[['Owners',need('None added')]])
  +section('taxes','Taxes',[['Default treatment',E(tax.label)],['Your choice',st.inc.tax_election==='undecided'?need('Not decided yet'):E(C.ELECTIONS[st.inc.tax_election])],...(['s_corp','c_corp'].includes(st.inc.tax_election)?[['Election status',pill('Not submitted','attn')]]:[])])
  +section('addresses','Addresses',[['Registered agent',st.inc.agent==='later'?need('Decide later'):st.inc.agent==='own'?(st.inc.agent_name?E(st.inc.agent_name):need('Name needed')):'Registered agent service '+pill('Price shown before you approve')],['Business address',f.physical_address?E(f.physical_address):need('Not added')],['Mailing address',st.inc.mailing_same?'Same as business address':E(f.mailing_address||'Not added')],...(st.inc.mail_interest?[['Mailing address service','Requested · we’ll confirm options with you']]:[])])
- +'<section class="finc-rv"><h4>Costs</h4><table class="finc-costs"><tbody>'+[['State filing fee','Quote required'],['Formation service','Quote required'],...(st.inc.agent==='service'?[['Registered agent service, renews yearly','Quote required']]:[]),...(st.inc.mail_interest?[['Mailing address and forwarding','Confirmed with you first']]:[]),['Tax election filing','Not included']].map(([l,v])=>'<tr><th scope="row">'+l+'</th><td>'+v+'</td></tr>').join('')+'</tbody></table><p class="finc-note">Prices appear only from a current provider quote. Nothing is charged in FranWallet today.</p></section>'
+ +'<section class="finc-rv"><h4>Costs</h4><table class="finc-costs"><tbody>'+[['State filing fee','Quote required'],['Formation service','Quote required'],...(st.inc.agent==='service'?[['Registered agent service, renews yearly','Quote required']]:[]),...(st.inc.mail_interest?[['Mailing address and forwarding','Confirmed with you first']]:[]),['Tax election filing','Not included'],...(quote()?[['Your quote',quote()]]:[])].map(([l,v])=>'<tr><th scope="row">'+l+'</th><td>'+E(v)+'</td></tr>').join('')+'</tbody></table><p class="finc-note">'+(quote()?'Your quote lists exactly what it covers. Review it before you accept.':'Prices come from your formation team’s quote. Nothing is charged until you accept it.')+'</p></section>'
  +(ok?'':'<div class="finc-confirm'+(st.errors.confirm?' has-error':'')+'"><label class="finc-check"><input type="checkbox" id="finc-confirm" name="confirm"'+(gaps.length?' disabled':'')+(st.errors.confirm?' aria-invalid="true" aria-describedby="finc-confirm-error"':'')+'> I confirm these details are correct and I’m authorized to prepare this company.</label>'+(st.errors.confirm?'<p class="finc-error" id="finc-confirm-error">'+E(st.errors.confirm)+'</p>':'')+'</div>')
  +nextSteps(ok);}
 
+const HEADINGS={
+ send:()=>['Your company is ready to send','You confirmed these details. Send them to your formation team for one quote. Change anything and you’ll confirm again.'],
+ checking:()=>HEADINGS.send(),unknown:()=>HEADINGS.send(),
+ preparing:()=>['Your formation team has your details','They’re checking the name with the state and preparing one quote. You’ll see it here when it’s ready.'],
+ quote:()=>['Your quote is ready','Review what it covers and the price. Nothing is filed or charged until you accept it.'],
+ filing:()=>['Your formation team is on it','You accepted the quote. They’ll post each step and your documents in your request.'],
+ done:()=>['Your formation team marked this complete','Their updates and your documents are in your request.'],
+ payment:()=>['Your payment needs attention','Open your request to update the payment.'],
+ ended:()=>['Your formation request ended','Message your formation team if you want to start again.'],
+ resend:()=>['Send your updated details','You changed and re-confirmed details after sending. Your team hasn’t quoted yet, so send them the update.'],
+ locked:()=>['Tell your team about the change','Your team is working from the details you sent on '+sentDate()+'. Message them about what changed.']};
+const quote=()=>{const p=request()?.e?.proposal;return p&&Number.isSafeInteger(p.amount)?money(p.amount)+(p.interval==='once'?' one time':' / '+p.interval):'';};
 function nextSteps(ok){const row=(who,what,status,tone)=>'<li><span class="finc-who">'+who+'</span><span class="finc-what">'+what+'</span>'+pill(status,tone)+'</li>';
- return '<section class="finc-rv finc-next"><h4>What happens next</h4><ol>'+row('You','Confirm your company details',ok?'Done':'Up next',ok?'ok':'')+row('FranWallet','Turn on online filing, then submit yours after you approve the price','In progress','attn')+row('State','Review and approve the filing','Not started')+row('You','EIN, operating agreement and business bank account','After approval')+'</ol></section>';}
+ const P=phase(),at=['confirm','send','preparing','quote','filing','done'].indexOf(['checking','unknown','resend','locked'].includes(P)?'send':P==='payment'?'quote':P==='ended'?'confirm':P),past=i=>at>i;
+ const step=(i,upNext='Up next')=>past(i)?['Done','ok']:at===i?[upNext,'attn']:['Not started',''];
+ return '<section class="finc-rv finc-next"><h4>What happens next</h4><ol>'
+  +row('You','Confirm your company details',...(ok||past(0)?['Done','ok']:['Up next','']))
+  +row('You','Send it to your formation team',...(P==='resend'?['Send the update','attn']:P==='locked'?['Message your team','attn']:step(1)))
+  +row('Formation team','Check the name with the state and prepare one quote',...step(2,'In progress'))
+  +row('You','Review and accept the quote',...(P==='payment'?['Needs attention','attn']:step(3)))
+  +row('Formation team','File with the state and post each update here',...(P==='done'?['Marked complete','ok']:step(4,'In progress')))
+  +row('You','EIN, operating agreement and business bank account','After approval')+'</ol></section>';}
 
 function existingDone(){const f=facts();return '<h3 id="finc-heading" tabindex="-1">'+E(f.name)+' is on record</h3><p class="finc-sub">Saved as an existing company, so FranWallet won’t prepare a new formation for it.</p>'
  +'<div class="finc-next-actions"><button type="button" class="btn btn-primary" data-finc-open="record">Add EIN and owners</button><button type="button" class="btn btn-ghost" data-finc-open="dataroom">Store formation documents</button><button type="button" class="finc-link" data-finc-step="company">Edit company details</button></div>';}
 
 function actions(){const i=STEPS.findIndex(s=>s[0]===st.step),last=st.step==='review';if(st.path==='existing'&&st.step==='review')return '';
- const primary=last?(confirmed()?'<button type="button" class="btn btn-primary" disabled aria-describedby="finc-file-why">File with the state</button>':'<button type="button" class="btn btn-primary" data-finc-confirm'+(C.incorporationGaps(facts(),st.inc).length?' disabled':'')+'>Confirm details</button>'):'<button type="button" class="btn btn-primary" data-finc-next>'+(st.path==='existing'?'Save company':'Save and continue')+'</button>';
+ const primary=last?(confirmed()?teamAction():'<button type="button" class="btn btn-primary" data-finc-confirm'+(C.incorporationGaps(facts(),st.inc).length?' disabled':'')+'>Confirm details</button>'):'<button type="button" class="btn btn-primary" data-finc-next>'+(st.path==='existing'?'Save company':'Save and continue')+'</button>';
  return '<div class="finc-actions">'+primary+(i>0&&st.path!=='existing'?'<button type="button" class="btn btn-ghost" data-finc-step="'+STEPS[i-1][0]+'">Back</button>':'')+(last?'<button type="button" class="btn btn-ghost" data-finc-brief>Download summary</button>':'<button type="button" class="btn btn-ghost" data-finc-later>Save and finish later</button>')+'</div>'+support
-  +(last&&confirmed()?'<p class="finc-note" id="finc-file-why">Filing through FranWallet isn’t switched on yet. Your confirmed details are saved and will be used when it is.</p>':'');}
+  +(last&&confirmed()?teamNote():'');}
+function teamAction(){const P=phase(),t=teamOf(),btn=(label,attr,extra='')=>'<button type="button" class="btn btn-primary" '+attr+extra+'>'+label+'</button>';
+ if(['send','resend','unknown','checking'].includes(P)){const blocked=P==='checking'||sending||(t.state==='ready'&&!t.canSend);return btn(sending?'Sending…':P==='resend'?'Send the updated details':'Send to my formation team','data-finc-send',(blocked?' disabled':'')+' aria-describedby="finc-send-why"');}
+ return btn(P==='quote'?'Review your quote':P==='locked'?'Message my formation team':'View request','data-finc-request');}
+function teamNote(){const P=phase(),t=teamOf();
+ if(!['send','resend','unknown','checking'].includes(P))return '';
+ const why=t.state==='ready'&&!t.canSend?'Only the wallet owner can send this to the formation team.':'Your formation team checks the name with the state, then sends you one quote for the state fee, formation and any registered agent service. Nothing is filed or charged until you accept it.';
+ return '<p class="finc-note" id="finc-send-why">'+why+'</p>'+(P==='unknown'?'<p class="finc-note">We couldn’t check whether you’ve already sent this. Sending again is safe; it never creates a second request. <button type="button" class="finc-link" data-finc-team-retry>Check again</button></p>':'');}
 
-function render(){homeCard();if(!host?.isConnected)return;host.classList.add('finc');
+function render(){if(ctx&&st?.path&&st.path!=='existing'&&teamOf().state==='idle')loadTeam(); /* the request status, once per wallet */
+ homeCard();if(!host?.isConnected)return;host.classList.add('finc');
  /* A re-render (often a lifecycle refresh after a save) must not take the field the owner is typing in. */
  const was=document.activeElement,keep=was&&was.id&&host.contains(was)?{id:was.id,start:was.selectionStart,end:was.selectionEnd}:null;
  const status='<p id="finc-status" class="finc-status'+(st.error?' is-error':'')+'" role="'+(st.error?'alert':'status')+'" tabindex="-1">'+E(st.message)+(st.error?' <button type="button" class="finc-link" data-finc-retry>Retry</button>':'')+'</p>';
@@ -191,6 +256,9 @@ function bind(){
  host.querySelector('[data-finc-later]')?.addEventListener('click',async()=>{read();st.dirty=true;const ok=await persist('Saved. Pick up where you left off from your wallet’s Home any time.');if(!ok)return;metric('incorporate_saved_for_later',{step:st.step});window.switchTab?.('dashboard');window.scrollTo?.(0,0);document.getElementById('finc-home-title')?.focus?.();});
  host.querySelectorAll('[data-finc-support]').forEach(b=>b.onclick=()=>{window.switchTab?.('services');dispatchEvent(new CustomEvent('fran:support-open'));});
  host.querySelector('[data-finc-brief]')?.addEventListener('click',brief);
+ host.querySelector('[data-finc-send]')?.addEventListener('click',send);
+ host.querySelector('[data-finc-request]')?.addEventListener('click',openRequest);
+ host.querySelector('[data-finc-team-retry]')?.addEventListener('click',()=>loadTeam(true));
  host.querySelectorAll('[data-finc-open]').forEach(b=>b.onclick=()=>b.dataset.fincOpen==='record'?window.FranLifecycleUI?.openRecord?.('ein'):window.switchTab?.('dataroom'));
  host.querySelectorAll('#finc-error-summary a').forEach(a=>a.onclick=e=>{e.preventDefault();host.querySelector(a.getAttribute('href'))?.focus();});
  const form=host.querySelector('#finc-form');if(!form)return;form.onsubmit=e=>{e.preventDefault();host.querySelector('[data-finc-next],[data-finc-confirm]')?.click();};
@@ -215,12 +283,13 @@ function brief(){const f=facts(),tax=C.defaultTax(f.entity_type,f.owners),lines=
 function homeCard(){const page=document.getElementById('page-dashboard'),hdr=page?.querySelector('.main-hdr');if(!hdr||!ctx||!st)return;
  let card=document.getElementById('finc-home');
  if(st.path==='existing'||(!st.path&&ctx.entity?.stage!=='planning')){card?.remove();return;}
- const f=facts(),i=STEPS.findIndex(x=>x[0]===st.step),ok=confirmed(),started=!!st.path,pct=ok?100:started?Math.round(i/STEPS.length*100):0;
- const title=ok?E(f.name)+' is ready to file':started?'Continue setting up '+E(f.name||'your company'):'Your first step: set up the company behind '+E(ctx.wallet.name);
- const sub=ok?'You confirmed the details. Filing through FranWallet isn’t switched on yet; your confirmed profile is saved for when it is.':started?'Step '+(i+1)+' of '+STEPS.length+' · '+STEPS[i][1]+'. Your answers are saved; pick up right where you left off.':'Name, owners, taxes and addresses, checked for gaps. About 5 minutes. Nothing is filed or charged.';
+ const f=facts(),i=STEPS.findIndex(x=>x[0]===st.step),ok=confirmed(),started=!!st.path,pct=ok?100:started?Math.round(i/STEPS.length*100):0,P=started?phase():'confirm',withTeam=['preparing','quote','filing','done','payment','ended','locked','resend'].includes(P);
+ const HOME={preparing:['is with your formation team','They’re checking the name with the state and preparing your quote. You’ll see it here when it’s ready.'],quote:['has a quote ready','Review what it covers and the price. Nothing is filed or charged until you accept it.'],filing:['is being filed','You accepted the quote. Your formation team posts each step in your request.'],done:['is marked complete','Your formation team’s updates and documents are in your request.'],payment:['needs a payment update','Open your request to update the payment.'],ended:['request ended','Message your formation team to start again.'],resend:['has updated details to send','Your team hasn’t quoted yet. Send them the update.'],locked:['changed after your quote','Message your formation team about what changed.']};
+ const title=withTeam?E(f.name)+' '+HOME[P][0]:ok?E(f.name)+' is ready to send':started?'Continue setting up '+E(f.name||'your company'):'Your first step: set up the company behind '+E(ctx.wallet.name);
+ const sub=withTeam?HOME[P][1]:ok?'Send your confirmed details to your formation team for one quote. Nothing is filed or charged until you accept it.':started?'Step '+(i+1)+' of '+STEPS.length+' · '+STEPS[i][1]+'. Your answers are saved; pick up right where you left off.':'Name, owners, taxes and addresses, checked for gaps. About 5 minutes. Nothing is filed or charged.';
  if(!card){card=document.createElement('section');card.id='finc-home';card.className='finc-home';card.setAttribute('aria-labelledby','finc-home-title');hdr.after(card);}
- card.innerHTML='<div class="finc-home-copy"><p class="finc-home-eyebrow">'+(ok?'Company setup · done for now':'Your next step')+'</p><h2 id="finc-home-title">'+title+'</h2><p>'+sub+'</p><div class="finc-home-bar" role="progressbar" aria-label="Company setup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div></div>'
-  +'<button type="button" class="finc-home-go" data-finc-home>'+(ok?'View company':started?'Continue':'Start company setup')+' <span aria-hidden="true">→</span></button>';
+ card.innerHTML='<div class="finc-home-copy"><p class="finc-home-eyebrow">'+(withTeam?'Company setup · with your formation team':'Your next step')+'</p><h2 id="finc-home-title">'+title+'</h2><p>'+sub+'</p><div class="finc-home-bar" role="progressbar" aria-label="Company setup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div></div>'
+  +'<button type="button" class="finc-home-go" data-finc-home>'+(P==='quote'?'Review your quote':withTeam?'View company':ok?'Send for a quote':started?'Continue':'Start company setup')+' <span aria-hidden="true">→</span></button>';
  card.querySelector('[data-finc-home]').onclick=()=>open({path:started?'':'new'});}
 window.addEventListener('fran:location',e=>{if(!e.detail||e.detail.wallet?.id!==ctx?.wallet?.id)document.getElementById('finc-home')?.remove();});
 
@@ -237,10 +306,13 @@ let pendingOpen=null;
 const currentWallet=()=>typeof WALLET_ID!=='undefined'?WALLET_ID:ctx?.wallet?.id;
 function choose(path){if(!path||st.path)return;st.path=path;st.step='company';st.dirty=true;if(!st.details.entity_type)st.details.entity_type='Undecided';}
 function focusHeading(){const h=document.getElementById('finc-heading');(host?.isConnected?host:h)?.scrollIntoView({block:'start'});h?.focus({preventScroll:true});}
-function open({path}={}){window.switchTab?.('entity');window.FranLifecycleUI?.showFormation?.();metric('incorporate_opened',{});
+function open({path}={}){if(ctx&&request())loadTeam(true);window.switchTab?.('entity');window.FranLifecycleUI?.showFormation?.();metric('incorporate_opened',{});
  if(!st||ctx?.wallet?.id!==currentWallet()){pendingOpen={walletId:currentWallet(),path:path||''};return;}
  requestAnimationFrame(()=>{choose(path);render();focusHeading();});}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-formation-open]'))return;e.preventDefault();open();});
 window.addEventListener('fran:incorporate-open',e=>open(e.detail||{}));
+/* The request changes elsewhere (the quote dialog, the team): refresh its status when it does or when the owner returns. */
+window.addEventListener('fran:service-changed',e=>{if(e.detail?.service==='entity'&&ctx)loadTeam(true);});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&ctx&&request())loadTeam(true);});
 window.FranFormation={mount,open,_reset:()=>memory.clear()};
 })();

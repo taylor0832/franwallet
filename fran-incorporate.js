@@ -280,13 +280,17 @@ function brief(){const f=facts(),tax=C.defaultTax(f.entity_type,f.owners),lines=
  const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/plain'})),a=document.createElement('a');a.href=url;a.download='company-setup-summary.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);metric('incorporate_summary_downloaded',{});}
 
 /* ---------- Home: the one next step until the company is set up ---------- */
+let status=null;
+function publishStatus(next){if(JSON.stringify(next)===JSON.stringify(status))return;status=next;window.dispatchEvent(new CustomEvent('fran:formation-status',{detail:status}));}
 function homeCard(){const page=document.getElementById('page-dashboard'),hdr=page?.querySelector('.main-hdr');if(!hdr||!ctx||!st)return;
  let card=document.getElementById('finc-home');
  if(st.path==='existing'||(!st.path&&ctx.entity?.stage!=='planning')){card?.remove();return;}
  const f=facts(),i=STEPS.findIndex(x=>x[0]===st.step),ok=confirmed(),started=!!st.path,pct=ok?100:started?Math.round(i/STEPS.length*100):0,P=started?phase():'confirm',withTeam=['preparing','quote','filing','done','payment','ended','locked','resend'].includes(P);
- const HOME={preparing:['is with your formation team','They’re checking the name with the state and preparing your quote. You’ll see it here when it’s ready.'],quote:['has a quote ready','Review what it covers and the price. Nothing is filed or charged until you accept it.'],filing:['is being filed','You accepted the quote. Your formation team posts each step in your request.'],done:['is marked complete','Your formation team’s updates and documents are in your request.'],payment:['needs a payment update','Open your request to update the payment.'],ended:['request ended','Message your formation team to start again.'],resend:['has updated details to send','Your team hasn’t quoted yet. Send them the update.'],locked:['changed after your quote','Message your formation team about what changed.']};
+ const HOME={preparing:['is with your formation team','They’re checking the name with the state and preparing your quote. We’ll email you and show it here when it’s ready.'],quote:['has a quote ready','Review what it covers and the price. Nothing is filed or charged until you accept it.'],filing:['is being filed','You accepted the quote. Your formation team posts each step in your request.'],done:['is marked complete','Your formation team’s updates and documents are in your request.'],payment:['needs a payment update','Open your request to update the payment.'],ended:['request ended','Message your formation team to start again.'],resend:['has updated details to send','Your team hasn’t quoted yet. Send them the update.'],locked:['changed after your quote','Message your formation team about what changed.']};
  const title=withTeam?E(f.name)+' '+HOME[P][0]:ok?E(f.name)+' is ready to send':started?'Continue setting up '+E(f.name||'your company'):'Your first step: set up the company behind '+E(ctx.wallet.name);
  const sub=withTeam?HOME[P][1]:ok?'Send your confirmed details to your formation team for one quote. Nothing is filed or charged until you accept it.':started?'Step '+(i+1)+' of '+STEPS.length+' · '+STEPS[i][1]+'. Your answers are saved; pick up right where you left off.':'Name, owners, taxes and addresses, checked for gaps. About 5 minutes. Nothing is filed or charged.';
+ /* Home's setup card reads this, so the owner's next step waits on the formation request instead of skipping past it. */
+ publishStatus({walletId:ctx.wallet.id,phase:P,withTeam,title:withTeam?(f.name||'Your company')+' '+HOME[P][0]:'',sub:withTeam?HOME[P][1]:'',action:P==='quote'?'Review your quote':'View company request'});
  if(!card){card=document.createElement('section');card.id='finc-home';card.className='finc-home';card.setAttribute('aria-labelledby','finc-home-title');hdr.after(card);}
  card.innerHTML='<div class="finc-home-copy"><p class="finc-home-eyebrow">'+(withTeam?'Company setup · with your formation team':'Your next step')+'</p><h2 id="finc-home-title">'+title+'</h2><p>'+sub+'</p><div class="finc-home-bar" role="progressbar" aria-label="Company setup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div></div>'
   +'<button type="button" class="finc-home-go" data-finc-home>'+(P==='quote'?'Review your quote':withTeam?'View company':ok?'Send for a quote':started?'Continue':'Start company setup')+' <span aria-hidden="true">→</span></button>';
@@ -314,5 +318,5 @@ window.addEventListener('fran:incorporate-open',e=>open(e.detail||{}));
 /* The request changes elsewhere (the quote dialog, the team): refresh its status when it does or when the owner returns. */
 window.addEventListener('fran:service-changed',e=>{if(e.detail?.service==='entity'&&ctx)loadTeam(true);});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&ctx&&request())loadTeam(true);});
-window.FranFormation={mount,open,_reset:()=>memory.clear()};
+window.FranFormation={mount,open,status:()=>status,_reset:()=>memory.clear()};
 })();

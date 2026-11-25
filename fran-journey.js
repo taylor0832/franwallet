@@ -550,17 +550,20 @@ if(!h){h=document.createElement('section');h.id='fj-home';h.className='fj-home';
 const anchor=dash.querySelector('#wallet-home>.wallet-heading')||dash.querySelector('.main-hdr');if(anchor){if(anchor.nextElementSibling!==h)anchor.after(h)}else if(dash.firstElementChild!==h)dash.prepend(h)
 const n=readyCount(),next=n<6?order().find(x=>!saved(x)&&due(x))||null:null,pre=stage()==='preopening',why=WHY[pre?'preopening':'operating']
 document.body.classList.add('fj-home-on');h.dataset.complete=String(n===6)
-const title=n===6?E(loc.wallet.name)+' is fully set up.':next?'Next: '+E(next==='accounting'?'your books':'your '+SLOTS[next].noun)+'.':'Pick up what’s left for '+E(loc.wallet.name)+'.'
+/* While the company is with the formation team (quote, filing, an update to send), that is the owner's next step: the bank account, lease and EIN all wait on it. */
+const fs=window.FranFormation?.status?.(),forming=!!(fs&&fs.walletId===loc.wallet.id&&fs.withTeam&&fs.phase!=='done')
+const title=forming?E(fs.title)+'.':n===6?E(loc.wallet.name)+' is fully set up.':next?'Next: '+E(next==='accounting'?'your books':'your '+SLOTS[next].noun)+'.':'Pick up what’s left for '+E(loc.wallet.name)+'.'
 /* With no next step, say exactly where each remaining part stands; never imply a request that wasn't sent. */
 const rest=CANON.filter(x=>!saved(x)).map(status),count=k=>rest.filter(x=>x===k).length
 const where=[[count('invited'),'invited'],[count('requested'),'with a help request you sent'],[count('exploring'),'exploring options'],[count('drafted'),'with a draft request to review'],[count('later')+count('diy')+count('started'),'on your list']].filter(([c])=>c).map(([c,t])=>c+' '+t)
-const sub=n===6?'Every part is in. Fran flags anything that goes out of date.':next?why[next]:'Everything else has a path: '+where.join(', ')+'.'
+const sub=forming?fs.sub:n===6?'Every part is in. Fran flags anything that goes out of date.':next?why[next]:'Everything else has a path: '+where.join(', ')+'.'
 const grid='<ol class="fj-home-grid">'+CANON.map(x=>{const st=status(x);return '<li data-state="'+st+'"'+(x===next?' data-next':'')+'><button type="button" data-fj-area="'+x+'"><span class="fj-slot-icon">'+svg(st==='saved'?'check':x)+'</span><span><strong>'+E(SLOTS[x].name)+'</strong><small>'+E(x===next&&st!=='saved'?'Up next':LABEL[st])+'</small></span></button></li>'}).join('')+'</ol>'
 const path=pre?'<h3 class="fj-home-sub">Your path to opening</h3><ol class="fj-path">'+PATH.map((p,i)=>{const d=p.done();return '<li data-done="'+d+'"><span class="fj-path-n" aria-hidden="true">'+(d?svg('check'):i+1)+'</span><span class="fj-path-copy"><strong>'+E(p.name)+'</strong><small>'+E(d?'Saved':p.sub)+'</small>'+(p.more?'<span class="fj-path-more">'+p.more.map(([l],j)=>'<button type="button" class="fj-textbtn" data-fj-path-more="'+i+':'+j+'">'+E(l)+'</button>').join('')+'</span>':'')+'</span><button type="button" class="fj-btn small" data-fj-path="'+i+'" aria-label="'+E((d?'Review ':'Start ')+p.name)+'">'+(d?'Review':'Start')+'</button></li>'}).join('')+'</ol>':''
 h.innerHTML='<div class="fj-home-row"><span class="fj-home-ring" style="--p:'+Math.round(n/6*100)+'" aria-hidden="true"><b>'+n+'</b>/6</span><div class="fj-home-copy"><small>Setup · '+n+' of 6 saved</small><h2 id="fj-home-title">'+title+'</h2><p>'+E(sub)+'</p></div>'+(n<6?'<button type="button" class="fj-textbtn fj-home-fran" data-fj-continue>Continue with Fran</button>':'')+'</div>'
- +(n<6?nextActions(next):'')
+ +(forming?'<div class="fj-home-pair"><button type="button" class="fj-btn primary" data-fj-formation>'+E(fs.action)+'</button></div>':n<6?nextActions(next):'')
  +'<details class="fj-home-more"'+(homeOpen?' open':'')+'><summary>'+(pre?'All six parts and your path to opening':'See all six parts')+'</summary>'+grid+path+'</details>'
 h.querySelector('.fj-home-more').addEventListener('toggle',e=>{homeOpen=e.target.open})
+h.querySelector('[data-fj-formation]')?.addEventListener('click',()=>window.FranFormation?.open?.())
 h.querySelector('[data-fj-continue]')?.addEventListener('click',()=>resume('home'))
 h.querySelectorAll('[data-fj-do]').forEach(b=>b.onclick=()=>{const k=HUBKEY[next],a=b.dataset.fjDo;metric('setup_card_action',{slot:next,action:a});if(a==='area')return hub()?.openArea?.(k,'home_card');hub()?.perform?.(k,a)})
 h.querySelectorAll('[data-fj-path]').forEach(b=>b.onclick=()=>{const p=PATH[b.dataset.fjPath];metric('setup_path_opened',{step:p.id});p.go()})
@@ -608,6 +611,7 @@ window.addEventListener('fran:readiness',e=>{if(e.detail?.location?.wallet?.id!=
 /* Continue once this wallet's data arrives; if the refresh is slow, continue with the wallet just created and let the data fill in. */
 window.addEventListener('fran:onboarding-created',e=>{if(!pendingPlan)return;const id=e.detail?.wallet_id,started=Date.now();const go=()=>{if(loc?.wallet?.id===id)return afterCreate();const w=typeof WALLETS!=='undefined'&&WALLETS.find(x=>x.id===id);if(w&&Date.now()-started>2500){loc={wallet:w,records:[],books:[],banks:[]};return afterCreate()}setTimeout(go,120)};go()})
 window.addEventListener('fran:connector-result',()=>setTimeout(showPill,200))
+window.addEventListener('fran:formation-status',()=>{if(wantHome)renderHome()})
 document.addEventListener('click',()=>setTimeout(showPill,80))
 const FROM_HUB={company:'entity',lease:'lease',banking:'banking',books:'accounting',payroll:'payroll',insurance:'insurance'},NOTE={connect:'started',file:'started',drive:'started',primary:'started',invite:'invited',help:'exploring'}
 window.FRAN_JOURNEY={create,resume,saved,note:(hubKey,action)=>{const slot=FROM_HUB[hubKey];if(!slot||!loc||!NOTE[action]||saved(slot))return;mark(slot,NOTE[action]);save({last:slot});renderHome();showPill()},ready:()=>loc?readyCount():0,refresh:()=>{renderWallet();showPill();renderHome()},active:()=>!!dialog?.open||!!pendingPlan||driving,state:()=>store(),

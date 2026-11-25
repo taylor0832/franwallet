@@ -71,7 +71,7 @@ function table(s,limit){const rows=limit?s.rows.slice(Math.max(0,s.rows.findInde
 async function save(kind,d,ev,meta){const evidence=Object.fromEntries(Object.entries(ev||{}).map(([k,s])=>[k.split('.')[0],s]))
  if(kind==='entity'){const cur=entityRecord()||{},owners=(d.owners||[]).map(o=>({name:o.name,percentage:o.percentage}))
   const name=d.name||cur.name||'',jurisdiction=d.jurisdiction||cur.jurisdiction||''
-  const data={...cur,name,entity_type:d.entity_type||cur.entity_type||'Undecided',jurisdiction,ein:d.ein||cur.ein||'',effective_date:d.effective_date||cur.effective_date||'',owners:owners.length?owners:(cur.owners||[]),stage:cur.stage&&cur.stage!=='planning'?cur.stage:'existing',operating_status:cur.operating_status||'operating',onboarding_draft:!(name&&jurisdiction)}
+  const data={...cur,name,entity_type:d.entity_type||cur.entity_type||'Undecided',jurisdiction,ein:d.ein||cur.ein||'',effective_date:d.effective_date||cur.effective_date||'',owners:owners.length?owners:(cur.owners||[]),stage:cur.stage==='planning'&&!(d.effective_date||cur.effective_date)?'planning':(cur.stage||'existing'),operating_status:cur.operating_status||'operating',onboarding_draft:!(name&&jurisdiction)}
   await api('lifecycle','save',{kind:'entity',data,request_id:'entity'});await refresh();return {kind,...data}}
  const docId=meta.docId||'',key=docId||('doc:'+(meta.fileName||kind+'-'+Date.now()))
  const existing=records(kind).find(r=>r.data?.document_id===docId&&docId||r.record_key===key)

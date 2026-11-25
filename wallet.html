@@ -636,7 +636,7 @@ footer a{color:var(--g500)}
         <h1>Open one location. See what matters next.</h1>
         <p class="sc-sub">Start with your email. Fran will help you name the location, choose an outcome and add one trusted source—without making you finish everything first.</p>
         <form id="signin-form">
-          <div class="field"><label for="signin-email">Work email</label><input id="signin-email" autocomplete="email" type="email" placeholder="jordan@donutnv.com" required aria-label="Email address"></div>
+          <div class="field"><label for="signin-email">Work email</label><input id="signin-email" autocomplete="email" type="email" placeholder="you@yourcompany.com" required aria-label="Email address"></div>
           <button type="submit" class="btn-modal coral" id="signin-btn">Email me a sign-in link →</button>
           <div class="su-toolkit">No password or card required. We’ll email you a secure sign-in link.</div>
         </form>
@@ -1205,6 +1205,7 @@ $('signin-form').addEventListener('submit', async (e)=>{
     const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo:'https://franwallet.com/wallet.html', data: signupData } });
     if(error) throw error;
     $('signin-address').textContent=email;
+    try { sessionStorage.setItem('fran_signin_email', JSON.stringify({ email, at: Date.now() })); } catch(_){}
     $('signin-form').style.display='none';
     $('signin-ok').classList.add('show');
   } catch(error) {
@@ -1225,6 +1226,7 @@ function cleanRef(v){ const r = String(v||'').trim().toLowerCase(); return /^[a-
 
 /* ---------- member wallet ---------- */
 async function loadMember(user){
+  try { sessionStorage.removeItem('fran_signin_email'); } catch(_){}
   // fetch or create own row
   let { data: row, error: readError } = await sb.from('members').select('*').eq('id', user.id).maybeSingle();
   if(readError) throw readError;
@@ -1238,8 +1240,15 @@ async function loadMember(user){
     // Restore the starting choice ("Start a new entity" and so on) when sign-in finished on a different device.
     try { const i = user.user_metadata?.fran_intent; if(i && window.FranEntry && !window.FranEntry.pending()) window.FranEntry.choose(i); } catch(_){}
     const { data: created, error } = await sb.from('members').insert(fresh).select().single();
-    if(error) throw error;
-    row = created;
+    if(error && error.code === '23505'){
+      // Another tab finished signing in at the same moment and created the row first.
+      const again = await sb.from('members').select('*').eq('id', user.id).maybeSingle();
+      if(again.error || !again.data) throw (again.error || error);
+      row = again.data;
+    } else {
+      if(error) throw error;
+      row = created;
+    }
   }
   // Paid access comes only from the server's verified Stripe payment record.
   // A checkout return URL is navigation, never proof of payment.
@@ -2750,7 +2759,9 @@ async function submitWalletModal(){
     const w=activeWallet();if(!w)throw new Error('wallet_missing');const {error}=await sb.from('wallets').update({name,state}).eq('id',w.id);if(error)throw error;w.name=name;w.state=state;
     if(WALLETS[0]?.id===w.id){ME.wallet_name=name;localStorage.setItem('fran_wallet_name:'+ME.id,name);await sb.from('members').update({wallet_name:name,updated_at:new Date().toISOString()}).eq('id',ME.id);}
     closeWalletModal();renderWsRow();renderOverview();if(window.refreshLocation)await window.refreshLocation();try{posthog.capture('wallet_named');}catch(_){}
-  }catch(_){errorEl.textContent='We could not save this location. Your entries are still here. Please try again.';errorEl.classList.add('show');}
+  }catch(err){const m=String(err?.message||'');
+    /* Some failures can't be fixed by trying again; say so instead of offering a retry that will fail the same way. */
+    errorEl.textContent=m==='session_missing'?'Your sign-in expired. Reload the page and sign in again; your entries are saved on this device.':/setup changed|Resume the|Web Locks|Recover the saved/i.test(m)?m.replace(/\.?$/,'.')+' Reload the page to continue; your entries are saved on this device.':'We could not save this location. Your entries are still here. Please try again.';errorEl.classList.add('show');}
   finally{walletSaveInFlight=false;$('wallet-form').querySelectorAll('button,input,select').forEach(el=>el.disabled=false);$('wallet-save').textContent=buttonLabel;renderWalletStep();}
 }
 $('wallet-form').addEventListener('submit',e=>{e.preventDefault();submitWalletModal();});$('wallet-skip').addEventListener('click',closeWalletModal);
@@ -3473,7 +3484,10 @@ async function boot(session){
   });
   return bootInFlight;
 }
-function routeWalletEntryAfterAuth(needsFirstLocation){const action=window.FranEntry?.afterSignIn?.(ME.id,needsFirstLocation)||'defer';if(action==='start')openWalletModal('create');else if(action==='normal')nameMaybePrompt(()=>{});return action;}
+function routeWalletEntryAfterAuth(needsFirstLocation){
+/* Boot can finish before the rest of the page's scripts run; wait for them so setup opens the guided journey and a start link's choice is saved first. */
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>routeWalletEntryAfterAuth(needsFirstLocation),{once:true});return 'defer';}
+const action=window.FranEntry?.afterSignIn?.(ME.id,needsFirstLocation)||'defer';if(action==='start')openWalletModal('create');else if(action==='normal')nameMaybePrompt(()=>{});return action;}
 async function bootMember(session, generation){
   const user = session.user;
   analyticsSignedOut = false;
@@ -3633,6 +3647,6 @@ if(FRAN_LABOR_DEMO){
 <link rel="stylesheet" href="fran-routines.css?v=20261010-1"><script src="fran-routines.js?v=20261125-brand-1"></script>
 <script src="fran-journey.js?v=20261125-brand-1"></script>
 <script src="fran-bloomfield-pilot.js?v=20261021-1"></script>
-<script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script src="fran-formation-rehearsal.js?v=20261106-after-inc-1"></script>
+<script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script>if(new URLSearchParams(location.search).get('rehearsal')==='1')document.write('<script src="fran-formation-rehearsal.js?v=20261106-after-inc-1"><\/script>');</script>
 </body>
 </html>

@@ -3051,7 +3051,10 @@ $('refresh-gusto').addEventListener('click', async ()=>{
 /* ---------- card spend (Ramp: one business per location) ---------- */
 const RAMP_FN = SUPABASE_URL + '/functions/v1/ramp';
 let RAMP_BUSINESSES = [];
+/* Ramp isn't configured on the server yet; after the first "not configured" answer, stop asking for the rest of this visit. */
+let RAMP_OFF=false;
 async function rampCall(body){
+  if(RAMP_OFF) throw Object.assign(new Error('ramp_not_configured'),{status:503});
   const requestWallet=WALLET_ID;
   const { data:{ session } } = await sb.auth.getSession();
   const res = await fetch(RAMP_FN, {
@@ -3060,7 +3063,7 @@ async function rampCall(body){
     body: JSON.stringify({ wallet_id: requestWallet, ...body }),
   });
   const data = await res.json().catch(()=>({}));
-  if(!res.ok) throw Object.assign(new Error(data.error||('HTTP '+res.status)), {status:res.status});
+  if(!res.ok){ if(data.error==='ramp_not_configured') RAMP_OFF=true; throw Object.assign(new Error(data.error||('HTTP '+res.status)), {status:res.status}); }
   return data;
 }
 function rampStatus(msg, kind){

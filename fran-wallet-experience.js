@@ -622,3 +622,5 @@ window.addEventListener('fran:open-document',e=>{if(state&&e.detail?.wallet_id==
 window.addEventListener('fran:priority',e=>{if(state&&!state.wallet.access_role)priorityDetail(e.detail?.id);});
 window.addEventListener('fran:ask',e=>{if(!state||state.wallet.access_role)return;e.stopImmediatePropagation();ask(e.detail?.question||'',e.detail?.section||'books');},true);
 })();
+/* Pages built for an open store (weekly labor planning, payroll results) step back while the store hasn't opened. */
+window.addEventListener('fran:location',e=>{const en=(e.detail?.records||[]).find(r=>r.kind==='entity')?.data;document.body.classList.toggle('fran-preopening',!!en&&(en.operating_status==='preopening'||en.stage==='planning'));});

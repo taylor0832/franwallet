@@ -814,3 +814,6 @@ body.wallet-refined #wallet-home .wallet-operating-pulse header h2{color:#fff!im
 .wallet-evidence-daily table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 .wallet-evidence-daily th,.wallet-evidence-daily td{padding:10px 14px;text-align:right;border-bottom:1px solid #dfe7e2;white-space:nowrap}
 .wallet-evidence-daily th:first-child{text-align:left}
+/* Not useful before opening day; the page's own connect options stay. */
+body.fran-preopening #page-payroll .main-hdr [data-la-open],body.fran-preopening #page-payroll .main-hdr [data-pa-open]{display:none!important}
+.fh-empty .fh-top{display:none}

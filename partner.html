@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your invitation · Fran Wallet</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your invitation · FranWallet</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@ ul.files{list-style:none;margin:14px 0 0;padding:0}ul.files li{display:flex;just
 [hidden]{display:none!important}
 @media (max-width:560px){.facts{grid-template-columns:1fr}.top{padding:14px 16px}main{padding-top:28px}.who span{display:none}}
 </style></head><body>
-<header class="top"><a class="brand" href="/"><span class="mark">F.</span>Fran Wallet</a><div class="who" id="who" hidden><span>Signed in as </span><b id="who-email"></b><button type="button" id="signout">Sign out</button></div></header>
+<header class="top"><a class="brand" href="/"><span class="mark">F.</span>FranWallet</a><div class="who" id="who" hidden><span>Signed in as </span><b id="who-email"></b><button type="button" id="signout">Sign out</button></div></header>
 <main>
  <div id="loading" class="status" role="status">Opening your invitation…</div>
 
@@ -139,7 +139,7 @@ async function workspace(){
  files(d.uploads);
  const q=params.get('qbo');if(q){history.replaceState(null,'',location.pathname+'?grant='+encodeURIComponent(grant));
   if(q==='connected'){banner('ok','QuickBooks is connected.',who()+' will see '+d.location+'’s reports in their Wallet. You can close this page.');el('qbo').textContent='Reconnect QuickBooks';el('qbo').className='btn secondary'}
-  else if(q==='inuse')banner('err','That QuickBooks company is already connected elsewhere.','It’s attached to a different Fran Wallet login, so nothing changed. Choose a different company, or let '+who()+' know.');
+  else if(q==='inuse')banner('err','That QuickBooks company is already connected elsewhere.','It’s attached to a different FranWallet login, so nothing changed. Choose a different company, or let '+who()+' know.');
   else banner('err','QuickBooks didn’t finish connecting.','Nothing changed. Try again.')}
 }
 function files(list){const ul=el('submitted');ul.innerHTML='';if(!list?.length){const li=document.createElement('li');li.innerHTML='<em>Nothing yet.</em>';ul.append(li);return}for(const f of list){const li=document.createElement('li'),n=document.createElement('span'),t=document.createElement('em');n.textContent=f.name;t.textContent=new Date(f.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});li.append(n,t);ul.append(li)}}

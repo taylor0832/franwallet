@@ -48,7 +48,7 @@ document.getElementById('signin-code-form')?.addEventListener('submit',async e=>
  e.preventDefault();if(verifying)return;const code=document.getElementById('signin-code'),button=document.getElementById('signin-verify'),status=document.getElementById('signin-code-status');
  if(!/^[0-9]{8}$/.test(code.value.trim())){status.textContent='Enter the 8-digit code from your newest email.';return;}
  verifying=true;button.disabled=true;button.textContent='Opening…';status.textContent='';
- try{const {data,error}=await sb.auth.verifyOtp({email:document.getElementById('signin-address').textContent,token:code.value.trim(),type:'email'});if(error||!data.session)throw Error();code.value='';await boot(data.session);}
+ try{const {data,error}=await sb.auth.verifyOtp({email:document.getElementById('signin-address').textContent,token:code.value.trim(),type:'email'});if(error||!data.session)throw Error();code.value='';try{sessionStorage.removeItem('fran_signin_email');}catch{}await boot(data.session);}
  catch{status.textContent='That code is expired or could not be verified. Try the newest code, or request a fresh email.';status.setAttribute('role','alert');}
  finally{verifying=false;button.disabled=false;button.textContent='Open my wallet';}
 });
@@ -56,6 +56,11 @@ document.getElementById('signin-code-form')?.addEventListener('submit',async e=>
 const authError=new URLSearchParams(location.hash.slice(1)).get('error_code')||new URLSearchParams(location.search).get('error_code');
 if(authError){const error=document.getElementById('signin-err');error.textContent='This sign-in link has expired or was already used. Enter your email below for a fresh link. Your saved wallet is still there.';error.classList.add('show');history.replaceState(null,'',location.pathname);}
 document.getElementById('signin-change')?.addEventListener('click',()=>{
+ try{sessionStorage.removeItem('fran_signin_email');}catch{}
  document.getElementById('signin-ok').classList.remove('show');document.getElementById('signin-form').style.display='';document.getElementById('signin-email').focus();
 });
+// A phone often reloads the tab while the owner copies the code from Mail: bring the code box back for an hour.
+try{const saved=JSON.parse(sessionStorage.getItem('fran_signin_email')||'null');
+ if(saved&&saved.email&&Date.now()-saved.at<3600e3&&!authError){document.getElementById('signin-address').textContent=saved.email;document.getElementById('signin-form').style.display='none';document.getElementById('signin-ok').classList.add('show');}
+}catch{}
 })();

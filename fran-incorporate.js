@@ -17,7 +17,7 @@ const ELECTION_HELP={default:['Keep the default','The simplest start: nothing ex
  s_corp:['Request S corporation treatment','Can lower self-employment tax once profits are steady, but you must run payroll and pay yourself a reasonable salary. Owners generally must be U.S. individuals. Filed separately with the IRS on Form 2553, which has a deadline.',tag('Separate IRS filing')],
  c_corp:['Request C corporation treatment','Rare for a single franchise location. Usually only when investors or a specific tax plan call for it. Filed separately with the IRS on Form 8832.',tag('Separate IRS filing')],
  undecided:['Decide later with my accountant','That’s fine. Review will flag it, and nothing is filed until you approve.']};
-const support='<button type="button" class="finc-link finc-support" data-finc-support>Questions? Message the FranWallet team</button>';
+const support='<button type="button" class="finc-link finc-support" data-finc-support>Questions? Message your formation team</button>';
 const memory=new Map(); /* wallet id → working state, so a lifecycle re-render never loses unsaved input */
 const draftKey=id=>'fran-incorporate-draft:'+id;
 let host=null,ctx=null,st=null,busy=false,pendingFocus=null,typingTimer=null;
@@ -28,7 +28,7 @@ function fromRecord(e,wallet){const j=C.normalizeJourney(e.formation_journey)||C
  let name=String(e.name||''),ending=inc.ending;if(ending&&name.toLowerCase().endsWith(' '+ending.toLowerCase()))name=name.slice(0,-(ending.length+1));else if(ending&&name)ending='';
  const owners=Array.isArray(e.owners)&&e.owners.length?e.owners.map(o=>({name:o.name||'',percentage:o.percentage??''})):[{name:'',percentage:''}];
  return {path,step:inc.step,inc,journey:j,details:{base:name,dba:e.dba||'',jurisdiction:e.jurisdiction||(j.jurisdiction_unsure?'unsure':'')||(path==='existing'?'':wallet.state||''),entity_type:['LLC','Corporation'].includes(e.entity_type)?e.entity_type:(path?'Undecided':''),owners,physical_address:e.physical_address||'',mailing_address:e.mailing_address||''},
-  errors:{},message:'',error:false,dirty:false,serverAt:Date.parse(j.updated_at)||0};}
+  errors:{},message:'',error:false,dirty:false,serverAt:Date.parse(j.updated_at)||0,serverSig:JSON.stringify([e.name||'',e.dba||'',e.jurisdiction||'',e.entity_type||'',e.owners||[],e.physical_address||'',e.mailing_address||'',e.stage||''])};}
 const compose=base=>{const b=String(base||'').trim(),end=st.inc.ending;return b&&end&&!b.toLowerCase().endsWith(end.toLowerCase())?b+' '+end:b;};
 const legalName=d=>compose(d.base);
 const facts=()=>({name:legalName(st.details),entity_type:st.details.entity_type,jurisdiction:st.details.jurisdiction,owners:st.details.owners,physical_address:st.details.physical_address,mailing_address:st.inc.mailing_same?st.details.physical_address:st.details.mailing_address});
@@ -203,7 +203,8 @@ function actions(){const i=STEPS.findIndex(s=>s[0]===st.step),last=st.step==='re
   +(last&&confirmed()?teamNote():'');}
 function teamAction(){const P=phase(),t=teamOf(),btn=(label,attr,extra='')=>'<button type="button" class="btn btn-primary" '+attr+extra+'>'+label+'</button>';
  if(['send','resend','unknown','checking'].includes(P)){const blocked=P==='checking'||sending||(t.state==='ready'&&!t.canSend);return btn(sending?'Sending…':P==='resend'?'Send the updated details':'Send to my formation team','data-finc-send',(blocked?' disabled':'')+' aria-describedby="finc-send-why"');}
- return btn(P==='quote'?'Review your quote':P==='locked'?'Message my formation team':'View request','data-finc-request');}
+ if(P==='locked'||P==='ended')return btn('Message my formation team','data-finc-message')+' <button type="button" class="btn btn-ghost" data-finc-request>View request</button>';
+ return btn(P==='quote'?'Review your quote':'View request','data-finc-request');}
 function teamNote(){const P=phase(),t=teamOf();
  if(!['send','resend','unknown','checking'].includes(P))return '';
  const why=t.state==='ready'&&!t.canSend?'Only the wallet owner can send this to the formation team.':'Your formation team checks the name with the state, then sends you one quote for the state fee, formation and any registered agent service. Nothing is filed or charged until you accept it.';
@@ -254,7 +255,7 @@ function bind(){
  host.querySelectorAll('[data-finc-remove]').forEach(b=>b.onclick=()=>{read();st.details.owners.splice(+b.dataset.fincRemove,1);st.dirty=true;st.errors={};pendingFocus='#finc-owner_0';render();});
  host.querySelector('[data-finc-retry]')?.addEventListener('click',()=>persist());
  host.querySelector('[data-finc-later]')?.addEventListener('click',async()=>{read();st.dirty=true;const ok=await persist('Saved. Pick up where you left off from your wallet’s Home any time.');if(!ok)return;metric('incorporate_saved_for_later',{step:st.step});window.switchTab?.('dashboard');window.scrollTo?.(0,0);document.getElementById('finc-home-title')?.focus?.();});
- host.querySelectorAll('[data-finc-support]').forEach(b=>b.onclick=()=>{window.switchTab?.('services');dispatchEvent(new CustomEvent('fran:support-open'));});
+ host.querySelectorAll('[data-finc-support],[data-finc-message]').forEach(b=>b.onclick=()=>dispatchEvent(new CustomEvent('fran:service-message',{detail:{service:'entity'}})));
  host.querySelector('[data-finc-brief]')?.addEventListener('click',brief);
  host.querySelector('[data-finc-send]')?.addEventListener('click',send);
  host.querySelector('[data-finc-request]')?.addEventListener('click',openRequest);
@@ -300,7 +301,8 @@ window.addEventListener('fran:location',e=>{if(!e.detail||e.detail.wallet?.id!==
 /* ---------- mount ---------- */
 function mount(el,c){host=el;ctx=c;if(!host)return;const id=c.wallet.id,mem=memory.get(id),fresh=fromRecord(c.entity||{},c.wallet);
  /* Keep this tab's state through lifecycle re-renders unless the saved record is newer (another tab or device). */
- if(mem&&(mem.dirty||mem.serverAt>=fresh.serverAt))st=mem;else{st=fresh;const draft=readDraft(id);if(draft&&draft.at>st.serverAt){st.path=draft.path||st.path;st.step=draft.step||st.step;st.inc={...st.inc,...C.normalizeIncorporation(draft.inc)};st.details={...st.details,...draft.details};st.dirty=true;st.message='Restored answers you hadn’t saved yet on this device.';}}
+ /* The record form and the Company card save without touching the journey's time, so also compare the saved fields themselves. */
+ if(mem&&(mem.dirty||(mem.serverAt>=fresh.serverAt&&mem.serverSig===fresh.serverSig)))st=mem;else{st=fresh;const draft=readDraft(id);if(draft&&draft.at>st.serverAt){st.path=draft.path||st.path;st.step=draft.step||st.step;st.inc={...st.inc,...C.normalizeIncorporation(draft.inc)};st.details={...st.details,...draft.details};st.dirty=true;st.message='Restored answers you hadn’t saved yet on this device.';}}
  if(st.path&&st.step!=='company')st.visited=Object.fromEntries(STEPS.slice(0,STEPS.findIndex(s=>s[0]===st.step)).map(s=>[s[0],true]));
  const queued=pendingOpen?.walletId===id?pendingOpen:null;if(queued){pendingOpen=null;choose(queued.path);}
  memory.set(id,st);render();if(queued)requestAnimationFrame(focusHeading);}

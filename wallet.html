@@ -1197,7 +1197,12 @@ $('signin-form').addEventListener('submit', async (e)=>{
   try{ posthog.capture('wallet_signin_requested'); }catch(_){}
   $('signin-err').classList.remove('show');
   try {
-    const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo:'https://franwallet.com/wallet.html' } });
+    // The referral code and starting choice ride on the sign-up itself (saved on the new account), so they
+    // survive the owner opening the emailed link on another device. Supabase keeps them only for new accounts.
+    const signupData = {};
+    try { const r = cleanRef(localStorage.getItem('fran_ref')); if(r) signupData.fran_ref = r; } catch(_){}
+    try { const i = window.FranEntry?.pending?.()?.intent; if(['new','existing','unsure'].includes(i)) signupData.fran_intent = i; } catch(_){}
+    const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo:'https://franwallet.com/wallet.html', data: signupData } });
     if(error) throw error;
     $('signin-address').textContent=email;
     $('signin-form').style.display='none';
@@ -1215,6 +1220,9 @@ $('signin-form').addEventListener('submit', async (e)=>{
 
 $('signout').addEventListener('click', async ()=>{ await sb.auth.signOut(); location.hash=''; $('signin-form').style.display=''; $('signin-ok').classList.remove('show'); $('signin-code').value=''; boot(null); });
 
+/* Referral codes are short slugs such as "sidekick"; anything else is ignored. */
+function cleanRef(v){ const r = String(v||'').trim().toLowerCase(); return /^[a-z0-9_-]{1,40}$/.test(r) ? r : null; }
+
 /* ---------- member wallet ---------- */
 async function loadMember(user){
   // fetch or create own row
@@ -1223,8 +1231,12 @@ async function loadMember(user){
   if(!row){
     const fresh = { id:user.id, email:user.email };
     // Referral attribution: a ?ref= code captured on any page before signup credits the referrer.
-    const refCode = localStorage.getItem('fran_ref');
+    // Prefer this browser's code; fall back to the one saved with the sign-up on the device that started it.
+    let refCode = null; try { refCode = cleanRef(localStorage.getItem('fran_ref')); } catch(_){}
+    refCode = refCode || cleanRef(user.user_metadata?.fran_ref);
     if(refCode) fresh.referred_by = refCode;
+    // Restore the starting choice ("Start a new entity" and so on) when sign-in finished on a different device.
+    try { const i = user.user_metadata?.fran_intent; if(i && window.FranEntry && !window.FranEntry.pending()) window.FranEntry.choose(i); } catch(_){}
     const { data: created, error } = await sb.from('members').insert(fresh).select().single();
     if(error) throw error;
     row = created;
@@ -3604,7 +3616,7 @@ if(FRAN_LABOR_DEMO){
 <script src="fran-concierge.js?v=20261125-brand-1"></script>
 <script src="fran-activation.js?v=1bda3a591b93"></script>
 <script src="fran-onboarding-email.js?v=6a2e44bd4bd3"></script>
-<script src="fran-plan-core.js?v=7c2941cc4455"></script><script src="fran-plan.js?v=7809af502316"></script><script src="fran-navigation.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-plan.css?v=4f3758e73982"><script src="fran-design.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-design.css?v=ae1f8d49ec7b"><script src="fran-partners.js?v=02e542bfd2d3"></script><script src="fran-sections.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-sections.css?v=f36985d9fb89"><script src="fran-ecosystem.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-ecosystem.css?v=55b61b1f0110"><script src="fran-sales-evidence.js?v=20261023-inspection-2"></script><script src="fran-wallet-model.js?v=20261007-data-1"></script><script src="fran-wallet-experience.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-wallet-experience.css?v=20261022-evidence-1"><script src="fran-service-commerce.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-service-commerce.css?v=20261109-handoff-1"><script src="fran-spend-ledger.js?v=9e618e412235"></script><link rel="stylesheet" href="fran-spend-ledger.css?v=3240bd134205"><link rel="stylesheet" href="fran-health.css?v=20261006-demo-1"><script src="fran-health.js?v=20261006-demo-1"></script>
+<script src="fran-plan-core.js?v=7c2941cc4455"></script><script src="fran-plan.js?v=7809af502316"></script><script src="fran-navigation.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-plan.css?v=4f3758e73982"><script src="fran-design.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-design.css?v=ae1f8d49ec7b"><script src="fran-partners.js?v=02e542bfd2d3"></script><script src="fran-sections.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-sections.css?v=f36985d9fb89"><script src="fran-ecosystem.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-ecosystem.css?v=55b61b1f0110"><script src="fran-sales-evidence.js?v=20261023-inspection-2"></script><script src="fran-wallet-model.js?v=20261007-data-1"></script><script src="fran-wallet-experience.js?v=20261125-company-1"></script><link rel="stylesheet" href="fran-wallet-experience.css?v=20261022-evidence-1"><script src="fran-service-commerce.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-service-commerce.css?v=20261109-handoff-1"><script src="fran-spend-ledger.js?v=9e618e412235"></script><link rel="stylesheet" href="fran-spend-ledger.css?v=3240bd134205"><link rel="stylesheet" href="fran-health.css?v=20261006-demo-1"><script src="fran-health.js?v=20261006-demo-1"></script>
 <link rel="stylesheet" href="fran-portfolio.css?v=20261010-3"><script src="fran-portfolio-model.js?v=20261007-test-1"></script><script src="fran-portfolio.js?v=20261125-brand-1"></script>
 <link rel="stylesheet" href="fran-payroll-agent.css?v=20260923-client-2"><script src="fran-payroll-agent.js?v=20261125-brand-1"></script>
 <link rel="stylesheet" href="fran-labor-agent.css?v=20261023-readiness-1"><link rel="stylesheet" href="fran-labor-guide.css?v=20261009-done-2"><script src="fran-labor-agent-core.js?v=20261023-inspection-2"></script><script>/* The labor demo fixture loads only on its demo link (wallet.html?demo=1&labor=1). */if(typeof FRAN_LABOR_DEMO!=='undefined'&&FRAN_LABOR_DEMO)document.write('<script src="fran-labor-agent-demo.js?v=20261009-done-2"><\/script>');</script><script src="fran-labor-guide.js?v=20261009-done-2"></script><script src="fran-labor-agent.js?v=20261023-inspection-2"></script>

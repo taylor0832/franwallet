@@ -119,6 +119,9 @@ body #page-dashboard.wallet-home-page>#wallet-team.fj-reveal,body.fran-empty-wal
 /* Home panel: one progress model, same six parts as the journey */
 body.fj-home-on #fran-onboarding{display:none!important}
 #page-dashboard>#fj-home,body.fran-empty-wallet #page-dashboard.wallet-home-page>#fj-home,#page-dashboard.wallet-home-page>#fj-home{display:block!important}
+/* A new owner's wallet hides every dashboard section but onboarding, and Home sits inside #wallet-home under the store heading: show that heading and Home, nothing else. */
+body.fran-empty-wallet.fj-home-on #page-dashboard>#wallet-home{display:block!important}
+body.fran-empty-wallet.fj-home-on #page-dashboard>#wallet-home>:not(#fj-home):not(.wallet-heading){display:none!important}
 .fj-home{margin:0 0 24px;padding:24px;border:1px solid #d6e2da;border-radius:18px;background:linear-gradient(145deg,#fff,#f3f7f4);color:#173b32;font-family:'DM Sans',sans-serif;box-shadow:0 14px 38px rgba(26,67,54,.07)}
 .fj-home-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 .fj-home-head small{font:600 11px/1.4 'DM Sans',sans-serif;letter-spacing:.1em;color:#a94425}

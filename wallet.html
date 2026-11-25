@@ -5,20 +5,20 @@
 (function(){try{if(!window.opener||window.name!=='fran_oauth')return;var q=new URLSearchParams(location.search),p=q.get('qbo')?'qbo':q.get('gusto')?'gusto':'';if(!p)return;window.opener.postMessage({type:'fran-oauth',provider:p,result:q.get(p),from:q.get('from')||''},location.origin);window.close();document.documentElement.innerHTML='<body style="font:16px system-ui;padding:32px;color:#173b32">Done. You can close this window.</body>'}catch(_){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fran — Your Wallet</title>
-<meta name="description" content="Sign in to your Fran Wallet: payroll, labor plans, books, bank and documents for every location.">
+<title>FranWallet</title>
+<meta name="description" content="Sign in to your FranWallet: payroll, labor plans, books, bank and documents for every location.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Fran — The Franchise Wallet">
+<meta property="og:site_name" content="FranWallet">
 <meta property="og:url" content="https://franwallet.com/wallet.html">
-<meta property="og:title" content="Fran — Your Wallet">
-<meta property="og:description" content="Sign in to your Fran Wallet: payroll, labor plans, books, bank and documents for every location.">
+<meta property="og:title" content="FranWallet · Your wallet">
+<meta property="og:description" content="Sign in to your FranWallet: payroll, labor plans, books, bank and documents for every location.">
 <meta property="og:image" content="https://franwallet.com/og-wallet.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="FranWallet labor planner drafting next week's hours for a sample store">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fran — Your Wallet">
-<meta name="twitter:description" content="Sign in to your Fran Wallet: payroll, labor plans, books, bank and documents for every location.">
+<meta name="twitter:title" content="FranWallet · Your wallet">
+<meta name="twitter:description" content="Sign in to your FranWallet: payroll, labor plans, books, bank and documents for every location.">
 <meta name="twitter:image" content="https://franwallet.com/og-wallet.png">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0A3D3D">
@@ -620,13 +620,13 @@ footer a{color:var(--g500)}
 </style>
 <link rel="stylesheet" href="fran-public.css?v=20261005-s1">
 <script src="fran-analytics-privacy.js?v=20261002-1"></script>
-<link rel="stylesheet" href="fran-entry.css?v=20261106-cards-1"><script src="fran-entry.js?v=20261124-start-1"></script>
+<link rel="stylesheet" href="fran-entry.css?v=20261106-cards-1"><script src="fran-entry.js?v=20261125-audit-1"></script>
 </head>
 <body>
 <!-- ============ SIGNED-OUT — demo signup screen ============ -->
 <section id="view-signin">
   <div class="signup-top">
-    <div class="st-logo"><div class="dot"></div><span>Fran</span><span class="st-tag">the Franchise Wallet</span></div>
+    <div class="st-logo"><div class="dot"></div><span>FranWallet</span></div>
     <div class="st-help"><a href="index.html">← Back to franwallet.com</a></div>
   </div>
   <div class="signup-body">
@@ -709,12 +709,12 @@ footer a{color:var(--g500)}
   <!-- Mobile top bar (visible <720px) -->
   <div class="mobile-topbar">
     <button class="mt-burger" onclick="toggleSidebar()" aria-label="Open menu"><span></span></button>
-    <div class="mt-logo"><div class="mt-mark"></div><span>Fran</span></div>
+    <div class="mt-logo"><div class="mt-mark"></div><span>FranWallet</span></div>
   </div>
   <div class="sidebar-overlay" onclick="toggleSidebar(false)"></div>
 
   <nav class="sidebar" aria-label="Primary navigation">
-    <div class="sb-logo"><div class="dot"></div><span>Fran</span></div>
+    <div class="sb-logo"><div class="dot"></div><span>FranWallet</span></div>
     <div class="sb-ws" id="sb-ws" role="button" tabindex="0" aria-haspopup="true" aria-label="Switch wallet or location">
       <div class="wsr-info"><div class="wsr-name" id="ws-name">Your wallet</div><div class="wsr-loc" id="ws-loc">Connect books to add a location</div></div>
       <span class="sb-caret" aria-hidden="true">⌄</span>
@@ -844,7 +844,7 @@ footer a{color:var(--g500)}
           <a class="btn btn-primary" href="https://cal.com/taylor-coverpanda/franwallet" target="_blank" rel="noopener" id="book-call">Book your 30-min onboarding →</a>
         </div>
       </div>
-      <footer>Need help? <a href="mailto:taylor@coverpanda.co?subject=Fran%20Wallet%20support">taylor@coverpanda.co</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
+      <footer>Need help? <a href="mailto:taylor@coverpanda.co?subject=FranWallet%20support">taylor@coverpanda.co</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
     </div>
 
     <div class="page" id="page-billing"><div class="main-hdr"><h1>Plan &amp; billing</h1></div><div id="fw-billing" class="fw"></div></div>
@@ -2313,12 +2313,12 @@ function reportSheets(){
   }
   const title = `${loc} · Financials · ${label}`;
   const file = (loc + ' ' + label).replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-|-$/g,'');
-  const summaryText = `${title}\nRevenue ${money(p.income)} · Gross profit ${money(p.gross_profit)} · Net operating income ${money(p.net_operating_income || (p.gross_profit-p.expenses))} · Net income ${money(p.net_income)}${p.income?` (${(p.net_income/p.income*100).toFixed(1)}% margin)`:''}\nCash in bank ${money(b.bank_accounts||0)}\n\nFrom Fran Wallet · franwallet.com`;
+  const summaryText = `${title}\nRevenue ${money(p.income)} · Gross profit ${money(p.gross_profit)} · Net operating income ${money(p.net_operating_income || (p.gross_profit-p.expenses))} · Net income ${money(p.net_income)}${p.income?` (${(p.net_income/p.income*100).toFixed(1)}% margin)`:''}\nCash in bank ${money(b.bank_accounts||0)}\n\nFrom FranWallet · franwallet.com`;
   return { title, file, summaryText, sheets:[{name:'P&L', aoa:plAoa},{name:'Balance sheet', aoa:bsAoa},{name:'Cash flow', aoa:cfAoa}] };
 }
 function sheetsToHtml(sh){
   const esc = (s)=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
-  return `<h1>${esc(sh.title)}</h1><p class="muted">Generated by Fran Wallet · franwallet.com</p>` + sh.sheets.map(s=>
+  return `<h1>${esc(sh.title)}</h1><p class="muted">Generated by FranWallet · franwallet.com</p>` + sh.sheets.map(s=>
     `<h2>${esc(s.name)}</h2><table>` + s.aoa.map(row=>{
       if(!row.length) return '';
       const tds = row.map((c,i)=>`<td${i>0?' style="text-align:right"':''}>${typeof c==='number'? '$'+c.toLocaleString() : esc(c)}</td>`).join('');
@@ -3542,7 +3542,7 @@ async function bootMember(session, generation){
   }
   if(journeyReturn!=='accounting' && qboParam==='inuse'){
     switchTab('books');
-    qboStatus('That QuickBooks company is already connected under a different Fran Wallet login. Sign in as that account to manage it, or pick a different company.', 'err');
+    qboStatus('That QuickBooks company is already connected under a different FranWallet login. Sign in as that account to manage it, or pick a different company.', 'err');
     try{ posthog.capture('qbo_realm_in_use'); }catch(_){}
   }
   if(journeyReturn!=='accounting' && qboParam==='error'){ switchTab('books'); qboStatus('QuickBooks connection did not complete. Try again.', 'err'); }
@@ -3621,34 +3621,34 @@ if(FRAN_LABOR_DEMO){
 <script src="fran-core.js?v=1d04073d804f"></script>
 <link rel="stylesheet" href="fran-actions.css?v=20261002-1"><script src="fran-actions.js?v=20261002-signout-1"></script>
 <script src="fran-readiness-core.js?v=21153b95810f"></script>
-<script src="fran-readiness.js?v=20261002-scope-1"></script>
+<script src="fran-readiness.js?v=20261125-audit-1"></script>
 <link rel="stylesheet" href="fran-room-presentation.css?v=20261010-1"><script src="fran-record-viewer.js?v=3f08f2cb51d6"></script><script src="fran-room-presentation.js?v=20261010-1"></script><script src="fran-room-builder.js?v=20261010-1"></script>
 <link rel="stylesheet" href="fran-room-builder.css?v=e9aef3725b36">
 <script src="fran-financing-core.js?v=6eac1373770e"></script>
-<link rel="stylesheet" href="fran-incorporate.css?v=20261106-inc-2"><script src="fran-formation-core.js?v=20261106-inc-2"></script><script src="fran-incorporate.js?v=20261125-status-1"></script><script src="fran-lifecycle.js?v=20261106-inc-1"></script>
+<link rel="stylesheet" href="fran-incorporate.css?v=20261106-inc-2"><script src="fran-formation-core.js?v=20261106-inc-2"></script><script src="fran-incorporate.js?v=20261125-audit-1"></script><script src="fran-lifecycle.js?v=20261125-audit-1"></script>
 <script src="fran-workspace.js?v=20261125-brand-1"></script>
 <script src="fran-revenue.js?v=20261125-brand-1"></script>
 <script src="fran-billing.js?v=f51bb55e5066"></script>
 <script src="fran-experience.js?v=73ea0cdfd0f6"></script>
-<script src="fran-concierge.js?v=20261125-brand-1"></script>
+<script src="fran-concierge.js?v=20261125-audit-1"></script>
 <script src="fran-activation.js?v=1bda3a591b93"></script>
-<script src="fran-onboarding-email.js?v=6a2e44bd4bd3"></script>
-<script src="fran-plan-core.js?v=7c2941cc4455"></script><script src="fran-plan.js?v=7809af502316"></script><script src="fran-navigation.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-plan.css?v=4f3758e73982"><script src="fran-design.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-design.css?v=ae1f8d49ec7b"><script src="fran-partners.js?v=02e542bfd2d3"></script><script src="fran-sections.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-sections.css?v=f36985d9fb89"><script src="fran-ecosystem.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-ecosystem.css?v=55b61b1f0110"><script src="fran-sales-evidence.js?v=20261023-inspection-2"></script><script src="fran-wallet-model.js?v=20261007-data-1"></script><script src="fran-wallet-experience.js?v=20261125-company-1"></script><link rel="stylesheet" href="fran-wallet-experience.css?v=20261022-evidence-1"><script src="fran-service-commerce.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-service-commerce.css?v=20261109-handoff-1"><script src="fran-spend-ledger.js?v=9e618e412235"></script><link rel="stylesheet" href="fran-spend-ledger.css?v=3240bd134205"><link rel="stylesheet" href="fran-health.css?v=20261006-demo-1"><script src="fran-health.js?v=20261006-demo-1"></script>
+<script src="fran-onboarding-email.js?v=20261125-audit-1"></script>
+<script src="fran-plan-core.js?v=7c2941cc4455"></script><script src="fran-plan.js?v=7809af502316"></script><script src="fran-navigation.js?v=20261125-audit-1"></script><link rel="stylesheet" href="fran-plan.css?v=4f3758e73982"><script src="fran-design.js?v=20261125-audit-1"></script><link rel="stylesheet" href="fran-design.css?v=ae1f8d49ec7b"><script src="fran-partners.js?v=02e542bfd2d3"></script><script src="fran-sections.js?v=20261125-brand-1"></script><link rel="stylesheet" href="fran-sections.css?v=f36985d9fb89"><script src="fran-ecosystem.js?v=20261125-audit-1"></script><link rel="stylesheet" href="fran-ecosystem.css?v=55b61b1f0110"><script src="fran-sales-evidence.js?v=20261023-inspection-2"></script><script src="fran-wallet-model.js?v=20261007-data-1"></script><script src="fran-wallet-experience.js?v=20261125-audit-1"></script><link rel="stylesheet" href="fran-wallet-experience.css?v=20261125-audit-1"><script src="fran-service-commerce.js?v=20261125-audit-1"></script><link rel="stylesheet" href="fran-service-commerce.css?v=20261109-handoff-1"><script src="fran-spend-ledger.js?v=9e618e412235"></script><link rel="stylesheet" href="fran-spend-ledger.css?v=3240bd134205"><link rel="stylesheet" href="fran-health.css?v=20261006-demo-1"><script src="fran-health.js?v=20261006-demo-1"></script>
 <link rel="stylesheet" href="fran-portfolio.css?v=20261010-3"><script src="fran-portfolio-model.js?v=20261007-test-1"></script><script src="fran-portfolio.js?v=20261125-brand-1"></script>
-<link rel="stylesheet" href="fran-payroll-agent.css?v=20260923-client-2"><script src="fran-payroll-agent.js?v=20261125-brand-1"></script>
+<link rel="stylesheet" href="fran-payroll-agent.css?v=20260923-client-2"><script src="fran-payroll-agent.js?v=20261125-audit-1"></script>
 <link rel="stylesheet" href="fran-labor-agent.css?v=20261023-readiness-1"><link rel="stylesheet" href="fran-labor-guide.css?v=20261009-done-2"><script src="fran-labor-agent-core.js?v=20261023-inspection-2"></script><script>/* The labor demo fixture loads only on its demo link (wallet.html?demo=1&labor=1). */if(typeof FRAN_LABOR_DEMO!=='undefined'&&FRAN_LABOR_DEMO)document.write('<script src="fran-labor-agent-demo.js?v=20261009-done-2"><\/script>');</script><script src="fran-labor-guide.js?v=20261009-done-2"></script><script src="fran-labor-agent.js?v=20261023-inspection-2"></script>
 <link rel="stylesheet" href="fran-onboarding.css?v=20261002-hub-1"><script src="fran-onboarding.js?v=20261125-brand-1"></script>
-<script src="fran-public.js?v=20261005-s1"></script>
+<script src="fran-public.js?v=20261125-audit-1"></script>
 <script src="fran-setup.js?v=20261125-brand-1"></script>
 <link rel="stylesheet" href="fran-setup.css?v=20261002-5">
 <link rel="stylesheet" href="fran-ask.css?v=20261002-outcomes-1"><script src="fran-ask.js?v=20261125-brand-1"></script>
 <link rel="stylesheet" href="fran-conversations.css?v=20261002-1"><script src="fran-conversations.js?v=20261002-2"></script>
 <link rel="stylesheet" href="fran-hub.css?v=20261010-1"><script src="fran-hub.js?v=20261125-brand-1"></script>
-<link rel="stylesheet" href="fran-bizplan.css?v=20261005-journeys-1"><script src="fran-bizplan-core.js?v=20261005-journeys-1"></script><script src="fran-bizplan.js?v=20261005-journeys-1"></script>
-<link rel="stylesheet" href="fran-details.css?v=20261010-3"><script src="fran-extract.js?v=20261004-b2"></script><script src="fran-details.js?v=20261010-3"></script>
-<link rel="stylesheet" href="fran-journey.css?v=20261125-home-1"><link rel="stylesheet" href="fran-invite.css?v=20261005-i1"><script src="fran-invite.js?v=20261006-demo-1"></script><script src="fran-drive.js?v=20261006-paged-1"></script>
-<link rel="stylesheet" href="fran-routines.css?v=20261010-1"><script src="fran-routines.js?v=20261125-brand-1"></script>
-<script src="fran-journey.js?v=20261125-brand-1"></script>
+<link rel="stylesheet" href="fran-bizplan.css?v=20261005-journeys-1"><script src="fran-bizplan-core.js?v=20261005-journeys-1"></script><script src="fran-bizplan.js?v=20261125-audit-1"></script>
+<link rel="stylesheet" href="fran-details.css?v=20261010-3"><script src="fran-extract.js?v=20261004-b2"></script><script src="fran-details.js?v=20261125-audit-1"></script>
+<link rel="stylesheet" href="fran-journey.css?v=20261125-home-1"><link rel="stylesheet" href="fran-invite.css?v=20261005-i1"><script src="fran-invite.js?v=20261125-audit-1"></script><script src="fran-drive.js?v=20261006-paged-1"></script>
+<link rel="stylesheet" href="fran-routines.css?v=20261010-1"><script src="fran-routines.js?v=20261125-audit-1"></script>
+<script src="fran-journey.js?v=20261125-audit-1"></script>
 <script src="fran-bloomfield-pilot.js?v=20261021-1"></script>
 <script src="fran-rehearsal-core.js?v=20261028-rehearsal-1"></script><script>if(new URLSearchParams(location.search).get('rehearsal')==='1')document.write('<script src="fran-formation-rehearsal.js?v=20261106-after-inc-1"><\/script>');</script>
 </body>

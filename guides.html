@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guides — Fran, the Franchise Wallet</title>
-<meta name="description" content="Plain-English guides for franchise operators: FDDs, entities, royalties, financing, unit economics. Free from Fran Wallet.">
+<title>Guides — FranWallet</title>
+<meta name="description" content="Plain-English guides for franchise operators: FDDs, entities, royalties, financing, unit economics. Free from FranWallet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -64,16 +64,16 @@ footer a{color:var(--g500)}
 </head>
 <body>
 <div class="top"><div class="top-in">
-  <span class="mark"></span><a class="brand" href="index.html" style="color:#fff">Fran</a><span class="tag">the Franchise Wallet</span>
+  <span class="mark"></span><a class="brand" href="index.html" style="color:#fff">FranWallet</a>
   <a class="cta" href="wallet.html">Open your free wallet →</a>
 </div></div>
 
 <div class="wrap" id="app"></div>
 
-<footer>Free guides from Fran Wallet · <a href="index.html">franwallet.com</a> · <a href="skills.html">Skills &amp; templates library</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
+<footer>Free guides from FranWallet · <a href="index.html">franwallet.com</a> · <a href="skills.html">Skills &amp; templates library</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
 
 <script>
-/* ---- PostHog (Fran Wallet org · project 531033) ---- */
+/* ---- PostHog (FranWallet org · project 531033) ---- */
 !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
 posthog.init('phc_sgBgHWWwCgArAVu2udMCD9LbH7RESavBuRxhpLBNsZHi',{api_host:'https://us.i.posthog.com'});
 
@@ -121,14 +121,14 @@ const slug = new URLSearchParams(location.search).get('g');
 const guide = GUIDES.find(g=>g.slug===slug);
 
 function renderIndex(){
-  document.title = 'Guides — Fran, the Franchise Wallet';
+  document.title = 'Guides — FranWallet';
   app.innerHTML = `
     <h1 class="page">Franchise guides, in plain English</h1>
-    <p class="sub">The stuff every operator has to figure out — FDDs, entities, royalties, financing, unit economics — written straight, free, no signup. From the team behind Fran Wallet.</p>
+    <p class="sub">The stuff every operator has to figure out — FDDs, entities, royalties, financing, unit economics — written straight, free, no signup. From the team behind FranWallet.</p>
     <div class="grid">` +
     GUIDES.map(g=>`<a class="gcard" href="guides.html?g=${g.slug}"><span class="gi">${g.icon}</span><h3>${g.title}</h3><p>${g.desc}</p><span class="go">Read the guide →</span></a>`).join('') +
     `</div>
-    <div class="foot-cta"><div><h3>Nine free operator skills &amp; templates</h3><p>Daily labor budget, FDD interrogator, SBA readiness pack, and more — free with a Fran Wallet account.</p></div><a href="wallet.html">Open your free wallet →</a></div>`;
+    <div class="foot-cta"><div><h3>Nine free operator skills &amp; templates</h3><p>Daily labor budget, FDD interrogator, SBA readiness pack, and more — free with a FranWallet account.</p></div><a href="wallet.html">Open your free wallet →</a></div>`;
   try{ posthog.capture('guides_index_viewed'); }catch(_){}
 }
 

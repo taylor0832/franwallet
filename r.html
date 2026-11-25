@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shared report — Fran Wallet</title>
+<title>Shared report — FranWallet</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +46,7 @@ td.neg{color:var(--red)}
 </head>
 <body>
 <div class="top"><div class="top-in">
-  <span class="mark"></span><a class="brand" href="https://franwallet.com">Fran</a>
+  <span class="mark"></span><a class="brand" href="https://franwallet.com">FranWallet</a>
   <a class="cta" href="https://franwallet.com/wallet.html">Open your free wallet →</a>
 </div></div>
 <div class="wrap" id="app"><div class="err">Loading report…</div></div>
@@ -79,7 +79,7 @@ const esc = (s)=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
         }).join('') + '</tr>';
       }).join('') + `</table>`;
     });
-    html += `<div class="foot"><div><h3>Made with Fran Wallet</h3><p>Books, payroll, banking and reports for franchise operators. Free account.</p></div><a href="https://franwallet.com/wallet.html">Open your free wallet →</a></div>`;
+    html += `<div class="foot"><div><h3>Made with FranWallet</h3><p>Books, payroll, banking and reports for franchise operators. Free account.</p></div><a href="https://franwallet.com/wallet.html">Open your free wallet →</a></div>`;
     app.innerHTML = html;
   }catch(e){
     app.innerHTML = '<div class="err">Could not load this report. Check your connection and refresh.</div>';

@@ -7,7 +7,7 @@ function status(message){el('status').textContent=message;}
 async function refresh(){
  const {data:{user}}=await client.auth.getUser();
  el('signin').hidden=!!user;
- if(!user){status('Use the email associated with your Fran Wallet.');return;}
+ if(!user){status('Use the email associated with your FranWallet.');return;}
  el('verify').hidden=true;
  if(!id){
   el('intro').textContent='Manage the applications connected to your Fran account.';

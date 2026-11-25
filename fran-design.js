@@ -38,7 +38,7 @@ function laborQuestions(){
 document.addEventListener('click',e=>{if(e.target.closest('#page-insurance [data-design-route="services"]'))document.querySelector('[data-service-choice="insurance"]')?.click();});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-design-evidence]');if(b)window.dispatchEvent(new CustomEvent('fran:open-evidence',{detail:{id:b.dataset.designEvidence}}));});
 // Keep navigation meaningful to browsers and assistive technology.
-const destinations={dashboard:'Home',banking:'Finance',books:'Accounting',payroll:'Payroll',company:'Company',entity:'Compliance',insurance:'Insurance',documents:'Data room',readiness:'Readiness',dataroom:'Sharing',value:'Valuation',plan:'Budget & forecast',services:'Support',marketplace:'Marketplace',community:'Community',settings:'Settings'};
+const destinations={dashboard:'Home',banking:'Finance',books:'Accounting',payroll:'Payroll',company:'Company',entity:'Compliance',insurance:'Insurance',documents:'Data rooms',readiness:'Readiness',dataroom:'Sharing',value:'Valuation',plan:'Budget & forecast',debt:'Debt schedule',services:'Support',marketplace:'Marketplace',community:'Community',settings:'Settings'};
 let replaying=false,routeInitialized=false;
 const previousSwitch=window.switchTab;
 window.switchTab=function(route,...args){

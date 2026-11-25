@@ -10,14 +10,14 @@
 <meta name="robots" content="index, follow">
 <!-- Open Graph (Facebook / LinkedIn / iMessage / Slack) -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Fran — The Franchise Wallet">
+<meta property="og:site_name" content="FranWallet">
 <meta property="og:url" content="https://franwallet.com/">
 <meta property="og:title" content="FranWallet — Your Franchise. One Clear Picture.">
 <meta property="og:description" content="The financial home for franchise owners. Run with clarity, stay ready, and share on your terms.">
 <meta property="og:image" content="https://franwallet.com/og-wallet.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Fran — The Franchise Wallet">
+<meta property="og:image:alt" content="FranWallet">
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FranWallet — Your Franchise. One Clear Picture.">
@@ -2045,7 +2045,7 @@ body.demo-active .main{padding-top:104px}
 </style>
 <link rel="stylesheet" href="fran-public.css?v=20261005-s1">
 <script src="fran-analytics-privacy.js?v=20261002-1"></script>
-<link rel="stylesheet" href="fran-entry.css?v=20261106-cards-1"><script src="fran-entry.js?v=20261106-cards-1"></script>
+<link rel="stylesheet" href="fran-entry.css?v=20261106-cards-1"><script src="fran-entry.js?v=20261125-audit-1"></script>
 </head>
 <body>
 
@@ -2061,7 +2061,7 @@ body.demo-active .main{padding-top:104px}
 
   <!-- NAV -->
   <nav class="land-nav">
-    <div class="ln-logo"><div class="dot">👛</div><span>Fran</span><span style="font-size:10px;font-weight:500;color:rgba(255,255,255,.4);font-family:'DM Sans',sans-serif;margin-left:6px;letter-spacing:.2px">the Franchise Wallet</span></div>
+    <div class="ln-logo"><div class="dot">👛</div><span>FranWallet</span></div>
     <div class="land-nav-links">
       <a onclick="document.getElementById('land-outcome').scrollIntoView({behavior:'smooth'})">Why Fran</a>
       <a onclick="document.getElementById('land-debt').scrollIntoView({behavior:'smooth'})">Debt Schedule</a>
@@ -2296,7 +2296,7 @@ body.demo-active .main{padding-top:104px}
 
   <!-- FOOTER -->
   <div class="land-footer">
-    <div>© 2026 Fran · The Franchise Wallet · <span style="opacity:.6">a CoverPanda product</span></div>
+    <div>© 2026 FranWallet · <span style="opacity:.6">a CoverPanda product</span></div>
     <div class="land-footer-links">
       <a href="/skills.html">Free skills &amp; templates</a><a href="/wallet.html">Member sign-in</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/privacy.html#security">Security</a><a href="mailto:taylor@coverpanda.co?subject=Fran%20partnership%20%E2%80%94%20attorney%2FFSO">For attorneys &amp; FSOs</a><a href="mailto:taylor@coverpanda.co?subject=Fran%20partnership%20%E2%80%94%20franchise%20brand">For franchise brands</a>
     </div>
@@ -2350,7 +2350,7 @@ body.demo-active .main{padding-top:104px}
   <div class="signup-body">
     <div class="signup-card" id="waitlist-card">
       <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(232,115,74,.12);border:1px solid rgba(232,115,74,.35);border-radius:14px;font-size:10px;font-weight:700;color:#FFD7B5;letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ADE80;box-shadow:0 0 6px #4ADE80;animation:livePulse 2s infinite"></span> Free account · open now</div>
-      <h1>Get your Fran Wallet — free.</h1>
+      <h1>Get your FranWallet — free.</h1>
       <p class="sc-sub" id="waitlist-sub">Create your free account and you're inside your Wallet in under a minute. We email you a one-time sign-in link. No password, no card.</p>
 
       <form id="waitlist-form" onsubmit="submitWaitlist(event)">
@@ -2403,7 +2403,7 @@ body.demo-active .main{padding-top:104px}
       </div>
     </div>
   </div>
-  <div class="signup-footer">🔒 Bank-grade encryption · We never share your email · Fran Wallet © 2026</div>
+  <div class="signup-footer">🔒 Bank-grade encryption · We never share your email · FranWallet © 2026</div>
 </div>
 
 <!-- ===== DASHBOARD ===== -->
@@ -6414,8 +6414,8 @@ function toast(msg, kind){
 const FRAN_CONFIG = {
   SUPABASE_URL:       'https://nlshvthmcnwuygaeague.supabase.co',
   SUPABASE_ANON_KEY:  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sc2h2dGhtY253dXlnYWVhZ3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjM4NTksImV4cCI6MjA5NDY5OTg1OX0.fOTXhlZWtl8MOtC7kJnc8JI8TEvBm2J518mDXKkPGyA',
-  POSTHOG_KEY:        'phc_sgBgHWWwCgArAVu2udMCD9LbH7RESavBuRxhpLBNsZHi', // US Cloud · project 531033 · standalone "Fran Wallet" org (NOT the CoverPanda org)
-  STRIPE_FOUNDING:    'https://buy.stripe.com/28EbJ19hg7Qg0Lxajtao800', // Fran Wallet Stripe acct (acct_1TxwxWGTZDM3asBm) — $299 Founding Member, redirects to /?founding=success
+  POSTHOG_KEY:        'phc_sgBgHWWwCgArAVu2udMCD9LbH7RESavBuRxhpLBNsZHi', // US Cloud · project 531033 · standalone "FranWallet" org (NOT the CoverPanda org)
+  STRIPE_FOUNDING:    'https://buy.stripe.com/28EbJ19hg7Qg0Lxajtao800', // FranWallet Stripe acct (acct_1TxwxWGTZDM3asBm) — $299 Founding Member, redirects to /?founding=success
   CALENDLY_FOUNDING:  'https://cal.com/taylor-coverpanda/franwallet',   // 30-min Founding Member onboarding (Cal.com)
 };
 const FRAN_LIVE = (key)=> FRAN_CONFIG[key] && !FRAN_CONFIG[key].startsWith('__FRAN_');
@@ -6779,7 +6779,7 @@ function closeMilestone(){ document.getElementById('milestone-modal').classList.
 function shareMilestone(channel){
   const m = MILESTONES[window.__currentMilestone] || MILESTONES.first25k;
   const url = 'https://franwallet.com/?ref=jordan-smith';
-  const text = `${m.emoji} ${m.big} — ${m.sub} (tracked inside my Fran Wallet — the franchise wallet.)`;
+  const text = `${m.emoji} ${m.big} — ${m.sub} (tracked inside my FranWallet — the franchise wallet.)`;
   const enc = encodeURIComponent(text);
   const map = {
     x: `https://twitter.com/intent/tweet?text=${enc}&url=${encodeURIComponent(url)}`,
@@ -7007,7 +7007,7 @@ document.addEventListener('DOMContentLoaded',()=>{ setTimeout(startScarcityTicke
 
     <div class="tc-step active" data-step="1">
       <span class="tc-emoji" style="display:inline-flex;align-items:center;justify-content:center;animation:popIn .5s ease;margin-bottom:12px"><span class="fran-mark fm-lg" style="width:64px;height:64px;border-radius:14px"></span></span>
-      <h2 class="tc-h1">Welcome to your Fran Wallet</h2>
+      <h2 class="tc-h1">Welcome to your FranWallet</h2>
       <p class="tc-p">This is a fully live demo account for <strong>Smith QSR Holdings LLC</strong> — a DonutNV operator in Springfield, NV. Real numbers, real reports, real conversations. Quick 30-second tour?</p>
       <div class="tc-actions">
         <button class="tc-skip" onclick="closeTour()">Skip — I'll explore</button>
@@ -7163,7 +7163,7 @@ document.addEventListener('DOMContentLoaded',()=>{ setTimeout(startScarcityTicke
       </div>
 
       <label style="display:block;font-size:11px;font-weight:700;color:var(--g700);text-transform:uppercase;letter-spacing:.4px;margin:18px 0 6px">Pre-written message</label>
-      <div class="invite-msg" id="invite-msg-text">Hey — I just got my Fran Wallet set up for the franchise. It handles the entity, the books with Marcus, my insurance through Sarah, and my payroll without me touching it. Way better than figuring it out solo while trying to open the unit. Here's my invite — both of us get $50 off Founding Member: https://franwallet.com/?ref=jordan-smith</div>
+      <div class="invite-msg" id="invite-msg-text">Hey — I just got my FranWallet set up for the franchise. It handles the entity, the books with Marcus, my insurance through Sarah, and my payroll without me touching it. Way better than figuring it out solo while trying to open the unit. Here's my invite — both of us get $50 off Founding Member: https://franwallet.com/?ref=jordan-smith</div>
 
       <div class="invite-stats">
         <div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--g900)">0</div><div style="font-size:10px;color:var(--g500);text-transform:uppercase;letter-spacing:.4px;font-weight:600">Invites sent</div></div>
@@ -7511,8 +7511,8 @@ document.addEventListener('DOMContentLoaded',()=>{ setTimeout(startScarcityTicke
 </div>
 
 <script src="fran-experience.js"></script>
-<script src="fran-public.js?v=20261005-s1"></script>
-<link rel="stylesheet" href="fran-landing.css?v=20261004-l2"><script src="fran-landing.js?v=20261004-l2"></script>
+<script src="fran-public.js?v=20261125-audit-1"></script>
+<link rel="stylesheet" href="fran-landing.css?v=20261004-l2"><script src="fran-landing.js?v=20261125-audit-1"></script>
 <link rel="stylesheet" href="fran-showcase.css?v=20261004-s1"><script src="fran-showcase.js?v=20261004-s1"></script>
 </body>
 </html>

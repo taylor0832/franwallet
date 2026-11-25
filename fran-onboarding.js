@@ -11,7 +11,7 @@ const connectors=[
  {id:'document',icon:'↥',name:'Files & documents',copy:'Add a statement, lease, agreement, or other source record.',action:'Add a file',reads:'The private copy you select and its readable text.',limits:'Nothing is shared until you deliberately publish a room.',alt:'Import a private copy from Drive'},
  {id:'debt',icon:'D',name:'Loans & debt',copy:'Add a lender statement, schedule, or owner-confirmed loan record.',action:'Add a loan',reads:'The lender terms, source date, and evidence you provide.',limits:'Fran does not verify a payoff amount or apply for credit.',alt:'Upload the lender statement first'},
  {id:'insurance',icon:'◇',name:'Insurance',copy:'Keep policies and renewal dates with this location, or get coverage help.',action:'Add a policy document',reads:'The policy documents and coverage details you choose to add.',limits:'Your insurer confirms coverage and any policy changes.',alt:'Add a policy document'},
- {id:'help',icon:'?',name:'Get setup help',copy:'Ask Fran or your CoverPanda team when a connection is blocked.',action:'Show help',reads:'Only the request you choose to send.',limits:'Documents are not automatically shared with the service team.',alt:'Return to my wallet'}
+ {id:'help',icon:'?',name:'Get setup help',copy:'Ask Fran or your FranWallet team when a connection is blocked.',action:'Show help',reads:'Only the request you choose to send.',limits:'Documents are not automatically shared with the service team.',alt:'Return to my wallet'}
 ];
 function records(state,kind){return (state?.records||[]).filter(r=>r.kind===kind)}
 function record(kind){return records(locationState,kind).length>0}

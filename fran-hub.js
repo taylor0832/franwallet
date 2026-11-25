@@ -32,19 +32,19 @@ const AREAS={
   connect:[{name:'QuickBooks Online',logo:'QB',copy:'Profit & loss, balance sheet and reporting periods.',connector:'qbo'}],
   file:{label:'Upload a P&L or balance sheet',copy:'Using Xero, Wave or spreadsheets? A recent export works.',category:'Financial statements'},
   invite:{scope:'accounting',label:'Invite your accountant or bookkeeper',copy:'They get access to this location only.'},
-  help:{service:'books',label:'Get bookkeeping from CoverPanda',copy:'Monthly books, cleanup and reporting. You see scope and price before anything starts.'},
+  help:{service:'books',label:'Get bookkeeping from FranWallet',copy:'Monthly books, cleanup and reporting. You see scope and price before anything starts.'},
   reads:'Accounting reports and company identity you authorize.',limits:'Fran does not create, edit or pay transactions.'},
  payroll:{topic:'payroll',route:'payroll',name:'Payroll',noun:'payroll',value:'Employer cost, paid hours and labor-to-sales for each pay period.',unlock:['Full labor cost','Labor vs. sales','Pay-period history'],
   connect:[{name:'Gusto',logo:'G',copy:'Pay runs, employer cost and headcount.',connector:'payroll'}],
   file:{label:'Import a payroll report',copy:'ADP, Paychex, Square, Toast or another provider: export a payroll summary.',payrollImport:true},
   invite:{scope:'payroll',label:'Invite your payroll provider',copy:'They can add reports for this location only.'},
-  help:{service:'payroll',label:'Set up payroll with CoverPanda',copy:'Help choosing or running a payroll provider. Nothing starts without your approval.'},
+  help:{service:'payroll',label:'Set up payroll with FranWallet',copy:'Help choosing or running a payroll provider. Nothing starts without your approval.'},
   reads:'Payroll summaries and labor totals for the company you confirm.',limits:'Fran does not run, approve or change payroll.'},
  insurance:{topic:'insurance',route:'insurance',name:'Insurance',noun:'your coverage',value:'Coverage limits and renewal dates in one place, read from your policy documents.',unlock:['Coverage limits','Renewal dates','Policy documents'],
   connect:[],
   file:{label:'Upload a policy or declarations page',copy:'Fran reads the coverage and renewal dates from it.',category:'Legal & insurance',drive:true},
   invite:{scope:'insurance',label:'Invite your insurance agent',copy:'They can add policies for this location only.'},
-  help:{service:'insurance',label:'Get coverage help from CoverPanda',copy:'Find an agent or compare coverage. You decide before anything is bound.'},
+  help:{service:'insurance',label:'Get coverage help from CoverPanda Insurance',copy:'Find an agent or compare coverage. You decide before anything is bound.'},
   reads:'The policy documents and coverage details you add.',limits:'Your insurer confirms coverage. Fran only organizes it.'},
  banking:{topic:'bank',route:'banking',name:'Banking & cards',noun:'your accounts',value:'Balances and account activity for this location, with the date of every figure.',unlock:['Available cash','Account activity','Statement history'],
   connect:[{name:'Bank & cards via Plaid',logo:'$',copy:'Balances and transactions from the accounts you choose.',connector:'bank'}],
@@ -135,7 +135,7 @@ d.innerHTML='<header class="hub-head"><span class="hub-mark" aria-hidden="true">
  '<div class="hub-body">'+
  (connect?'<section class="hub-group"><h3>Connect what you use '+tip('hub-tip-connect','You review the provider’s own sign-in and permission screen. Fran only reads; you can disconnect anytime.')+'</h3>'+connect+'</section>':'')+
  '<section class="hub-group"><h3>'+(connect?'Or start with a file':'Start with a file')+' '+tip('hub-tip-file','Files stay private to this location. Fran reads what it can and shows you what still needs confirming.')+'</h3>'+(a.file.pair?pair(a):actionRow('file','upload',a.file,a.file.payrollImport?'Import':'Upload',!a.connect.length&&!a.primary||a.connect.length&&a.connect.every(x=>health(x.connector)?.state==='manual'))+(a.file.drive?'<button type="button" class="hub-link" data-hub-drive>Import a private copy from Google Drive →</button>':''))+'</section>'+
- ((a.invite||a.help)?'<section class="hub-group"><h3>Have someone do it for you '+tip('hub-tip-help','An invite creates a private link for this location only. You copy and send it yourself. Requests to CoverPanda open as drafts.')+'</h3>'+(a.invite?actionRow('invite','people',{label:a.invite.label,copy:a.invite.copy+' Free.'},'Invite'):'')+(a.help?actionRow('help','help',a.help,a.help.draft?'Prepare request':'See options'):'')+'<button type="button" class="hub-link" data-hub-market>Explore tools & offers for '+E(a.name.toLowerCase())+' →</button></section>':'')+
+ ((a.invite||a.help)?'<section class="hub-group"><h3>Have someone do it for you '+tip('hub-tip-help','An invite creates a private link for this location only. You copy and send it yourself. Requests to your FranWallet team open as drafts.')+'</h3>'+(a.invite?actionRow('invite','people',{label:a.invite.label,copy:a.invite.copy+' Free.'},'Invite'):'')+(a.help?actionRow('help','help',a.help,a.help.draft?'Prepare request':'See options'):'')+'<button type="button" class="hub-link" data-hub-market>Explore tools & offers for '+E(a.name.toLowerCase())+' →</button></section>':'')+
  '<details class="hub-trust"><summary>What Fran can and can’t see</summary><dl><div><dt>Fran can use</dt><dd>'+E(a.reads)+'</dd></div><div><dt>Fran won’t</dt><dd>'+E(a.limits)+'</dd></div><div><dt>Scope</dt><dd>'+E(name)+' only</dd></div></dl></details></div>'+
  '<footer class="hub-foot"><button type="button" class="hub-link" data-hub-directory>All connectors & plugins</button><button type="button" class="hub-btn" data-hub-later>'+(done?'Done':'Not now')+'</button></footer>'
 d.querySelector('.hub-close').onclick=()=>d.close()
@@ -159,7 +159,7 @@ const PLUGINS=[
  {id:'rooms',name:'Data rooms',copy:'Share selected originals with a named lender, buyer or advisor. Revoke anytime.',needs:['files'],page:'dataroom',open:()=>go('dataroom')},
  {id:'debt',name:'Debt schedule',copy:'Track lenders, terms and recorded balances with statement dates.',needs:['debt'],page:'debt',open:()=>go('debt')},
  {id:'bizplan',name:'Business plan & projections',copy:'Build or connect your plan, keep projections current against actual results, and print a lender summary.',needs:[],page:'bizplan',open:()=>go('bizplan')},
- {id:'services',name:'CoverPanda services',copy:'Bookkeeping, payroll, insurance and formation help from your CoverPanda team.',needs:[],page:'services',open:()=>go('services')}]
+ {id:'services',name:'FranWallet services',copy:'Bookkeeping, payroll, insurance and formation help from your FranWallet team.',needs:[],page:'services',open:()=>go('services')}]
 function anySaved(){return ORDER.some(saved)}
 function openDirectory(tab='connectors',trigger='button'){if(!owned())return
 const d=sheet(),name=state.wallet.name||'this location';d.dataset.mode='directory'
@@ -221,7 +221,7 @@ const GUIDES={
  banking:['Finance','Connect accounts through Plaid or upload statements.','See balances and activity by account.','Fran can’t move money or see your bank login.'],
  company:['Company','Keep the legal entity, owners and key dates together.','Upload formation documents to fill in details.','Deadlines appear once dates are saved.'],
  documents:['Data rooms','Store originals privately for this location.','Build a room to share selected files with a lender or buyer.','Nothing is shared until you publish and name recipients.'],
- services:['Support','Message your CoverPanda team about this location.','Requests start as drafts you can edit.','Nothing is sent until you press Send.']}
+ services:['Support','Message your FranWallet team about this location.','Requests start as drafts you can edit.','Nothing is sent until you press Send.']}
 function guideSeenKey(r){return 'fran_page_guide:'+memberId()+':'+r}
 function closeGuides(){document.querySelectorAll('.fran-page-guide[data-open]').forEach(g=>{g.removeAttribute('data-open');g.querySelector('button')?.setAttribute('aria-expanded','false')})}
 function ensureGuide(r){const g=GUIDES[r],page=$('page-'+r);if(!g||!page||!owned())return null

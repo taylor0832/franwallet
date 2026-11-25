@@ -74,7 +74,7 @@ function demoFixture(empty) {
     channels: { email: 'ready', slack: 'ready', sms: 'not_configured', reminders: 'enabled' },
     automations: { items: [
       { key: 'fran-document-ingestion', title: 'Document intake', description: 'Reads newly added documents and files them to the right store.', schedule_label: 'Every minute', last_status: 'ok', last_run_at: ago(1) },
-      { key: 'fran-support-outbox-dispatch', title: 'Support routing to Slack', description: 'Posts new support requests to the CoverPanda team in Slack.', schedule_label: 'Every minute', last_status: 'ok', last_run_at: ago(1) },
+      { key: 'fran-support-outbox-dispatch', title: 'Support routing to Slack', description: 'Posts new support requests to the FranWallet team in Slack.', schedule_label: 'Every minute', last_status: 'ok', last_run_at: ago(1) },
       { key: 'fran-accounting-source-collection', title: 'Accounting source collection', description: 'Checks connected accounting sources and collects new records.', schedule_label: 'Every 5 minutes', last_status: 'ok', last_run_at: ago(3) },
       { key: 'fran-service-notifications', title: 'Service notifications', description: 'Emails updates on service requests.', schedule_label: 'Every 5 minutes', last_status: 'ok', last_run_at: ago(3) },
       { key: 'fran-bill-spend-sync', title: 'BILL spend sync', description: 'Pulls card and spend activity from BILL.', schedule_label: 'Every 15 minutes', last_status: 'failed', last_run_at: ago(9) },

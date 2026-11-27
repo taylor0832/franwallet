@@ -1,38 +1,46 @@
-# How to read your P&L in 10 minutes
+# Read your franchise P&L with the right context.
 
-Your P&L tells a story in four acts: what came in, what it cost to make, what it cost to run the place, and what's left. Most operators only look at the last line. The money is made and lost in the middle two.
+Canonical article: https://franwallet.com/insights/how-to-read-your-pl/
 
-## Act 1 — Revenue (the top line)
+## Confirm what the report covers
 
-Everything you sold this period. For a franchise unit, watch two things: the **trend** (this month vs. the last three, not vs. last week), and the **mix** if you have multiple channels (in-store, catering, delivery — delivery revenue carries different costs than counter revenue).
+A profit-and-loss statement summarizes revenue and expenses for a defined period. Start with the company or location, dates, accounting basis and whether the books have been reviewed. Comparing a partial month with a complete month can produce a misleading story.
 
-## Act 2 — COGS and gross profit
 
-Cost of goods sold is what the product cost you: food, packaging, direct supplies. Revenue minus COGS is **gross profit**, and COGS as a % of revenue is the first number to benchmark. Most QSR concepts run **28–32%**; your franchisor's FDD or ops manual usually states a target. If you're at 36%, the story is almost always one of three: portioning, waste, or theft — in that order of likelihood.
+## Read from sales to the result
 
-## Act 3 — Operating expenses
 
-This is where units quietly die. The big four, as % of revenue:
+- Revenue: identify what is included and how refunds or channels are treated.
 
-- **Labor** (wages + payroll taxes): the 25–30% band is the franchise-wide target for most concepts. Above 32% consistently, you have a scheduling problem, not a sales problem.
-- **Occupancy** (rent, CAM, utilities): healthy is under ~10%. You can't renegotiate this monthly, which is why the lease you signed matters so much.
-- **Royalty + ad fund**: typically 6–10% combined. Fixed by contract — the reason your *other* percentages have to be tighter than an independent restaurant's.
-- **Everything else** (insurance, software, repairs, marketing): each small, collectively 8–12%.
+- Cost of sales: review the categories used for your concept.
 
-## Act 4 — Net income
+- Operating expenses: inspect labor, occupancy, royalties, advertising and other recurring costs.
 
-What's left. For a year-one franchise unit, **5–10% net is respectable, 10%+ is good, and negative through the first two quarters is normal** — the question is the direction of travel, not the sign.
+- Profit or loss: understand what remains under the report's accounting treatment.
 
-## The 10-minute monthly routine
 
-1. Revenue vs. the 3-month trend — growing, flat, shrinking?
-2. COGS % vs. your concept's target — one point of drift on $80k/month is $800.
-3. Labor % vs. 25–30% — check it against the same week's schedule, not the month.
-4. Net income direction — three months of the same bad direction is a decision, not a data point.
-5. One anomaly — find the line that moved most vs. last month and get the *why* before you close the report.
+## Use a transparent example
 
-An accurate P&L you read monthly beats a perfect one you read at tax time. If your books lag reality by 45 days, fix that first — you can't manage what you learn about too late to change.
+Illustrative month: $100,000 revenue less $30,000 cost of sales leaves $70,000 gross profit. If operating expenses are $55,000, the remaining amount before other report items is $15,000. The example describes arithmetic, not a target for every franchise.
+Expense ratios depend on the concept, sales mix, geography, maturity, definitions and period. Use your own history, the relevant franchise information and your accountant's analysis before drawing a conclusion.
 
----
 
-*Your [Fran Wallet](https://franwallet.com/wallet.html) turns a connected QuickBooks into exactly this view — margins against benchmarks, where every revenue dollar goes, by location. And the free **Read Your P&L** skill in the Library runs this routine with you.*
+## Ask about the change before deciding its cause
+
+Compare consistent periods and definitions. A rise in labor percentage might reflect sales movement, pay timing, extra operating days, staffing changes or an accounting classification. A high number by itself does not diagnose the cause.
+
+
+## Profit is different from bank cash
+
+Loan principal, equipment purchases, owner transactions, unpaid bills and settlement timing can affect cash differently from P&L expenses. Review the balance sheet, cash information and source records with your accountant when the result and bank balance appear inconsistent.
+
+
+## Use FranWallet for the next conversation
+
+Review available QuickBooks information with its reporting period and sync date. Open the relevant detail, keep supporting documents at the location and bring one specific question to your accountant. FranWallet software does not establish that the books are closed or independently verified.
+
+
+## Sources
+
+- [CoverPanda: bookkeeping scope](https://coverpanda.co/bookkeeping)
+- [Intuit: recording a business loan](https://quickbooks.intuit.com/learn-support/en-us/help-article/loans/set-loan-quickbooks-online/L7pMR6rUN_US_en_US)

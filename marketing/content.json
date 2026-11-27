@@ -1,0 +1,1030 @@
+{
+  "pages": [
+    {
+      "slug": "franchise-entity-setup",
+      "title": "Franchise Entity Setup & Incorporation Support | FranWallet",
+      "h1": "Put your franchise entity setup in order.",
+      "description": "Organize franchise LLC or corporation setup, formation records, EIN, banking and opening tasks with FranWallet. Filing services require a separate scope and quote.",
+      "sections": [
+        {
+          "heading": "What does franchise entity setup involve?",
+          "html": "<p>Entity setup connects the business you plan to operate with its legal name, ownership, tax identification, banking and operating records. For a franchise owner, the company information also needs to line up with the franchise agreement, lease, lender requirements and service accounts.</p><p>FranWallet gives the location a place to keep those details and the next steps together. Creating a Wallet is free to start; it does not create a legal entity or submit a state filing.</p>"
+        },
+        {
+          "heading": "Start with the decisions that affect the paperwork",
+          "html": "<ol><li>Confirm the proposed owners, operating state and legal entity type with your advisors.</li><li>Check how your franchisor, landlord and lender need the entity to appear on their documents.</li><li>Keep proposed names separate from a name approved by the state.</li><li>Review the filing provider, registered-agent arrangement, fees and ongoing obligations.</li><li>After formation, retain the official approval before moving to the applicable EIN, banking and registration tasks.</li></ol>"
+        },
+        {
+          "heading": "LLC formation and incorporation are different choices",
+          "html": "<p>An LLC and a corporation are state-law entity structures. Incorporation ordinarily refers to creating a corporation; forming an LLC is a different filing. A federal tax election is another decision. FranWallet helps organize the information, while your attorney or tax advisor helps you choose the structure for your circumstances.</p><p><a href=\"/insights/incorporation-vs-llc-for-franchise-owners/\">Compare incorporation and LLC formation</a> before requesting a filing quote.</p>"
+        },
+        {
+          "heading": "How FranWallet helps",
+          "html": "<ul><li>Name a location and record the stage of your company setup.</li><li>Keep entity details, formation documents and related business records together.</li><li>Organize what is known, what is missing and the next action.</li><li>Use the existing formation-help path to discuss provider support when needed.</li></ul><p>Formation assistance, filing work, state fees, registered-agent services and professional advice are separate from free software access. Confirm the current service scope and quote before authorizing anything.</p>"
+        },
+        {
+          "heading": "Keep the setup record useful after opening",
+          "html": "<p>Save the approved legal name and state documents with your business records. Keep the EIN confirmation, governing documents, bank information and professional contacts available to the people you authorize. As you add another location, check its entity and account arrangements rather than copying the first store without review.</p>"
+        }
+      ],
+      "related": [
+        "insights/franchise-entity-setup-checklist",
+        "insights/incorporation-vs-llc-for-franchise-owners",
+        "franchise-services"
+      ],
+      "cta": {
+        "label": "Start your setup record",
+        "href": "/wallet.html?intent=new"
+      },
+      "kind": "product",
+      "sources": [
+        [
+          "IRS: business structures",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/business-structures"
+        ],
+        [
+          "IRS: limited liability companies",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc"
+        ],
+        [
+          "IRS: get an employer identification number",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number"
+        ]
+      ],
+      "eyebrow": "Built for franchise owners",
+      "faqs": [
+        [
+          "Does opening a FranWallet form my LLC?",
+          "No. A Wallet organizes your company information and setup tasks. State filing requires a separate service process and your authorization."
+        ],
+        [
+          "Can I organize a corporation instead of an LLC?",
+          "You can prepare company information for discussion with your advisors and provider. Confirm that the requested entity type, state and service are supported before accepting a quote."
+        ],
+        [
+          "Is the EIN the same as incorporation?",
+          "No. An EIN is a federal tax identification number. State formation and federal tax identification are separate steps."
+        ]
+      ],
+      "image": null,
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "franchise-accounting",
+      "title": "Franchise Accounting & Bookkeeping Support | FranWallet",
+      "h1": "Understand the books behind each location.",
+      "description": "Review franchise accounting reports in FranWallet and explore separately scoped CoverPanda bookkeeping services for your franchise locations.",
+      "sections": [
+        {
+          "heading": "What franchise accounting needs to explain",
+          "html": "<p>A franchise owner needs to understand sales, operating costs, royalties, advertising contributions, payroll and the result for each reporting period. The supporting records matter as much as the dashboard: which location, which period, which accounting basis and which sources produced the number?</p><p>FranWallet organizes location-level records and supported accounting reports. CoverPanda offers bookkeeping services separately. Choose the software, service or combination that fits the work you need done.</p>"
+        },
+        {
+          "heading": "Review existing reports in your Wallet",
+          "html": "<p>Connect supported QuickBooks accounts to review available profit-and-loss information. Keep the reporting period and last sync date with your questions. Store relevant debt records and business documents beside the location so your accountant has context.</p><p>A report snapshot is information for review. Connecting an account does not establish that the books are reconciled, complete or closed.</p>"
+        },
+        {
+          "heading": "When you want a bookkeeping team",
+          "html": "<p>CoverPanda publishes franchise bookkeeping services covering transaction categorization, reconciliation, royalty and advertising-fund reporting, and financial statements. Engagement terms determine deliverables, timing, systems, fees and responsibilities.</p><p><a href=\"https://coverpanda.co/bookkeeping\">Review CoverPanda bookkeeping scope and current pricing</a>. Professional services and third-party subscriptions are separate from FranWallet software plans.</p>"
+        },
+        {
+          "heading": "A useful monthly accounting conversation",
+          "html": "<ol><li>Confirm that you are reviewing the right company, location, period and accounting basis.</li><li>Check whether bank, card, sales and payroll records are complete for that period.</li><li>Ask how royalties and advertising contributions were calculated under your agreement.</li><li>Compare revenue and costs with a relevant prior period.</li><li>Separate an unusual accounting entry from an actual operating change.</li><li>Record one question or next action and who will resolve it.</li></ol>"
+        },
+        {
+          "heading": "Multi-location reporting starts with comparable records",
+          "html": "<p>Location-level reports are easier to compare when periods, account definitions and treatment of shared costs are consistent. Separate legal entities and intercompany activity may require accounting work beyond viewing stores in one interface. Agree on the reporting structure with your accountant.</p>"
+        }
+      ],
+      "related": [
+        "insights/how-to-read-your-pl",
+        "insights/franchise-bookkeeping-checklist",
+        "franchise-services"
+      ],
+      "cta": {
+        "label": "Open your free Wallet",
+        "href": "/wallet.html"
+      },
+      "kind": "product",
+      "sources": [
+        [
+          "CoverPanda: franchise bookkeeping",
+          "https://coverpanda.co/bookkeeping"
+        ],
+        [
+          "Intuit: recording a business loan",
+          "https://quickbooks.intuit.com/learn-support/en-us/help-article/loans/set-loan-quickbooks-online/L7pMR6rUN_US_en_US"
+        ]
+      ],
+      "eyebrow": "Built for franchise owners",
+      "faqs": [
+        [
+          "Does FranWallet replace my accountant?",
+          "FranWallet organizes records and helps you review available reports. Bookkeeping, tax preparation and professional accounting advice require their own agreed services."
+        ],
+        [
+          "Can I use FranWallet with my existing accountant?",
+          "You can continue using your existing advisors. Confirm the supported account connections and sharing arrangements for your team."
+        ],
+        [
+          "Is bookkeeping included in the free Wallet?",
+          "No. Software access and professional services have separate scope and pricing."
+        ]
+      ],
+      "image": [
+        "/fran-product-books.png",
+        "FranWallet accounting view with illustrative financial results."
+      ],
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "franchise-services",
+      "title": "Franchise Services: Formation, Accounting & Payroll | FranWallet",
+      "h1": "Find the next service your franchise needs.",
+      "description": "Explore franchise entity setup, incorporation support, accounting, bookkeeping, payroll and document preparation, with clear software and service responsibilities.",
+      "sections": [
+        {
+          "heading": "Start with the task in front of you",
+          "html": "<p>Franchise services cover different jobs at different stages. A new owner may need entity setup and business records. An operating store may need bookkeeping or payroll support. An owner preparing a lender or buyer conversation needs organized, current documents.</p><p>FranWallet is a CoverPanda product for organizing the location and its information. Services are provided under their own scope and commercial terms; a software account alone does not engage a professional or authorize a filing.</p>"
+        },
+        {
+          "heading": "Entity setup and incorporation support",
+          "html": "<p>Prepare ownership, state and proposed company information, organize formation records and track the steps that follow. Discuss LLC formation or incorporation with an appropriate advisor, then review provider availability, state fees and service terms.</p><p><a href=\"/franchise-entity-setup/\">Explore franchise entity setup</a>.</p>"
+        },
+        {
+          "heading": "Franchise accounting and bookkeeping",
+          "html": "<p>Review supported accounting reports in your Wallet, or explore CoverPanda bookkeeping for ongoing accounting work. Confirm reporting periods, account access, reconciliation responsibilities and what the engagement includes.</p><p><a href=\"/franchise-accounting/\">Explore franchise accounting</a>.</p>"
+        },
+        {
+          "heading": "Payroll support and labor records",
+          "html": "<p>Keep payroll information organized by location and review the sources behind labor questions. CoverPanda also publishes payroll services. Processing pay, tax filings, registrations and provider integrations depend on the agreed service and supported setup.</p><p><a href=\"https://coverpanda.co/payroll\">Review CoverPanda payroll services</a>. Your service quote should explain provider subscriptions, processing responsibilities and fees.</p>"
+        },
+        {
+          "heading": "Debt, documents and professional conversations",
+          "html": "<p>Record loan information with source dates and keep original business documents together. Prepare a selected set of information for an accountant, lender or buyer. Storage and sharing help organize a conversation; they do not verify the documents or approve financing.</p><p><a href=\"/franchise-debt-tracking/\">Review debt organization</a> or <a href=\"/franchise-data-room/\">prepare a document room</a>.</p>"
+        },
+        {
+          "heading": "What to confirm before engaging a provider",
+          "html": "<ul><li>Who provides the service and who is your contact?</li><li>What is included, excluded and dependent on your inputs?</li><li>Which fees are one-time, recurring, state or third-party charges?</li><li>What must you approve before a filing, payment or other action?</li><li>What records and access will the provider need?</li><li>How are documents returned, access revoked and services canceled?</li></ul>"
+        }
+      ],
+      "related": [
+        "franchise-entity-setup",
+        "franchise-accounting",
+        "franchising"
+      ],
+      "cta": {
+        "label": "Open your free Wallet",
+        "href": "/wallet.html"
+      },
+      "kind": "product",
+      "sources": [
+        [
+          "CoverPanda: franchise bookkeeping",
+          "https://coverpanda.co/bookkeeping"
+        ],
+        [
+          "CoverPanda: payroll services",
+          "https://coverpanda.co/payroll"
+        ]
+      ],
+      "eyebrow": "Built for franchise owners",
+      "faqs": [
+        [
+          "Are all franchise services included in FranWallet?",
+          "No. The Wallet is software. Professional services, filing support and third-party subscriptions have separate terms and fees."
+        ],
+        [
+          "Does FranWallet sell franchise opportunities?",
+          "These pages help people setting up or operating a franchise. They are not a directory of franchises for sale or a promise to match you with a franchise brand."
+        ]
+      ],
+      "image": null,
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "franchising",
+      "title": "Franchising Resources for New & Operating Owners | FranWallet",
+      "h1": "From franchise research to an organized business.",
+      "description": "Franchising resources for people buying, setting up and operating a franchise: disclosure documents, entity setup, accounting, payroll and financial records.",
+      "sections": [
+        {
+          "heading": "Who these franchising resources are for",
+          "html": "<p>FranWallet serves franchise owner-operators: people preparing a location, running a store or organizing several locations. Use this hub to find the next practical task in your journey. If you want to turn your own brand into a franchise system, you will need a different legal and development process with qualified advisors.</p>"
+        },
+        {
+          "heading": "Before choosing or buying a franchise",
+          "html": "<p>Understand the Franchise Disclosure Document, the franchise agreement, investment requirements, fees and the experience of existing operators. Separate the franchisor's representations from your own projections, and use independent professional review.</p><p><a href=\"/insights/what-is-an-fdd/\">Read the FDD guide</a> and <a href=\"/insights/franchise-unit-economics/\">work through unit economics</a>.</p>"
+        },
+        {
+          "heading": "After your franchise agreement",
+          "html": "<p>Confirm the company structure, legal name, operating state and requirements from your franchisor, lender and landlord. Organize formation, tax identification, banking, insurance and the records needed before opening. The steps depend on your situation; a new Wallet is not a formed company.</p><p><a href=\"/franchise-entity-setup/\">Plan entity setup</a> or <a href=\"/start\">start your location record</a>.</p>"
+        },
+        {
+          "heading": "While you operate",
+          "html": "<p>Keep financial reporting, payroll information, loan records, leases and other documents connected to the correct location. Review source dates, follow up on missing information and ask specific questions of the people who help run the business.</p><p><a href=\"/franchise-accounting/\">Review your accounting options</a> and <a href=\"/insights/weekly-cash-position/\">prepare a weekly cash position</a>.</p>"
+        },
+        {
+          "heading": "When you grow, refinance or prepare a sale",
+          "html": "<p>Keep each location's records distinct and prepare documents for the actual recipient's request. Review historical statements, debt information, franchise and lease documents with your advisors. A data room makes selected records easier to share; it does not establish a business valuation or lender eligibility.</p><p><a href=\"/franchise-data-room/\">Prepare buyer or lender documents</a>.</p>"
+        }
+      ],
+      "related": [
+        "franchise-services",
+        "insights/what-is-an-fdd",
+        "insights/franchise-unit-economics"
+      ],
+      "cta": {
+        "label": "Open your free Wallet",
+        "href": "/wallet.html"
+      },
+      "kind": "hub",
+      "sources": [
+        [
+          "FTC: buying a franchise",
+          "https://search.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise"
+        ]
+      ],
+      "eyebrow": "Built for franchise owners",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "franchise-debt-tracking",
+      "title": "Franchise Debt Tracking & Loan Records | FranWallet",
+      "h1": "Keep each franchise loan with its location.",
+      "description": "Organize franchise debt schedules, recorded loan balances, payment amounts, statement dates and supporting documents by location in FranWallet.",
+      "sections": [
+        {
+          "heading": "A debt schedule you can trace to its source",
+          "html": "<p>For a franchise owner, a useful debt schedule connects each obligation to the right location and the documents behind it. FranWallet helps keep recorded lender, balance, payment, rate and source-date information together, alongside the location's financial records.</p><p>Owner-entered or imported debt records need review against lender information. A bank payment match does not establish the outstanding principal or a payoff amount.</p>"
+        },
+        {
+          "heading": "What to keep for each obligation",
+          "html": "<ul><li>Location and legal borrower.</li><li>Lender and loan reference, without exposing sensitive account numbers unnecessarily.</li><li>Recorded balance and the date it represents.</li><li>Payment amount, rate and maturity information when known.</li><li>Original agreement, amendments and current statements.</li><li>Open questions for the lender or accountant.</li></ul><p>Keep an unknown field open for follow-up rather than replacing it with a guessed value.</p>"
+        },
+        {
+          "heading": "Review a month without losing context",
+          "html": "<ol><li>Confirm that each record belongs to the correct location.</li><li>Find the statement that supports the recorded balance.</li><li>Review the payment and any possible match against connected bank activity.</li><li>Check how principal, interest, fees or other changes explain the new statement balance.</li><li>Update the recorded amount and source date after review.</li></ol><p><a href=\"/insights/monthly-franchise-debt-review/\">Use the worked monthly debt-review example</a>.</p>"
+        },
+        {
+          "heading": "Work alongside your accounting system",
+          "html": "<p>Your accounting system records liabilities and transactions. FranWallet provides a location-centered place for records and review. Confirm posting and reconciliation with your accountant. A specialist debt-accounting platform may be a better fit when you require complex interest calculations, covenant testing or formal debt disclosures.</p>"
+        },
+        {
+          "heading": "Start with the records you have",
+          "html": "<p>You can start organizing a location before connecting every account. Use the current software plans and in-app options to confirm supported imports, payment reviews and sharing features. Professional services and lender fees are separate.</p>"
+        }
+      ],
+      "related": [
+        "insights/monthly-franchise-debt-review",
+        "franchise-accounting",
+        "franchise-data-room"
+      ],
+      "cta": {
+        "label": "Open your free Wallet",
+        "href": "/wallet.html"
+      },
+      "kind": "product",
+      "sources": [
+        [
+          "Intuit: recording a business loan",
+          "https://quickbooks.intuit.com/learn-support/en-us/help-article/loans/set-loan-quickbooks-online/L7pMR6rUN_US_en_US"
+        ]
+      ],
+      "eyebrow": "Built for franchise owners",
+      "faqs": [
+        [
+          "Does a matched payment verify my loan balance?",
+          "No. Confirm the balance and date against the lender statement. Interest, fees, additional borrowing and adjustments can affect the amount owed."
+        ],
+        [
+          "Does FranWallet refinance my loans?",
+          "This page describes debt record organization and review. It does not promise refinancing, lender matching or approval."
+        ]
+      ],
+      "image": [
+        "/fran-product-debt.png",
+        "FranWallet debt schedule using illustrative lender, balance and payment records."
+      ],
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "franchise-data-room",
+      "title": "Franchise Data Rooms for Buyers & Lenders | FranWallet",
+      "h1": "Bring the right records to the next conversation.",
+      "description": "Organize franchise financial statements, loan records, leases and agreements for buyer, lender and accountant conversations using FranWallet.",
+      "sections": [
+        {
+          "heading": "What is a franchise data room?",
+          "html": "<p>A franchise data room is an organized set of records shared for a specific purpose, such as a financing discussion or a business sale. It may include financial statements, loan documents, the franchise agreement, lease and other information requested by the recipient.</p><p>FranWallet helps keep the location's records together and offers buyer/lender sharing features on eligible plans. Review current plan availability in the Wallet before publishing a room.</p>"
+        },
+        {
+          "heading": "Build the package around the request",
+          "html": "<ul><li>Financial statements: company, period and accounting basis clearly identified.</li><li>Debt records: statement dates and supporting lender documents.</li><li>Franchise documents: signed agreement and relevant amendments.</li><li>Property documents: lease, amendments and other requested records.</li><li>Insurance and operating records where relevant.</li><li>A clear list of missing items and unresolved questions.</li></ul><p>Ask the buyer, lender or advisor what they need. A general checklist is a starting point, not a complete transaction-specific request list.</p>"
+        },
+        {
+          "heading": "Review dates before sharing",
+          "html": "<p>A file can be present and still be out of date. Check that the period, location and legal entity match the request. Keep original documents distinguishable from summaries and owner-prepared scenarios. Have the appropriate advisor review consequential financial or legal questions.</p>"
+        },
+        {
+          "heading": "Use the sharing controls for the conversation",
+          "html": "<p>Choose the files and available access settings deliberately. Eligible FranWallet sharing features include expiring room links and revocation. Confirm the current settings and recipient experience before sharing confidential records.</p><p>Revoking access cannot retrieve a copy someone already downloaded. If you need advanced transaction administration, specialized redaction or other controls, evaluate a dedicated virtual data room against those requirements.</p>"
+        },
+        {
+          "heading": "Organized records are the start",
+          "html": "<p>A room does not verify the underlying records, replace due diligence, establish a business value or secure financing. It helps you make the conversation specific: what is included, the dates it covers and what remains to resolve.</p>"
+        }
+      ],
+      "related": [
+        "franchise-debt-tracking",
+        "franchise-accounting",
+        "insights/franchise-bookkeeping-checklist"
+      ],
+      "cta": {
+        "label": "Open your free Wallet",
+        "href": "/wallet.html"
+      },
+      "kind": "product",
+      "sources": [],
+      "eyebrow": "Built for franchise owners",
+      "faqs": [
+        [
+          "Can I use this for an accountant as well as a lender?",
+          "Organize the records around the recipient and purpose. Confirm that the current sharing options fit the intended use before sending a link."
+        ],
+        [
+          "Is a complete room proof that I qualify for financing?",
+          "No. The lender determines its requirements and eligibility. Document presence is not verification or approval."
+        ]
+      ],
+      "image": null,
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "chatgpt",
+      "title": "FranWallet in ChatGPT: Capabilities & Access",
+      "h1": "Use FranWallet context in ChatGPT.",
+      "description": "Learn how the FranWallet ChatGPT integration reviews existing location records, what access requires, and how FranGPT relates to FranWallet.",
+      "sections": [
+        {
+          "heading": "FranWallet, FranGPT and the existing integration",
+          "html": "<p>FranWallet is the product that stores and organizes your location records. Its existing connection is called <strong>Fran — Franchise Wallet</strong>. You may also see FranGPT used for a franchise-assistant entry point.</p><p>Access depends on current availability in your ChatGPT account. If you cannot find FranWallet, <a href=\"/support.html\">contact support for current access options</a>. You can use the public guides and your Wallet without that connection.</p>"
+        },
+        {
+          "heading": "Start with an existing Wallet",
+          "html": "<p>Create or sign in to FranWallet and organize a location first. When the integration is available to you, use its supported account-connection flow and review the consent screen. It should use only the locations the connected account is permitted to access.</p>"
+        },
+        {
+          "heading": "Useful questions about existing records",
+          "html": "<ul><li>Which of my locations should I review before month-end?</li><li>What documents are recorded for this location?</li><li>Show my recorded debt information and its source dates.</li><li>What accounting snapshots are available, and what period do they cover?</li></ul><p>Financial records and source-review tools are read-only. Other capabilities may depend on specific account access or a limited release; confirm current permissions before relying on an editing workflow.</p>"
+        },
+        {
+          "heading": "Keep source dates with the answer",
+          "html": "<p>Ask for the reporting period, record date and missing information. The integration should distinguish record presence from verification of financial health, accounting close, compliance, valuation or financing eligibility. Use the Wallet to inspect and update the underlying information through supported workflows.</p>"
+        },
+        {
+          "heading": "Answers you can use without connecting anything",
+          "html": "<p>Read the public <a href=\"/insights/franchise-entity-setup-checklist/\">entity setup checklist</a>, <a href=\"/insights/how-to-read-your-pl/\">P&amp;L guide</a> and <a href=\"/insights/monthly-franchise-debt-review/\">monthly debt-review example</a>. These resources do not require a ChatGPT installation.</p>"
+        }
+      ],
+      "related": [
+        "franchise-entity-setup",
+        "franchise-accounting",
+        "franchise-debt-tracking"
+      ],
+      "cta": {
+        "label": "Open your free Wallet",
+        "href": "/wallet.html"
+      },
+      "kind": "integration",
+      "sources": [
+        [
+          "OpenAI: plugin publication and discovery",
+          "https://developers.openai.com/plugins/deploy/app-review"
+        ]
+      ],
+      "eyebrow": "FranWallet and ChatGPT",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27"
+    },
+    {
+      "slug": "insights/incorporation-vs-llc-for-franchise-owners",
+      "title": "Incorporation vs. LLC Formation for Franchise Owners | FranWallet",
+      "h1": "Incorporation or LLC formation: understand the decision.",
+      "description": "Understand how incorporation, LLC formation and tax elections differ when setting up a franchise, and which questions to bring to your advisors.",
+      "sections": [
+        {
+          "heading": "What does incorporation mean?",
+          "html": "<p>Incorporation generally means creating a corporation under state law. Forming a limited liability company creates an LLC instead. Both involve company records, but the ownership, governance and tax questions should be evaluated for the actual business.</p><p>Franchise owners sometimes use incorporation as shorthand for any entity setup. Clarify which entity you mean before asking a provider to file.</p>"
+        },
+        {
+          "heading": "Separate legal structure from tax classification",
+          "html": "<p>An LLC is a state-law structure. Its federal tax treatment depends on ownership and elections. An S corporation is a federal tax classification for an eligible entity, not simply another name for an LLC. Do not assume that filing a company also makes a tax election.</p>"
+        },
+        {
+          "heading": "Bring these franchise-specific questions",
+          "html": "<ul><li>Who will own the company, and who can sign for it?</li><li>Where will it operate and where does it need registration?</li><li>Which entity must appear on the franchise agreement and lease?</li><li>What does the lender require of the borrower and guarantors?</li><li>Will locations share a company or require separate entities?</li><li>What are the state fees, professional fees and ongoing administrative duties?</li></ul>"
+        },
+        {
+          "heading": "Compare the work, not a promised tax saving",
+          "html": "<p>Ask your attorney and accountant to compare governance, ownership, compensation, filing obligations and state treatment. There is no single profit threshold or structure that fits every franchise owner. A service provider should explain what it files and what remains your responsibility.</p>"
+        },
+        {
+          "heading": "Turn the decision into an organized setup",
+          "html": "<p>Record the chosen structure, approved legal name, state and owners after the appropriate review. Retain state approval and governing documents; then complete applicable EIN, banking and registration steps. FranWallet can organize the location and its records while the actual filing follows a separately authorized process.</p>"
+        }
+      ],
+      "related": [
+        "franchise-entity-setup",
+        "insights/llc-vs-s-corp",
+        "insights/franchise-entity-setup-checklist"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "IRS: business structures",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/business-structures"
+        ],
+        [
+          "IRS: LLC classification",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc"
+        ],
+        [
+          "IRS: get an EIN",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/franchise-entity-setup-checklist",
+      "title": "Franchise Entity Setup Checklist: LLC, EIN & Banking | FranWallet",
+      "h1": "A franchise entity setup checklist you can work through.",
+      "description": "Prepare a franchise company setup checklist covering structure, state formation, EIN, banking, lease details, accounting and payroll records.",
+      "sections": [
+        {
+          "heading": "Before signing documents in a company name",
+          "html": "<p>Identify the intended legal party with your advisors. Confirm who signs the franchise agreement and lease, how the company name should appear, and whether landlord, lender or franchisor consent is needed for a later change. A proposed name is not a state-approved company.</p>"
+        },
+        {
+          "heading": "Prepare the formation information",
+          "html": "<ul><li>Proposed entity type, filing state and legal name.</li><li>Owners, ownership interests and authorized signers.</li><li>Registered-agent and business-address arrangements.</li><li>Franchisor, lease and lender naming requirements.</li><li>Provider scope, state fees, renewal costs and required approvals.</li></ul><p>Keep sensitive owner identity information out of a general public checklist or email attachment.</p>"
+        },
+        {
+          "heading": "After state formation",
+          "html": "<p>Keep the state approval, effective date and governing documents. If creating a corporation or LLC, the IRS directs you to form it with the state before applying for the EIN. An EIN can be requested directly from the IRS without a fee; a provider may charge separately for assistance.</p>"
+        },
+        {
+          "heading": "Prepare for business banking",
+          "html": "<p>Ask your bank for its actual document list. It may need formation evidence, tax identification, ownership and signer information, governing documents and information about the business. Check that names are consistent. Do not treat a generic checklist as the bank's account-opening approval.</p>"
+        },
+        {
+          "heading": "Connect setup with opening operations",
+          "html": "<p>Arrange the appropriate insurance, registrations, books and payroll before the relevant operating or hiring activity. Identify deadlines from official notices and your advisors. Formation approval alone does not establish that all licenses, employer registrations or opening requirements are complete.</p><p>Use a location record in FranWallet to keep documents and open tasks together. Opening a Wallet does not submit a filing, apply for an EIN or open a bank account.</p>"
+        }
+      ],
+      "related": [
+        "franchise-entity-setup",
+        "franchise-accounting",
+        "franchise-services"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "IRS: get an EIN",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number"
+        ],
+        [
+          "IRS: business structures",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/business-structures"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/franchise-bookkeeping-checklist",
+      "title": "Monthly Franchise Bookkeeping Checklist | FranWallet",
+      "h1": "Prepare a useful monthly bookkeeping review.",
+      "description": "A franchise bookkeeping checklist for source records, reconciliation questions, royalties, payroll, financial reports and location-specific follow-up.",
+      "sections": [
+        {
+          "heading": "Start with the reporting period",
+          "html": "<p>Confirm the company, location, month and accounting basis. Note whether the month is still open, has been reviewed or has been closed by the responsible accountant. Downloading a report is not the same as completing the accounting work.</p>"
+        },
+        {
+          "heading": "Gather the source records",
+          "html": "<ul><li>Bank and card statements, including missing pages and adjustments.</li><li>Sales and payment-processor reports for the same period.</li><li>Payroll reports and related liabilities.</li><li>Royalty and advertising-fund statements.</li><li>Invoices, receipts, lease payments and unusual purchases.</li><li>Loan statements and information about new borrowing.</li></ul>"
+        },
+        {
+          "heading": "Ask what has been reconciled",
+          "html": "<p>Ask your bookkeeper whether bank and card balances have been reconciled, whether sales deposits and processor deductions have been explained, and which transactions still need owner information. Check whether late adjustments will change the statements.</p>"
+        },
+        {
+          "heading": "Review the franchise-specific lines",
+          "html": "<p>Compare royalty and advertising charges with the contractual sales definition and relevant period. Check payroll timing, shared costs and the treatment of owner items with your accountant. Use consistent location definitions before comparing stores.</p>"
+        },
+        {
+          "heading": "Leave with a report and a clear question",
+          "html": "<p>Review the P&amp;L and balance sheet with their period and basis. Ask about the largest change or unresolved item and record who will follow up. FranWallet helps organize records and available reports; CoverPanda bookkeeping is a separate engagement with agreed deliverables and fees.</p>"
+        }
+      ],
+      "related": [
+        "franchise-accounting",
+        "insights/how-to-read-your-pl",
+        "insights/understanding-royalties"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "CoverPanda: bookkeeping scope",
+          "https://coverpanda.co/bookkeeping"
+        ],
+        [
+          "Intuit: recording a business loan",
+          "https://quickbooks.intuit.com/learn-support/en-us/help-article/loans/set-loan-quickbooks-online/L7pMR6rUN_US_en_US"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/weekly-cash-position",
+      "title": "Weekly Franchise Cash Position Worksheet | FranWallet",
+      "h1": "See the next cash question before it becomes urgent.",
+      "description": "Build a weekly franchise cash position from dated balances, expected receipts, payroll, royalties, rent, taxes and debt payments, with a simple calculator.",
+      "sections": [
+        {
+          "heading": "What is a weekly cash position?",
+          "html": "<p>A weekly cash position combines a dated starting balance with expected cash receipts and payments. Its purpose is to make timing visible. It is different from a profit-and-loss statement and is only as reliable as the balances, obligations and assumptions you include.</p>"
+        },
+        {
+          "heading": "Use the same dates and definitions",
+          "html": "<ul><li>List the accounts and locations included and the date of the opening balances.</li><li>Record expected cash receipts in the week they are likely to settle.</li><li>Include payroll, rent, royalties, advertising funds, taxes, vendor and debt payments.</li><li>Identify restricted or already committed cash separately.</li><li>Set your own planning buffer and record the assumptions behind it.</li></ul>"
+        },
+        {
+          "heading": "A simple worked example",
+          "html": "<p>Illustrative week: opening cash of $40,000 plus $20,000 expected receipts minus $35,000 expected payments leaves $25,000 projected closing cash. Against a chosen $10,000 buffer, planning headroom is $15,000. This is not verified cash available to distribute or transfer.</p><p>Weekly totals can hide a shortfall before a deposit arrives. Review the dates of the largest receipts and payments as well as the total.</p>"
+        },
+        {
+          "heading": "Keep locations and transfers clear",
+          "html": "<p>Prepare each location's position first. Record a transfer as a separate movement in both affected accounts so it is not counted as operating income or expense. A portfolio total does not mean cash can legally or practically move between companies. Confirm restrictions and any proposed movement with the responsible people.</p>"
+        },
+        {
+          "heading": "Update the worksheet each week",
+          "html": "<p>Replace forecasts with actual results, explain the difference and refresh the next week's dates. A rolling forecast can extend the horizon, but missing receipts or obligations should remain visible. Keep source records organized in FranWallet; the calculator below is a browser-only planning aid and does not connect to your Wallet.</p><p><a href=\"/downloads/weekly-cash-position.csv\" download>Download a blank cash-position CSV</a>. The CSV is an input worksheet; the browser calculator performs the arithmetic below.</p>"
+        }
+      ],
+      "related": [
+        "franchise-accounting",
+        "franchise-debt-tracking",
+        "insights/how-to-read-your-pl"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "NH SBDC: 13-week cash-flow resource",
+          "https://www.nhsbdc.org/resource/cash-flow-template-13-week"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": "cash"
+    },
+    {
+      "slug": "insights/monthly-franchise-debt-review",
+      "title": "Monthly Franchise Debt Review: A Worked Example | FranWallet",
+      "h1": "Review the payment, statement and recorded balance together.",
+      "description": "A worked monthly franchise debt-review example covering lender statements, principal, interest, recorded balances, payment activity and source dates.",
+      "sections": [
+        {
+          "heading": "Keep three records distinct",
+          "html": "<p>The debt register says what you have recorded. The lender statement says what the lender reports for a date or period. Bank activity shows cash movement. Compare them; one is not an automatic substitute for the others.</p>"
+        },
+        {
+          "heading": "An illustrative principal review",
+          "html": "<p>Assume a $50,000 opening principal balance, a $1,200 payment and a lender-confirmed $300 interest portion. With no fees, new advances or other adjustments, $900 reduces principal and the expected closing principal is $49,100. Compare that expectation with the lender's statement.</p><p>Do not subtract the entire $1,200 payment from principal. A payoff quote may differ from a statement balance because of accrued interest, fees or other terms.</p>"
+        },
+        {
+          "heading": "Work through the monthly checklist",
+          "html": "<ol><li>Confirm the borrower, location and obligation.</li><li>Check the statement date and the prior recorded balance.</li><li>Find payment activity and any potential match.</li><li>Use lender information to understand principal, interest and adjustments.</li><li>Investigate unexplained differences with the lender or accountant.</li><li>Update your record and its source date after review.</li></ol>"
+        },
+        {
+          "heading": "Leave a useful note when something does not match",
+          "html": "<p>Record the dates, amounts and source documents involved, along with the open question and responsible person. Do not force the figures to match by changing an unsupported balance. If an older statement is all you have, keep that date visible.</p>"
+        },
+        {
+          "heading": "Make the next review easier",
+          "html": "<p>Keep statements beside the location's debt records in FranWallet. A possible bank-payment match is a review aid, not verification of principal. For accounting postings, interest treatment or complex loan terms, work with your accountant.</p><p><a href=\"/downloads/franchise-debt-register.csv\" download>Download a blank debt-register CSV</a>.</p>"
+        }
+      ],
+      "related": [
+        "franchise-debt-tracking",
+        "franchise-accounting",
+        "franchise-data-room"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "Intuit: recording a business loan",
+          "https://quickbooks.intuit.com/learn-support/en-us/help-article/loans/set-loan-quickbooks-online/L7pMR6rUN_US_en_US"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/how-to-read-your-pl",
+      "title": "How to Read a Franchise P&L | FranWallet",
+      "h1": "Read your franchise P&L with the right context.",
+      "description": "Understand a franchise profit-and-loss statement, compare periods, review royalties and labor, and distinguish accounting profit from cash.",
+      "sections": [
+        {
+          "heading": "Confirm what the report covers",
+          "html": "<p>A profit-and-loss statement summarizes revenue and expenses for a defined period. Start with the company or location, dates, accounting basis and whether the books have been reviewed. Comparing a partial month with a complete month can produce a misleading story.</p>"
+        },
+        {
+          "heading": "Read from sales to the result",
+          "html": "<ol><li><strong>Revenue:</strong> identify what is included and how refunds or channels are treated.</li><li><strong>Cost of sales:</strong> review the categories used for your concept.</li><li><strong>Operating expenses:</strong> inspect labor, occupancy, royalties, advertising and other recurring costs.</li><li><strong>Profit or loss:</strong> understand what remains under the report's accounting treatment.</li></ol>"
+        },
+        {
+          "heading": "Use a transparent example",
+          "html": "<p>Illustrative month: $100,000 revenue less $30,000 cost of sales leaves $70,000 gross profit. If operating expenses are $55,000, the remaining amount before other report items is $15,000. The example describes arithmetic, not a target for every franchise.</p><p>Expense ratios depend on the concept, sales mix, geography, maturity, definitions and period. Use your own history, the relevant franchise information and your accountant's analysis before drawing a conclusion.</p>"
+        },
+        {
+          "heading": "Ask about the change before deciding its cause",
+          "html": "<p>Compare consistent periods and definitions. A rise in labor percentage might reflect sales movement, pay timing, extra operating days, staffing changes or an accounting classification. A high number by itself does not diagnose the cause.</p>"
+        },
+        {
+          "heading": "Profit is different from bank cash",
+          "html": "<p>Loan principal, equipment purchases, owner transactions, unpaid bills and settlement timing can affect cash differently from P&amp;L expenses. Review the balance sheet, cash information and source records with your accountant when the result and bank balance appear inconsistent.</p>"
+        },
+        {
+          "heading": "Use FranWallet for the next conversation",
+          "html": "<p>Review available QuickBooks information with its reporting period and sync date. Open the relevant detail, keep supporting documents at the location and bring one specific question to your accountant. FranWallet software does not establish that the books are closed or independently verified.</p>"
+        }
+      ],
+      "related": [
+        "franchise-accounting",
+        "insights/franchise-bookkeeping-checklist",
+        "insights/weekly-cash-position"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "CoverPanda: bookkeeping scope",
+          "https://coverpanda.co/bookkeeping"
+        ],
+        [
+          "Intuit: recording a business loan",
+          "https://quickbooks.intuit.com/learn-support/en-us/help-article/loans/set-loan-quickbooks-online/L7pMR6rUN_US_en_US"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/llc-vs-s-corp",
+      "title": "LLC vs. S Corporation for Franchise Owners | FranWallet",
+      "h1": "An LLC and an S election answer different questions.",
+      "description": "Understand the difference between an LLC and S corporation tax treatment for a franchise, without blanket profit thresholds or tax-saving promises.",
+      "sections": [
+        {
+          "heading": "Start with the two decisions",
+          "html": "<p>An LLC is a company formed under state law. S corporation treatment is a federal tax classification available to eligible entities that make the appropriate election. An LLC may have different federal tax treatment depending on its owners and elections.</p>"
+        },
+        {
+          "heading": "What your advisors need to evaluate",
+          "html": "<ul><li>Ownership and eligibility for the proposed treatment.</li><li>Expected earnings, owner work and compensation.</li><li>State tax treatment and filing obligations.</li><li>Payroll, accounting and administrative costs.</li><li>Franchise, lender and lease requirements.</li></ul><p>A single revenue or profit threshold cannot decide the election for every owner.</p>"
+        },
+        {
+          "heading": "Keep formation separate from the election",
+          "html": "<p>Do not assume that a provider forming an LLC also handles tax elections or owner payroll. Confirm the scope, required forms, timing and professional responsibilities before proceeding. Review the choice when your ownership or operations change.</p>"
+        },
+        {
+          "heading": "Document the decision in your setup record",
+          "html": "<p>Keep state formation records separate from federal and state tax records. Record advisor-confirmed decisions, relevant dates and who handles each filing. FranWallet helps organize the information; it does not choose tax treatment or guarantee a tax saving.</p>"
+        }
+      ],
+      "related": [
+        "franchise-entity-setup",
+        "insights/incorporation-vs-llc-for-franchise-owners",
+        "franchise-accounting"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "IRS: business structures",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/business-structures"
+        ],
+        [
+          "IRS: LLC classification",
+          "https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/what-is-an-fdd",
+      "title": "What Is an FDD? A Franchise Buyer Guide | FranWallet",
+      "h1": "Read the FDD as a set of questions to investigate.",
+      "description": "Understand the Franchise Disclosure Document, fees, financial representations, agreements and questions to review before buying a franchise.",
+      "sections": [
+        {
+          "heading": "What is a Franchise Disclosure Document?",
+          "html": "<p>The FDD is the franchisor's disclosure document for a prospective franchise buyer. It contains information about the system, investment, fees, obligations and associated agreements. Read it with the franchise agreement and independent advice rather than treating it as a sales brochure.</p>"
+        },
+        {
+          "heading": "Group the questions before reading",
+          "html": "<ul><li>Who is the franchisor and what history should I investigate?</li><li>What is the estimated investment, and which ongoing fees apply?</li><li>What obligations, territory and supplier restrictions would I accept?</li><li>What financial information is actually represented, and which outlets does it cover?</li><li>What do openings, closures, transfers and franchisee conversations reveal?</li><li>What agreements would I sign, and how do renewal, transfer and termination work?</li></ul>"
+        },
+        {
+          "heading": "Keep timing and professional review in view",
+          "html": "<p>The FTC's Franchise Rule includes a disclosure waiting period before certain agreements or payments to the franchisor or its affiliate. Review the current rule, transaction circumstances and any state requirements with counsel. Do not assume that receiving an FDD means the government has approved the business opportunity.</p>"
+        },
+        {
+          "heading": "Turn the reading into follow-up",
+          "html": "<p>Keep the document version and date, record the question and relevant item, and ask for clarification or supporting material. Compare projections with the disclosed basis and speak with operators. Organize documents in FranWallet while your attorney and accountant address the legal and financial questions.</p>"
+        }
+      ],
+      "related": [
+        "franchising",
+        "insights/franchise-unit-economics",
+        "franchise-entity-setup"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "FTC: buying a franchise",
+          "https://search.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/understanding-royalties",
+      "title": "Franchise Royalties & Advertising Fund Review | FranWallet",
+      "h1": "Understand the sales base behind the fee.",
+      "description": "Review franchise royalties and advertising contributions using your agreement, reported sales, charge periods and supporting statements.",
+      "sections": [
+        {
+          "heading": "What is a franchise royalty?",
+          "html": "<p>A royalty is an ongoing charge under the franchise arrangement. It may use a sales percentage, fixed amount, minimum or another contractual method. Advertising contributions, required local spending and technology charges may be separate obligations.</p>"
+        },
+        {
+          "heading": "Use the agreement's definition",
+          "html": "<p>Find the applicable rate, sales definition, exclusions, minimum, reporting period and payment date. Discounts, refunds, delivery fees or taxes may be treated differently under different agreements. Do not substitute a general definition of gross sales for the contract.</p>"
+        },
+        {
+          "heading": "A worked calculation",
+          "html": "<p>Illustrative agreement: a 6% royalty on a $100,000 contractual sales base produces $6,000. A separate 2% advertising contribution on that same base adds $2,000. The combined $8,000 is not a claim about a typical franchise or your actual agreement.</p>"
+        },
+        {
+          "heading": "Reconcile the period",
+          "html": "<ol><li>Confirm the applicable agreement and fee terms.</li><li>Match the sales report to the charge period.</li><li>Check adjustments, exclusions and any minimum.</li><li>Compare the calculation with the statement and actual draw.</li><li>Raise unexplained differences with supporting records.</li></ol>"
+        },
+        {
+          "heading": "Keep fees visible in the business picture",
+          "html": "<p>Discuss accounting treatment with your bookkeeper and include dated cash obligations in your planning. FranWallet helps organize records and reports. It does not interpret your agreement or resolve a fee dispute.</p>"
+        }
+      ],
+      "related": [
+        "franchise-accounting",
+        "insights/franchise-bookkeeping-checklist",
+        "insights/franchise-unit-economics"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "FTC: buying a franchise",
+          "https://search.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise"
+        ],
+        [
+          "CoverPanda: bookkeeping scope",
+          "https://coverpanda.co/bookkeeping"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/sba-vs-robs-vs-conventional",
+      "title": "Franchise Financing: SBA, ROBS & Conventional | FranWallet",
+      "h1": "Compare financing structures before committing.",
+      "description": "Prepare questions about SBA, conventional financing and ROBS for a franchise purchase, with current sources and no approval or borrowing promises.",
+      "sections": [
+        {
+          "heading": "Start with the capital need",
+          "html": "<p>Separate purchase or opening costs, working capital, reserves and ongoing payments. Identify which figures are supported by documents and which are assumptions. A lender or financing professional can explain available structures and the requirements for your situation.</p>"
+        },
+        {
+          "heading": "SBA-backed borrowing",
+          "html": "<p>The SBA 7(a) program guarantees qualifying lender loans; borrowers work with lenders. Requirements, documentation, terms and timing depend on the transaction and lender. Use current official guidance and an actual lender request rather than assuming a universal credit score, down payment or approval timeline.</p>"
+        },
+        {
+          "heading": "Conventional borrowing",
+          "html": "<p>A conventional loan follows the lender's underwriting and commercial terms. Ask about collateral, guarantees, rate changes, payment schedules and fees. Compare the full proposal, including ongoing obligations, with your operating assumptions.</p>"
+        },
+        {
+          "heading": "ROBS and retirement assets",
+          "html": "<p>Rollovers as Business Start-ups involve retirement-plan and corporate arrangements. Using retirement assets introduces investment and ongoing compliance questions. Obtain specialized tax, legal and plan advice rather than treating the structure as a simple withdrawal or a universally preferable source of capital.</p>"
+        },
+        {
+          "heading": "Prepare for the discussion",
+          "html": "<ul><li>What amount and use of funds are being evaluated?</li><li>What documents and owner contribution does the lender require?</li><li>What guarantees or collateral are involved?</li><li>How would a different sales or cost scenario affect cash payments?</li><li>Who handles ongoing plan, reporting or loan requirements?</li></ul><p>FranWallet organizes financial and business records for the conversation. It does not approve financing or determine eligibility.</p>"
+        }
+      ],
+      "related": [
+        "franchise-data-room",
+        "franchise-debt-tracking",
+        "insights/franchise-unit-economics"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "SBA: 7(a) loan program",
+          "https://www.sba.gov/loans/7a-loans/"
+        ],
+        [
+          "IRS: ROBS compliance project",
+          "https://www.irs.gov/retirement-plans/rollovers-as-business-start-ups-compliance-project"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/the-14-registration-states",
+      "title": "Franchise Registration States: How to Check Requirements | FranWallet",
+      "h1": "Check the state rule for the actual transaction.",
+      "description": "Understand why state franchise registration and disclosure requirements need current verification, with a practical checklist for franchise buyers.",
+      "sections": [
+        {
+          "heading": "Why the state matters",
+          "html": "<p>Federal franchise disclosure rules operate alongside state laws. State requirements can involve registration, notice filings, exemptions, disclosures and other conditions. Which rules apply depends on the parties, transaction and jurisdiction.</p>"
+        },
+        {
+          "heading": "Do not rely on a fixed state count",
+          "html": "<p>A page labeled the 14 registration states can hide differences between registration, notice filing and exemptions. Use current state regulator information and qualified franchise counsel to establish the requirements for your situation. Registration should not be treated as a recommendation or guarantee of the investment.</p>"
+        },
+        {
+          "heading": "A verification checklist",
+          "html": "<ol><li>Identify where the offer, sale and operation are relevant.</li><li>Ask counsel which state laws apply.</li><li>Locate the regulator's current official information.</li><li>Check the franchisor's filing, effective dates and any applicable exemption.</li><li>Keep the current FDD and required state materials together.</li><li>Resolve open questions before signing or paying.</li></ol>"
+        },
+        {
+          "heading": "Use the record for the next step",
+          "html": "<p>Save the source, date checked and advisor follow-up with your franchise research. FranWallet stores and organizes information; it does not verify registration status, provide a state-law opinion or determine compliance.</p>"
+        }
+      ],
+      "related": [
+        "franchising",
+        "insights/what-is-an-fdd",
+        "franchise-entity-setup"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "FTC: buying a franchise",
+          "https://search.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    },
+    {
+      "slug": "insights/franchise-unit-economics",
+      "title": "Franchise Unit Economics: Revenue, Costs & Cash | FranWallet",
+      "h1": "Make the assumptions visible in your unit economics.",
+      "description": "Understand franchise revenue, prime cost, occupancy, royalties, break-even and cash assumptions with a transparent worked example.",
+      "sections": [
+        {
+          "heading": "Start with a defined unit and period",
+          "html": "<p>Unit economics describe the revenue and costs of a location under stated assumptions. Identify the period, store maturity, accounting definitions and source for each figure. An average across disclosed outlets is not a forecast for a new location.</p>"
+        },
+        {
+          "heading": "The operating lines to understand",
+          "html": "<ul><li>Revenue and sales mix.</li><li>Cost of goods or services under a consistent definition.</li><li>Labor and related employer costs.</li><li>Occupancy and other fixed or variable costs.</li><li>Royalties, advertising contributions and required fees.</li><li>Other operating costs and the stated earnings measure.</li></ul><p>Compare percentages only when their definitions and context match.</p>"
+        },
+        {
+          "heading": "A transparent example",
+          "html": "<p>Illustrative monthly revenue of $100,000 less $30,000 cost of sales, $28,000 labor, $9,000 occupancy, $8,000 franchise fees and $10,000 other operating costs leaves $15,000 before any excluded items. These are assumptions, not industry targets or an expected return.</p><p>When testing lower sales, do not reduce every cost by the same percentage. Some costs stay fixed, some change with volume and others move in steps.</p>"
+        },
+        {
+          "heading": "Separate operating result from cash requirements",
+          "html": "<p>A simplified operating break-even uses fixed operating costs divided by contribution margin. Define both carefully. Financing payments, capital expenditure, taxes and owner transactions can change cash needs beyond that operating calculation. Ask your accountant to help build the model appropriate to your decision.</p>"
+        },
+        {
+          "heading": "Use the model to ask better questions",
+          "html": "<p>Record which assumptions are supported by the FDD, your actual reports, a quote or an estimate. Test a slower opening or weaker revenue period. Keep source documents and model versions together in FranWallet for discussion with your advisors.</p>"
+        }
+      ],
+      "related": [
+        "franchise-accounting",
+        "insights/weekly-cash-position",
+        "franchise-data-room"
+      ],
+      "cta": {
+        "label": "Organize your location",
+        "href": "/wallet.html"
+      },
+      "kind": "article",
+      "sources": [
+        [
+          "FTC: buying a franchise",
+          "https://search.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise"
+        ],
+        [
+          "CoverPanda: bookkeeping scope",
+          "https://coverpanda.co/bookkeeping"
+        ]
+      ],
+      "eyebrow": "Franchise owner resources",
+      "faqs": [],
+      "image": null,
+      "updated": "2026-11-27",
+      "widget": null
+    }
+  ]
+}

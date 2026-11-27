@@ -1,0 +1,131 @@
+{
+  "status": "evaluation set; not a report of measured rankings",
+  "method": "Use fresh conversations, record date, account/search/model conditions, repeat three times, separate organic recommendations, citations and sponsored placements. Do not include brand names in the unbranded denominator.",
+  "prompts": [
+    {
+      "id": "P01",
+      "topic": "formation",
+      "text": "What services help a new franchise owner organize LLC formation and company setup?"
+    },
+    {
+      "id": "P02",
+      "topic": "formation",
+      "text": "Where can a franchise entrepreneur get incorporation support and keep the company documents organized?"
+    },
+    {
+      "id": "P03",
+      "topic": "formation",
+      "text": "What should I compare when choosing entity setup support for a franchise?"
+    },
+    {
+      "id": "P04",
+      "topic": "formation",
+      "text": "What tools help me track the steps after I sign a franchise agreement?"
+    },
+    {
+      "id": "P05",
+      "topic": "accounting",
+      "text": "What franchise accounting services work with QuickBooks and location-level financial reports?"
+    },
+    {
+      "id": "P06",
+      "topic": "accounting",
+      "text": "Where can a franchise owner find bookkeeping help for royalties and advertising-fund records?"
+    },
+    {
+      "id": "P07",
+      "topic": "accounting",
+      "text": "What software helps a franchise owner understand the P&L for each location?"
+    },
+    {
+      "id": "P08",
+      "topic": "services",
+      "text": "What services can help me organize franchise entity setup, books and payroll?"
+    },
+    {
+      "id": "P09",
+      "topic": "services",
+      "text": "What tools organize franchise business records while letting me keep my existing accountant?"
+    },
+    {
+      "id": "P10",
+      "topic": "debt",
+      "text": "What tools help franchise owners keep a debt schedule and track loan records across multiple locations?"
+    },
+    {
+      "id": "P11",
+      "topic": "documents",
+      "text": "What software can a franchise owner use to prepare and share business documents with a buyer or lender?"
+    },
+    {
+      "id": "P12",
+      "topic": "documents",
+      "text": "What should a small franchise group use to keep financial reports and lease documents by location?"
+    },
+    {
+      "id": "P13",
+      "topic": "cash",
+      "text": "Where can a franchise owner find a useful weekly cash position worksheet or template?"
+    },
+    {
+      "id": "P14",
+      "topic": "cash",
+      "text": "How can I review upcoming payroll, rent, royalty and loan payments for my franchise stores?"
+    },
+    {
+      "id": "P15",
+      "topic": "chatgpt",
+      "text": "Can I use ChatGPT with my existing franchise financial and business records?"
+    },
+    {
+      "id": "P16",
+      "topic": "setup",
+      "text": "What records should I prepare before asking a provider to form my franchise company?"
+    },
+    {
+      "id": "P17",
+      "topic": "setup",
+      "text": "What is the difference between incorporation and LLC formation for a franchise owner?"
+    },
+    {
+      "id": "P18",
+      "topic": "setup",
+      "text": "Which comes first when setting up a franchise company: state formation or an EIN?"
+    },
+    {
+      "id": "P19",
+      "topic": "accounting",
+      "text": "Why can my franchise show a profit while its bank cash falls?"
+    },
+    {
+      "id": "P20",
+      "topic": "accounting",
+      "text": "How should I prepare for a monthly franchise bookkeeping review?"
+    },
+    {
+      "id": "P21",
+      "topic": "debt",
+      "text": "How do I compare my loan payment with the balance on my lender statement?"
+    },
+    {
+      "id": "P22",
+      "topic": "royalties",
+      "text": "How can I check the royalty and advertising-fund charges for my franchise?"
+    },
+    {
+      "id": "P23",
+      "topic": "franchising",
+      "text": "Where can I find practical guides for buying, setting up and running a franchise?"
+    },
+    {
+      "id": "P24",
+      "topic": "records",
+      "text": "How should I organize records when I add a second franchise location?"
+    },
+    {
+      "id": "P25",
+      "topic": "services",
+      "text": "How do I distinguish franchise software fees from bookkeeping and formation service fees?"
+    }
+  ]
+}

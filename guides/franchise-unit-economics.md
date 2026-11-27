@@ -1,37 +1,46 @@
-# Franchise unit economics: the five numbers that decide everything
+# Make the assumptions visible in your unit economics.
 
-Strip away the brand story and a franchise unit is five numbers. If you can say them for your unit (or the unit you're evaluating) without looking them up, you understand your business better than most operators.
+Canonical article: https://franwallet.com/insights/franchise-unit-economics/
 
-## 1. AUV — average unit volume
+## Start with a defined unit and period
 
-What a typical unit sells in a year. Item 19 of the FDD is where the franchisor is allowed to show it; good Item 19s break it out by quartile. **Always find the bottom quartile**, because that's the risk you're pricing: half of units are below the median, and your first year will likely start below it too.
+Unit economics describe the revenue and costs of a location under stated assumptions. Identify the period, store maturity, accounting definitions and source for each figure. An average across disclosed outlets is not a forecast for a new location.
 
-## 2. Prime cost — COGS + labor
 
-The two big controllables, added together. In food service, **prime cost at or under 55–60% of revenue** is the line between a manageable unit and a grinding one. This is the number to track *weekly*, not monthly — food waste and over-scheduling both hide in month-long averages.
+## The operating lines to understand
 
-## 3. Occupancy — the number you can't fix later
 
-Rent + CAM + property costs as a share of revenue. **Under 10% is healthy; over 12% is a permanent headwind.** Occupancy is decided once, at lease signing, usually before you've sold a single dollar — which is why the lease deserves as much scrutiny as the franchise agreement. A cheap-looking rent on a low-traffic site is the most expensive rent there is.
+- Revenue and sales mix.
 
-## 4. The franchise load — royalty + ad fund + required tech
+- Cost of goods or services under a consistent definition.
 
-Everything the system charges as a function of existing: typically **7–11% of gross sales** all-in. It's fixed by contract, so it functions as a haircut on every other line. An independent operator's P&L has ~8 more points of slack; the franchisee's bet is that the brand's AUV lift is worth more than those points. Sometimes it clearly is. Make the comparison explicitly.
+- Labor and related employer costs.
 
-## 5. Break-even revenue — the only number that lets you sleep
+- Occupancy and other fixed or variable costs.
 
-Fixed monthly costs (occupancy, debt service, insurance, salaried labor, minimum royalties) divided by your contribution margin (1 − variable cost %). That's the monthly revenue where the unit stops consuming cash. Know it to the week: *"we break even at $58k/month, we did $63k"* is a sentence that changes how you run the schedule, the marketing, and your own stress level.
+- Royalties, advertising contributions and required fees.
 
-## Putting it together: a worked sketch
+- Other operating costs and the stated earnings measure.
+Compare percentages only when their definitions and context match.
 
-A unit doing **$900k AUV**: COGS 30% ($270k), labor 28% ($252k) — prime cost 58%. Occupancy 9% ($81k). Franchise load 9% ($81k). Everything else 10% ($90k). **Net: ~$126k, a 14% margin** — a genuinely good unit. Now run the same lines at $700k AUV with the same fixed occupancy and debt: the margin roughly halves. That sensitivity — not the median case — is what you're underwriting.
 
-## The operator's cadence
+## A transparent example
 
-- **Weekly**: prime cost vs. target; break-even pace for the month.
-- **Monthly**: full P&L against the five numbers; one anomaly chased to its cause.
-- **Quarterly**: AUV trend vs. the system; is this unit earning its way to unit #2?
+Illustrative monthly revenue of $100,000 less $30,000 cost of sales, $28,000 labor, $9,000 occupancy, $8,000 franchise fees and $10,000 other operating costs leaves $15,000 before any excluded items. These are assumptions, not industry targets or an expected return.
+When testing lower sales, do not reduce every cost by the same percentage. Some costs stay fixed, some change with volume and others move in steps.
 
----
 
-*Connect QuickBooks and your [Fran Wallet](https://franwallet.com/wallet.html) computes these views from your real numbers — margins vs. benchmarks, labor as a % of revenue, by location. Free account, five-minute setup.*
+## Separate operating result from cash requirements
+
+A simplified operating break-even uses fixed operating costs divided by contribution margin. Define both carefully. Financing payments, capital expenditure, taxes and owner transactions can change cash needs beyond that operating calculation. Ask your accountant to help build the model appropriate to your decision.
+
+
+## Use the model to ask better questions
+
+Record which assumptions are supported by the FDD, your actual reports, a quote or an estimate. Test a slower opening or weaker revenue period. Keep source documents and model versions together in FranWallet for discussion with your advisors.
+
+
+## Sources
+
+- [FTC: buying a franchise](https://search.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise)
+- [CoverPanda: bookkeeping scope](https://coverpanda.co/bookkeeping)

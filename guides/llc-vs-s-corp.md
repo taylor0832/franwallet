@@ -1,38 +1,38 @@
-# LLC vs. S-Corp for franchise owners
+# An LLC and an S election answer different questions.
 
-The entity question comes up before your first location opens, and the honest answer is less dramatic than the internet makes it: **most franchise owners form an LLC, and many of them later elect S-Corp taxation for that same LLC.** They're not competing structures — one is a legal wrapper, the other is a tax election.
+Canonical article: https://franwallet.com/insights/llc-vs-s-corp/
 
-## The LLC: the legal wrapper
+## Start with the two decisions
 
-An LLC gives you the thing you actually cannot skip: separation between the business's liabilities and your house. Slip-and-fall in your store, a delivery driver accident, a lease dispute — the claim is against the company, not you personally (as long as you keep finances separated and don't sign everything away with personal guarantees — your lease and SBA loan will still demand those).
+An LLC is a company formed under state law. S corporation treatment is a federal tax classification available to eligible entities that make the appropriate election. An LLC may have different federal tax treatment depending on its owners and elections.
 
-- Cheap and fast: state filing fees are typically $50–$500, done in days.
-- Flexible: single owner or partners, and profits pass through to your personal return — no corporate tax layer.
-- Franchisor-friendly: nearly every franchisor is used to signing franchise agreements with single-member LLCs.
 
-By default, a single-member LLC's profits flow to your personal return and the **entire profit is subject to self-employment tax (~15.3%)** on top of income tax. That default is what the S-Corp election changes.
+## What your advisors need to evaluate
 
-## The S-Corp election: the tax lever
 
-Once the business earns real profit, you can file IRS Form 2553 and have your LLC taxed as an S-Corp. The mechanics:
+- Ownership and eligibility for the proposed treatment.
 
-- You must pay yourself a **reasonable salary** through payroll (payroll taxes apply to it).
-- Profit **above** your salary passes through as a distribution — no self-employment tax on that slice.
+- Expected earnings, owner work and compensation.
 
-Rough example: your unit nets $120k. As a default LLC, roughly all $120k is hit with self-employment tax. As an S-Corp paying you a defensible $60k salary, the other $60k of distributions escapes it — saving on the order of **$8–9k a year**, minus the new costs the election creates.
+- State tax treatment and filing obligations.
 
-Those new costs are real: payroll service, a slightly more complex tax return, and the discipline of running actual payroll for yourself. That's why the rule of thumb most accountants use is: **the election starts paying for itself somewhere around $40–60k of consistent annual profit.** Below that, the default LLC is simpler and cheaper.
+- Payroll, accounting and administrative costs.
 
-## The franchise-specific wrinkles
+- Franchise, lender and lease requirements.
+A single revenue or profit threshold cannot decide the election for every owner.
 
-- **Royalties don't care about your entity.** Your royalty and ad fund are a percentage of gross sales either way; no structure reduces them.
-- **Multi-unit owners** often end up with an LLC per location (or a holding structure) — driven by lease liability and lender requirements, not taxes. Don't build the empire structure before unit #2 exists.
-- **Timing matters.** The S-Corp election generally must be filed within 2 months and 15 days of the start of the tax year it's meant to cover — a conversation to have with your accountant *before* January, not at tax time.
 
-## The honest bottom line
+## Keep formation separate from the election
 
-Form the LLC before you sign your lease or franchise agreement. Elect S-Corp when profit is consistently clearing ~$50k and an accountant has run your specific numbers. Skip anything more exotic until location #2 is real.
+Do not assume that a provider forming an LLC also handles tax elections or owner payroll. Confirm the scope, required forms, timing and professional responsibilities before proceeding. Review the choice when your ownership or operations change.
 
----
 
-*This is education, not tax or legal advice — your numbers and state change the answer. Want it handled? Entity formation done right for franchising is one request away in your [Fran Wallet](https://franwallet.com/wallet.html) Marketplace.*
+## Document the decision in your setup record
+
+Keep state formation records separate from federal and state tax records. Record advisor-confirmed decisions, relevant dates and who handles each filing. FranWallet helps organize the information; it does not choose tax treatment or guarantee a tax saving.
+
+
+## Sources
+
+- [IRS: business structures](https://www.irs.gov/businesses/small-businesses-self-employed/business-structures)
+- [IRS: LLC classification](https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc)

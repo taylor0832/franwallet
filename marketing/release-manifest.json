@@ -1,0 +1,38 @@
+{
+  "base": "b5432d341cbd779731adb051df70a53cb484cc22",
+  "purpose": "Public franchise service discovery, complete insight pages and legacy-route repair",
+  "existing_files_allowed": [
+    "index.html",
+    "start.html",
+    "skills.html",
+    "guides.html",
+    "waitlist.html",
+    "sitemap.xml",
+    "guides/*.md"
+  ],
+  "new_public_paths": [
+    "franchise-entity-setup/",
+    "franchise-accounting/",
+    "franchise-services/",
+    "franchising/",
+    "franchise-debt-tracking/",
+    "franchise-data-room/",
+    "chatgpt/",
+    "insights/",
+    "frangpt/",
+    "frangpt.html",
+    "incorporation/",
+    "entity-setup/",
+    "downloads/",
+    "fran-marketing.css",
+    "fran-cash-position.mjs",
+    "f5adacbc6467210052c2ac389eef4588.txt"
+  ],
+  "new_authoring_paths": [
+    "marketing/",
+    "scripts/",
+    "tests/",
+    "package.json"
+  ],
+  "preserve": "All existing JavaScript, wallet.html, OAuth pages, privacy, terms, DNS identity and robots preferences"
+}

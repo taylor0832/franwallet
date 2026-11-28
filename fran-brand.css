@@ -1,0 +1,22 @@
+/* FranWallet's approved layered wallet and original website typography. */
+@font-face{font-family:Fraunces;src:url('/assets/brand/fonts/Fraunces-variable.ttf') format('truetype');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:'DM Sans';src:url('/assets/brand/fonts/DM-Sans-variable.ttf') format('truetype');font-style:normal;font-weight:100 900;font-display:swap}
+:root{--fran-mark:url('/assets/brand/franwallet-icon.svg?v=20261128-layered');--fran-nav-mark:url('/assets/brand/franwallet-nav.svg?v=20261128-layered')}
+.fran-brand-link,.fw-brand,.ln-logo>span:first-of-type,.st-logo>span:first-of-type,.mt-logo>span,.sb-logo>span:first-of-type,.brandbar>a,.rp-private-header>a{font-family:Fraunces,Georgia,serif!important;font-weight:700!important}
+.fran-brand-link{display:inline-flex;align-items:center;gap:11px;text-decoration:none}
+.fran-brand-link>span{font-family:inherit}
+.fran-brand-inline{display:inline-block;flex:none;width:36px;height:36px;object-fit:contain;vertical-align:middle}
+.fw-brand{gap:11px}.fw-header .fw-brand img{width:40px;height:40px;object-fit:contain;border-radius:9px}
+.fran-mark,.fran-brand-glyph,.sb-logo .dot,.st-logo .dot,.mt-mark,.pf-mark,.sx-mark,.agent-avatar,.fj-avatar,.ld-av,.fj-brand>b,.ld-title>b{background:var(--fran-mark) center/contain no-repeat!important;box-shadow:none!important;color:transparent!important;font-size:0!important;flex-shrink:0}
+.fran-brand-glyph{display:inline-block;width:28px;height:28px;vertical-align:middle}
+.sx-mark::after,.pf-mark::after,.fran-brand-glyph::after,.ln-logo .dot::before,.ln-logo .dot::after{content:none!important;display:none!important}
+.ln-logo .dot{display:inline-block!important;width:44px!important;height:37px!important;min-width:44px!important;border-radius:0!important;background:var(--fran-nav-mark) center/contain no-repeat!important;box-shadow:none!important;color:transparent!important;font-size:0!important;flex-shrink:0}
+.ln-logo .dot>*{display:none!important}.ln-logo{gap:11px!important}.ln-logo>span:first-of-type{font-size:20px!important}
+.fran-brand-slot{display:inline-block!important;background:var(--fran-mark) center/contain no-repeat!important;box-shadow:none!important;color:transparent!important;font-size:0!important;flex-shrink:0;vertical-align:middle}
+.fran-brand-slot>svg,.fran-brand-slot::after{display:none!important;content:none!important}
+.setup-wordmark{display:inline-flex;align-items:center;gap:8px}.setup-wordmark::before{content:'';display:inline-block;width:26px;height:26px;background:var(--fran-mark) center/contain no-repeat;flex:none}
+.fw-footer .fw-brand{font-family:Fraunces,Georgia,serif!important}
+@media(max-width:600px){.ln-logo .dot{width:40px!important;min-width:40px!important;height:34px!important}.ln-logo>span:first-of-type{font-size:20px!important}}
+.brand:has(.fran-brand-slot),.brand:has(.fran-brand-inline){font-family:Fraunces,Georgia,serif!important;font-weight:700!important;display:inline-flex;align-items:center;gap:11px}
+.land-nav .ln-logo .dot{background:var(--fran-nav-mark) center/contain no-repeat!important;width:44px!important;height:37px!important;min-width:44px!important}
+@media(max-width:600px){.land-nav .ln-logo .dot{width:40px!important;min-width:40px!important;height:34px!important}}

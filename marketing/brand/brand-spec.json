@@ -1,0 +1,21 @@
+{
+  "version": "2026-11-28-layered",
+  "name": "FranWallet",
+  "colors": {
+    "teal": "#0A3D3D",
+    "coral": "#E8734A",
+    "white": "#FFFFFF"
+  },
+  "wordmark": {
+    "font": "Fraunces",
+    "weight": 700,
+    "supportingFont": "DM Sans"
+  },
+  "master": "franwallet-icon.svg",
+  "navbar": {
+    "file": "franwallet-nav.svg",
+    "width": 44,
+    "height": 37
+  },
+  "geometry": "Approved layered wallet. Do not redraw, outline, add a new clasp or change the card angles."
+}

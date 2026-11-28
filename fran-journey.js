@@ -118,7 +118,7 @@ function nextSlot(from){const o=order(),start=from?o.indexOf(from)+1:0;return o.
 /* ---------- shell ---------- */
 function shell(){if(dialog)return dialog
 dialog=document.createElement('dialog');dialog.id='fran-journey';dialog.className='fj';dialog.setAttribute('aria-label','Set up your Wallet with Fran')
-dialog.innerHTML='<div class="fj-top"><span class="fj-brand"><b>F.</b> Set up with Fran</span><span class="fj-phase" data-fj-phase></span><button type="button" class="fj-exit" data-fj-exit>Save & exit</button></div><div class="fj-main"><section class="fj-chat"><div class="fj-log" role="log" aria-live="polite" aria-label="Setup conversation"></div><div class="fj-turn" data-fj-turn></div></section><aside class="fj-wallet" aria-label="Your Wallet, as it comes together"></aside></div>'
+dialog.innerHTML='<div class="fj-top"><span class="fj-brand"><b></b> Set up with Fran</span><span class="fj-phase" data-fj-phase></span><button type="button" class="fj-exit" data-fj-exit>Save & exit</button></div><div class="fj-main"><section class="fj-chat"><div class="fj-log" role="log" aria-live="polite" aria-label="Setup conversation"></div><div class="fj-turn" data-fj-turn></div></section><aside class="fj-wallet" aria-label="Your Wallet, as it comes together"></aside></div>'
 dialog.addEventListener('cancel',e=>{if(phase==='create'&&busy)e.preventDefault()})
 dialog.addEventListener('close',()=>{if(phase==='create')window.FranEntry?.pause(memberId());showPill();renderHome();metric('journey_closed',{phase,ready:loc?readyCount():0})})
 dialog.querySelector('[data-fj-exit]').onclick=()=>{if(phase==='create'&&!loc?.wallet){if(!confirm('Leave setup? Your location hasn’t been created yet.'))return}dialog.close()}
@@ -126,7 +126,7 @@ document.body.append(dialog);return dialog}
 const log=()=>dialog.querySelector('.fj-log'),turn=()=>dialog.querySelector('[data-fj-turn]')
 function setPhase(t){dialog.querySelector('[data-fj-phase]').textContent=t}
 let said=0
-async function say(html,{lead=false}={}){const m=document.createElement('div');m.className='fj-msg fran'+(lead?' lead':'');m.innerHTML='<span class="fj-avatar" aria-hidden="true">F.</span><div class="fj-bubble" id="fj-q-'+(++said)+'"><span class="fj-typing" aria-hidden="true"><i></i><i></i><i></i></span></div>';log().append(m);scroll()
+async function say(html,{lead=false}={}){const m=document.createElement('div');m.className='fj-msg fran'+(lead?' lead':'');m.innerHTML='<span class="fj-avatar" aria-hidden="true"></span><div class="fj-bubble" id="fj-q-'+(++said)+'"><span class="fj-typing" aria-hidden="true"><i></i><i></i><i></i></span></div>';log().append(m);scroll()
 await wait(420);m.querySelector('.fj-bubble').innerHTML=html;scroll();await wait(120)}
 function you(text){const m=document.createElement('div');m.className='fj-msg you';m.innerHTML='<div class="fj-bubble">'+E(text)+'</div>';log().append(m);scroll()}
 function scroll(){const l=dialog.querySelector('.fj-chat');requestAnimationFrame(()=>l.scrollTo({top:l.scrollHeight,behavior:reduce()?'auto':'smooth'}))}
